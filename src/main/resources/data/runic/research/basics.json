@@ -1,0 +1,29 @@
+{
+  "entries": [
+    {
+      "key": "FIRST_STEPS",
+      "name": "runic.research.FIRST_STEPS.title",
+      "icons": [
+        "demonic:textures/item/book_necromancy.png"
+      ],
+      "category": "BASICS",
+      "location": [
+        0,
+        0
+      ],
+      "meta": [
+        "ROUND",
+        "SPIKY"
+      ],
+      "stages": [
+        {
+          "text": "runic.research.FIRST_STEPS.stage.1",
+          "required_item": ["minecraft:oak_planks;4"]
+        },
+        {
+          "text": "runic.research.FIRST_STEPS.stage.2"
+        }
+      ]
+    }
+  ]
+}

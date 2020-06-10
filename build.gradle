@@ -1,0 +1,113 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+
+plugins {
+    id "com.wynprice.cursemaven" version "2.1.0"
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'pmd'
+
+version = '1.0'
+group = 'binary404.runic' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = 'runic'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+minecraft {
+    mappings channel: 'snapshot', version: '20200514-1.15.1'
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        client {
+			properties 'forge.logging.console.level': 'debug'
+			properties 'fml.earlyprogresswindow': 'false'
+            workingDirectory project.file('run')
+            mods {
+                runic {
+                    source sourceSets.main
+                }
+            }
+        }
+        server {
+		    properties 'fml.earlyprogresswindow': 'false'
+            workingDirectory project.file('run')
+            mods {
+                runic {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+			properties 'fml.earlyprogresswindow': 'false'
+            workingDirectory project.file('run')
+
+            mods {
+                runic {
+                    source sourceSets.main
+                }
+            }
+			args '--mod', 'runic', '--all',
+                    '--existing', '"' + file('src/main/resources/') + '"',
+                    '--existing', '"' + file('src/generated/resources/') + '"',
+                    '--output', '"' + file('src/generated/resources/') + '"'
+        }
+    }
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name "yarn2mcp"
+        url "https://maven.tterrag.com/"
+    }
+    maven {
+        url "https://maven.blamejared.com"
+    }
+    maven {
+        url "https://dvs1.progwml6.com/files/maven"
+    }
+    maven {
+        url "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven {
+        name "curios"
+        url "https://maven.theillusivec4.top/"
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.5'
+
+    compile fg.deobf("curse.maven:fx_lib:2975820")
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "runic",
+            "Specification-Vendor": "runic",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"runic",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')

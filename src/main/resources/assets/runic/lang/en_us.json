@@ -1,0 +1,13 @@
+{
+  "item.runic.guide": "Runic Compendium",
+
+  "itemGroup.runic": "Runic",
+
+  "runic.stage.complete": "Complete Research",
+  "runic.need.obtain": "Obtain",
+  "runic.stage.hold": "Completing...",
+
+  "runic.research.FIRST_STEPS.title": "Cryptic Beginnings",
+  "runic.research.FIRST_STEPS.stage.1": "Who would have thought that the magic of an enchanting table, paired with the inscriptions on the stones would have been able to create this magical tablet? <BR>This tablet seems to be an ancient record of runic magic, but the tablet was just created before my eyes! <BR>I can’t help but wonder what else I can do with the magic inscriptions of runes. <BR> I need to find some way to engrave runes easily. Maybe some sort of chisel?<BR> I am sure I will be able to find something, I just need some time to experiment. "
+
+}
