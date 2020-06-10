@@ -18,6 +18,7 @@
       "stages": [
         {
           "text": "runic.research.FIRST_STEPS.stage.1",
+          "recipes": ["runic:plank_fake"],
           "required_item": ["minecraft:oak_planks;4"]
         },
         {

@@ -22,10 +22,10 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.item.Items;
+import net.minecraft.item.crafting.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -64,7 +64,6 @@ public class GuiResearchPage extends Screen {
     float pt;
     ResourceLocation tex1 = new ResourceLocation("runic", "textures/gui/gui_researchbook.png");
     ResourceLocation tex2 = new ResourceLocation("runic", "textures/gui/gui_researchbook_overlay.png");
-    ResourceLocation tex3 = new ResourceLocation("runic", "textures/aspects/_back.png");
     ResourceLocation tex4 = new ResourceLocation("runic", "textures/gui/paper.png");
     ResourceLocation dummyResearch = new ResourceLocation("runic", "textures/aspects/_unknown.png");
     ResourceLocation dummyMap = new ResourceLocation("runic", "textures/research/rd_map.png");
@@ -124,6 +123,7 @@ public class GuiResearchPage extends Screen {
     protected void init() {
         this.rotX = 25.0F;
         this.rotY = -45.0F;
+        this.parsePages();
     }
 
     @Override
@@ -153,7 +153,6 @@ public class GuiResearchPage extends Screen {
 
     @Override
     public boolean charTyped(char par1_, int par2) {
-        System.out.println(par1_ + " " + par2);
         if (par2 == 69 || par1_ == 'e') {
             history.clear();
             if (shownRecipe != null) {
@@ -396,7 +395,6 @@ public class GuiResearchPage extends Screen {
         this.renderingCompound = false;
         if (shownRecipe != null) {
             this.drawRecipe(mx, my);
-        } else if (stage.getWarp() > 0 && !this.isComplete) {
         }
     }
 
@@ -409,7 +407,7 @@ public class GuiResearchPage extends Screen {
             int space = Math.min(25, 200 / this.recipeOutputs.size());
             for (ResourceLocation rk : this.recipeOutputs.keySet()) {
                 int i;
-                List list = this.recipeOutputs.get((Object) rk);
+                List list = this.recipeOutputs.get(rk);
                 if (list == null || list.size() <= 0 || list.get(i = this.cycle % list.size()) == null) continue;
                 int sh = rng.nextInt(3);
                 int le = rng.nextInt(3) + (this.mouseInside(x + 280, y - 1, 30, 16, mx, my) ? 0 : 3);
@@ -419,10 +417,12 @@ public class GuiResearchPage extends Screen {
                 } else {
                     RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 }
+
                 this.blit(x + 280 + sh, y - 1, 120 + le, 232, 28, 16);
                 this.blit(x + 280 + sh, y - 1, 116, 232, 4, 16);
                 RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 if (list.get(i) instanceof ItemStack) {
+                    System.out.println("Drawing stack");
                     this.drawStackAt((ItemStack) list.get(i), x + 287 + sh - le, y - 1, mx, my, false);
                 }
                 y += space;
@@ -444,7 +444,7 @@ public class GuiResearchPage extends Screen {
             RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 0.25f);
             this.minecraft.getTextureManager().bindTexture(this.tex1);
             this.blit(x - 12, (y -= 18) - 1, 200, 232, 56, 16);
-            this.drawPopupAt(x - 15, y, mx, my, "demonic.need.research");
+            this.drawPopupAt(x - 15, y, mx, my, "runic.need.research");
             Object loc = null;
             if (this.hasResearch != null) {
                 if (this.hasResearch.length != stage.getResearch().length) {
@@ -458,7 +458,7 @@ public class GuiResearchPage extends Screen {
                     String k;
                     String key = stage.getResearch()[a];
                     loc = stage.getResearchIcon()[a] != null ? new ResourceLocation(stage.getResearchIcon()[a]) : this.dummyResearch;
-                    String text = I18n.format((String) ("demonic.research." + key + ".text"));
+                    String text = I18n.format((String) ("runic.research." + key + ".text"));
                     ResearchEntry re = ResearchCategories.getResearch(key);
                     RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                     if (re != null && re.getIcons() != null) {
@@ -596,6 +596,7 @@ public class GuiResearchPage extends Screen {
         this.allowWithPagePopup = true;
         RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
         this.minecraft.getTextureManager().bindTexture(this.tex4);
+        System.out.println("Drawing recipe");
         int x = (this.width - 256) / 2;
         int y = (this.height - 256) / 2;
         RenderSystem.disableDepthTest();
@@ -613,10 +614,10 @@ public class GuiResearchPage extends Screen {
                 this.recipePage = this.recipePageMax;
             }
             if ((recipe = list.get(this.recipePage % list.size())) != null) {
-                if (recipe instanceof IRecipe) {
-                    this.drawCraftingPage(x + 128, y + 128, mx, my, (IRecipe) recipe);
+                if (recipe instanceof ICraftingRecipe) {
+                    this.drawCraftingPage(x + 128, y + 128, mx, my, (ICraftingRecipe) recipe);
+                    System.out.println("drawing crafting page");
                 }
-                //Add More Recipes TODO
             }
             if (this.hasRecipePages) {
                 this.minecraft.getTextureManager().bindTexture(this.tex1);
@@ -632,7 +633,7 @@ public class GuiResearchPage extends Screen {
         this.allowWithPagePopup = false;
     }
 
-    private void drawCraftingPage(int x, int y, int mx, int my, IRecipe recipe) {
+    private void drawCraftingPage(int x, int y, int mx, int my, ICraftingRecipe recipe) {
         String text;
         int offset;
         RenderSystem.enableBlend();
@@ -665,6 +666,18 @@ public class GuiResearchPage extends Screen {
                     Ingredient toRender = (Ingredient) items.get(i + j * rw);
                     this.drawStackAt(toRender.getMatchingStacks()[0], x - 40 + i * 32, y - 40 + j * 32, mx, my, true);
                 }
+            }
+        }
+        if (recipe != null && (recipe instanceof ShapelessRecipe)) {
+            text = I18n.format("recipe.type.workbenchshapeless");
+            offset = this.minecraft.fontRenderer.getStringWidth(text);
+            this.minecraft.fontRenderer.drawString(text, x - offset / 2, y - 104, 5263440);
+            NonNullList items = recipe.getIngredients();
+            for (int i = 0; i < items.size() && i < 9; ++i) {
+                if (items.get(i) == null)
+                    continue;
+                Ingredient toRender = (Ingredient) items.get(i);
+                this.drawStackAt(toRender.getMatchingStacks()[0], x + -40 + i % 3 * 32, y - 40 + i / 3 * 32, mx, my, true);
             }
         }
         recipeCycle++;
@@ -882,13 +895,12 @@ public class GuiResearchPage extends Screen {
             recipe = CommonInternals.getCatalogRecipeFake(rk);
         }
         if (recipe == null) {
-            recipe = RecipeConfig.manager.getRecipe((ResourceLocation) rk);
+            recipe = RecipeConfig.manager.getRecipe(rk);
         }
         if (recipe == null) {
             recipe = RecipeConfig.recipeGroups.get(rk.toString());
         }
         if (recipe == null) {
-            System.out.println("no recipe found matching " + rk);
             return;
         }
         if (recipe instanceof ArrayList) {
@@ -898,14 +910,13 @@ public class GuiResearchPage extends Screen {
                 this.addRecipesToList(rl, recipeLists2, recipeOutputs2, rk);
             }
         } else {
-            if (!recipeLists2.containsKey((Object) rkey)) {
+            if (!recipeLists2.containsKey(rkey)) {
                 recipeLists2.put(rkey, new ArrayList());
                 recipeOutputs2.put(rkey, new ArrayList());
             }
             ArrayList list = recipeLists2.get((Object) rkey);
             ArrayList outputs = recipeOutputs2.get((Object) rkey);
             if (recipe instanceof IRecipe) {
-                System.out.println("adding IRecipe");
                 IRecipe re = (IRecipe) recipe;
                 list.add(re);
                 outputs.add(re.getRecipeOutput());

@@ -1,5 +1,6 @@
 package binary404.runic;
 
+import binary404.runic.common.config.RecipeConfig;
 import binary404.runic.common.config.ResearchConfig;
 import binary404.runic.common.core.capability.CapabilityEvent;
 import binary404.runic.common.core.network.PacketHandler;
@@ -32,6 +33,7 @@ public class Runic {
     }
 
     private void setup(FMLCommonSetupEvent event) {
+        RecipeConfig.init();
         CapabilityEvent.init();
         PacketHandler.init();
         ResearchConfig.init();

@@ -213,8 +213,8 @@ public class RenderingUtils {
         GL11.glDisable(3553);
         GL11.glEnable(3042);
         GL11.glDisable(3008);
-        GL11.glBlendFunc(770, 771);
-        GL11.glShadeModel(7425);
+        RenderSystem.blendFunc(770, 771);
+        RenderSystem.shadeModel(7425);
         Tessellator var15 = Tessellator.getInstance();
         var15.getBuffer().begin(7, DefaultVertexFormats.POSITION_COLOR);
         var15.getBuffer().pos(par3, par2, 300.0D).color(var8, var9, var10, var7).endVertex();
@@ -222,7 +222,7 @@ public class RenderingUtils {
         var15.getBuffer().pos(par1, par4, 300.0D).color(var12, var13, var14, var11).endVertex();
         var15.getBuffer().pos(par3, par4, 300.0D).color(var12, var13, var14, var11).endVertex();
         var15.draw();
-        GL11.glShadeModel(7424);
+        RenderSystem.shadeModel(7424);
         RenderSystem.blendFunc(770, 771);
         if (!blendon) GL11.glDisable(3042);
         GL11.glEnable(3008);

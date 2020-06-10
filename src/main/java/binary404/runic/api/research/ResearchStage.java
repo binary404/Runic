@@ -11,7 +11,6 @@ public class ResearchStage {
     int[] craftReference;
     String[] research;
     String[] researchIcon;
-    int warp;
 
     public String getText() {
         return this.text;
@@ -71,13 +70,5 @@ public class ResearchStage {
 
     public void setResearchIcon(String[] research) {
         this.researchIcon = research;
-    }
-
-    public int getWarp() {
-        return this.warp;
-    }
-
-    public void setWarp(int warp) {
-        this.warp = warp;
     }
 }

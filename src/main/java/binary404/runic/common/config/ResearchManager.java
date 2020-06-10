@@ -94,10 +94,6 @@ public class ResearchManager {
                     }
                     knowledge.setResearchStage(researchkey, Math.min(re.getStages().length + 1, cs + 1));
                     popups = cs >= re.getStages().length;
-                    warp = 0;
-                    if (currentStage != null) {
-                        warp = currentStage.getWarp();
-                    }
                     if (popups) {
                         cs = Math.min(cs, re.getStages().length);
                         currentStage = re.getStages()[cs - 1];
@@ -132,7 +128,7 @@ public class ResearchManager {
                             for (ResearchAddendum addendum : ri.getAddenda()) {
                                 if (addendum.getResearch() == null || !Arrays.asList(addendum.getResearch()).contains(researchkey))
                                     continue;
-                                TranslationTextComponent text = new TranslationTextComponent("demonic.addaddendum", new Object[]{ri.getLocalizedName()});
+                                TranslationTextComponent text = new TranslationTextComponent("runic.addaddendum", new Object[]{ri.getLocalizedName()});
                                 player.sendMessage((ITextComponent) text);
                                 knowledge.setResearchFlag(ri.getKey(), IPlayerKnowledge.EnumResearchFlag.PAGE);
                                 continue block3;
@@ -260,7 +256,9 @@ public class ResearchManager {
                 throw new Exception("Illegal stage text in research JSon");
             }
             if (stageObj.has("recipes")) {
+                System.out.println("found recipes");
                 stage.setRecipes(ResearchManager.arrayJsonToResourceLocations(stageObj.get("recipes").getAsJsonArray()));
+                System.out.println(stage.getRecipes());
             }
             if (stageObj.has("required_item")) {
                 stage.setObtain(ResearchManager.parseJsonOreList(entry.getKey(), ResearchManager.arrayJsonToString(stageObj.get("required_item").getAsJsonArray())));
@@ -296,9 +294,6 @@ public class ResearchManager {
                     stage.setResearch(rKey);
                     stage.setResearchIcon(rIcn);
                 }
-            }
-            if (stageObj.has("warp")) {
-                stage.setWarp(stageObj.getAsJsonPrimitive("warp").getAsInt());
             }
             stages.add(stage);
         }

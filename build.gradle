@@ -93,7 +93,7 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.15.2-31.2.5'
 
-    compile fg.deobf("curse.maven:fx_lib:2975820")
+    compile fg.deobf("curse.maven:fx_lib:2977019")
 }
 
 jar {
