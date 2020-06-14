@@ -26,6 +26,6 @@ Magic mod focused on channeling energy through runes
 [[dependencies.runic]]
     modId="fx_lib"
     mandatory=true
-    versionRange="[1.2]"
+    versionRange="[1.4]"
     ordering="NONE"
     side="BOTH"

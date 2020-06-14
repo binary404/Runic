@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "runic:block/chisel_top",
+    "down": "runic:block/chisel_other",
+    "up": "runic:block/chisel_top",
+    "north": "runic:block/chisel_other",
+    "east": "runic:block/chisel_other",
+    "south": "runic:block/chisel_other",
+    "west": "runic:block/chisel_other"
+  }
+}

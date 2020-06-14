@@ -1,13 +1,27 @@
 {
   "item.runic.guide": "Runic Compendium",
+  "item.runic.basic_mold": "Basic Mold",
+
+  "block.runic.runed_stone": "Runed Stone",
+  "block.runic.chisel": "Arcane Chisel",
 
   "itemGroup.runic": "Runic",
 
+  "recipe.type.workbenchshapeless": "Crafting - Shapeless",
+  "recipe.type.workbench": "Crafting - Shaped",
   "runic.stage.complete": "Complete Research",
   "runic.need.obtain": "Obtain",
+  "runic.need.craft": "Craft",
+  "runic.need.research": "Required Knowledge",
   "runic.stage.hold": "Completing...",
+  "runic.research.stage": "Stage:",
+  "runic.researchmissing": "Missing research required",
+  "runic.research.begin": "Start Research",
+  "recipe.clickthrough": "Click for recipe",
 
+  "runic.research.f_lava_swim.text": "Handle a hot liquid",
+  "f_lava_swim.msg": "You have handled a very hot fluid and have learned much",
   "runic.research.FIRST_STEPS.title": "Cryptic Beginnings",
-  "runic.research.FIRST_STEPS.stage.1": "Who would have thought that the magic of an enchanting table, paired with the inscriptions on the stones would have been able to create this magical tablet? <BR>This tablet seems to be an ancient record of runic magic, but the tablet was created just before my eyes! <BR>I can’t help but wonder what else I can do with the magic inscriptions of runes. <BR> I need to find some way to engrave runes easily. Maybe some sort of chisel?<BR> I am sure I will be able to find something, I just need some time to experiment. "
-
+  "runic.research.FIRST_STEPS.stage.1": "Who would have thought that the magic of an enchanting table, paired with the inscriptions on the stones would have been able to create this magical tablet? <BR>This tablet seems to be an ancient record of runic magic, but the tablet was created just before my eyes! <BR>I can’t help but wonder what else I can do with the magic inscriptions of runes. <BR> I need to create some sort of more powerful  rune?<BR> I need some sort of device to make it easier to produce runes...<BR> Maybe some sort of chisel",
+  "runic.research.FIRST_STEPS.stage.2": "I have created a device I am naming the Arcane Chisel. The device uses the mystic power of runes to enhance redstone technology. <BR> The device should be capable of transforming a bit of stone on top of it into an engraved mold. <BR> Now I just need some way to transform these molds into runes…<BR><BR> Maybe lava would be worth testing?"
 }

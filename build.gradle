@@ -91,9 +91,9 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.15.2-31.2.5'
+    minecraft 'net.minecraftforge:forge:1.15.2-31.2.19'
 
-    compile fg.deobf("curse.maven:fx_lib:2977019")
+    compile fg.deobf("curse.maven:fx_lib:2979664")
 }
 
 jar {

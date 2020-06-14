@@ -4,7 +4,7 @@
       "key": "FIRST_STEPS",
       "name": "runic.research.FIRST_STEPS.title",
       "icons": [
-        "demonic:textures/item/book_necromancy.png"
+        "runic:textures/item/guide.png"
       ],
       "category": "BASICS",
       "location": [
@@ -12,17 +12,41 @@
         0
       ],
       "meta": [
-        "ROUND",
-        "SPIKY"
+        "ROUND"
       ],
       "stages": [
         {
           "text": "runic.research.FIRST_STEPS.stage.1",
-          "recipes": ["runic:plank_fake"],
-          "required_item": ["minecraft:oak_planks;4"]
+          "recipes": ["runic:chisel_fake"],
+          "required_craft": ["runic:chisel"]
         },
         {
-          "text": "runic.research.FIRST_STEPS.stage.2"
+          "text": "runic.research.FIRST_STEPS.stage.2",
+          "required_research": ["f_lava_swim"]
+        },
+        {
+          "text": "runic.research.FIRST_STEPS.stage.3"
+        }
+      ]
+    },
+    {
+      "key": "BASIC_RUNES",
+      "name": "runic.research.BASIC_RUNES.title",
+      "icons": [
+        "runic:textures/item/basic_mold.png"
+      ],
+      "category": "BASICS",
+      "location": [
+        0, 2
+      ],
+      "parents": ["FIRST_STEPS"],
+      "meta": [
+        "ROUND"
+      ],
+      "stages": [
+        {
+          "text": "runic.research.BASIC_RUNES.stage.1",
+          "required_item":["runic:basic_mold"]
         }
       ]
     }
