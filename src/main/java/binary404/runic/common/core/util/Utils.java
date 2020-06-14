@@ -16,6 +16,7 @@
 
 package binary404.runic.common.core.util;
 
+import binary404.runic.Runic;
 import com.google.common.base.CaseFormat;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
@@ -332,6 +333,33 @@ public class Utils {
 
     public static <R> R cast(Object instance) {
         return (R) instance;
+    }
+
+    public static ResourceLocation fromClass(Object object, @Nullable String cutPrefix) {
+        return fromClass(object, cutPrefix, null);
+    }
+
+    public static ResourceLocation fromClass(Class<?> clazz, @Nullable String cutPrefix) {
+        return fromClass(clazz, cutPrefix, null);
+    }
+
+    public static ResourceLocation fromClass(Object object, @Nullable String cutPrefix, @Nullable String cutSuffix) {
+        return fromClass(object.getClass(), cutPrefix, cutSuffix);
+    }
+
+    public static ResourceLocation fromClass(Class<?> clazz, @Nullable String cutPrefix, @Nullable String cutSuffix) {
+        String name = clazz.getSimpleName();
+        if (clazz.getEnclosingClass() != null) {
+            name = clazz.getEnclosingClass().getSimpleName() + name;
+        }
+        if (cutPrefix != null && name.startsWith(cutPrefix)) {
+            name = name.substring(cutPrefix.length());
+        }
+        if (cutSuffix != null && name.endsWith(cutSuffix)) {
+            name = name.substring(0, name.length() - cutSuffix.length());
+        }
+        name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
+        return Runic.key(name);
     }
 
 }

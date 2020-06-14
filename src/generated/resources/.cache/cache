@@ -1,1 +1,9 @@
+8721efd00d1f648dfb20d156d12c6fef44b77b36 assets\runic\blockstates\chisel.json
+e81b85b9602ab90bea6a5d3441ea232e2a677f28 assets\runic\blockstates\green_rune.json
 af9e6c0dea5bce0afb42281643aa84731776f006 assets\runic\blockstates\runed_stone.json
+91b7e39ab8a7352dc820ad9b67a56edd63095d31 data\runic\advancements\recipes\runic\chisel.json
+a608fafada14e876ee8c40125991edc98fd8c9eb data\runic\advancements\recipes\runic\green_rune.json
+bdebdde701f4457fcad7acb2cf0effbfd3cc5b3a data\runic\advancements\recipes\runic\runed_stone.json
+1a37927cd2448895e0a21faf332596cfab4e3f13 data\runic\recipes\chisel.json
+37a45fc5771794c35ed05355f74b8e7634635311 data\runic\recipes\green_rune.json
+16267de298107a888de07de6f951253a956eadce data\runic\recipes\runed_stone.json
