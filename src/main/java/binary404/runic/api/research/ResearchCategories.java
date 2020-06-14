@@ -29,18 +29,9 @@ public class ResearchCategories {
         return null;
     }
 
-    public static ResearchCategory registerCategory(String key, String researchkey, ResourceLocation icon, ResourceLocation background) {
+    public static ResearchCategory registerCategory(String key, String researchkey, ResourceLocation icon) {
         if (ResearchCategories.getResearchCategory(key) == null) {
-            ResearchCategory rl = new ResearchCategory(key, researchkey, icon, background);
-            researchCategories.put(key, rl);
-            return rl;
-        }
-        return null;
-    }
-
-    public static ResearchCategory registerCategory(String key, String researchkey, ResourceLocation icon, ResourceLocation background, ResourceLocation background2) {
-        if (ResearchCategories.getResearchCategory(key) == null) {
-            ResearchCategory rl = new ResearchCategory(key, researchkey, icon, background, background2);
+            ResearchCategory rl = new ResearchCategory(key, researchkey, icon);
             researchCategories.put(key, rl);
             return rl;
         }

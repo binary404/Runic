@@ -1,5 +1,6 @@
 package binary404.runic.common.core.network.research;
 
+import binary404.runic.Runic;
 import binary404.runic.api.capability.CapabilityHelper;
 import binary404.runic.api.capability.IPlayerKnowledge;
 import binary404.runic.api.research.ResearchCategories;
@@ -37,14 +38,17 @@ public class PacketSyncKnowledge {
     }
 
     public static void handle(PacketSyncKnowledge msg, Supplier<NetworkEvent.Context> ctx) {
+        if (ctx.get().getDirection().getReceptionSide().isServer()) {
+            ctx.get().setPacketHandled(true);
+            return;
+        }
         ctx.get().enqueueWork(() -> {
-            PlayerEntity player = Minecraft.getInstance().player;
+            PlayerEntity player = Runic.proxy.getClientPlayer();
             IPlayerKnowledge pk = CapabilityHelper.getKnowledge(player);
             pk.deserializeNBT(msg.data);
             for (String key : pk.getResearchList()) {
                 ResearchEntry ri;
                 if (pk.hasResearchFlag(key, IPlayerKnowledge.EnumResearchFlag.POPUP) && (ri = ResearchCategories.getResearch(key)) != null) {
-                    //Stuff
                 }
                 pk.clearResearchFlag(key, IPlayerKnowledge.EnumResearchFlag.POPUP);
             }

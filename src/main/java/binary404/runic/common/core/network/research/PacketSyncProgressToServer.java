@@ -40,7 +40,7 @@ public class PacketSyncProgressToServer {
     }
 
     public static PacketSyncProgressToServer decode(PacketBuffer buf) {
-        return new PacketSyncProgressToServer(buf.readString(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
+        return new PacketSyncProgressToServer(buf.readString(32767), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
     }
 
     public static void handle(PacketSyncProgressToServer msg, Supplier<NetworkEvent.Context> ctx) {

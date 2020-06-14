@@ -30,7 +30,7 @@ public class PacketSyncResearchFlagsToServer {
     }
 
     public static PacketSyncResearchFlagsToServer decode(PacketBuffer buf) {
-        return new PacketSyncResearchFlagsToServer(buf.readString(), buf.readByte());
+        return new PacketSyncResearchFlagsToServer(buf.readString(32767), buf.readByte());
     }
 
     public static void handle(PacketSyncResearchFlagsToServer msg, Supplier<NetworkEvent.Context> ctx) {

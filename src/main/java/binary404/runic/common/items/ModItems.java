@@ -1,6 +1,8 @@
 package binary404.runic.common.items;
 
 import binary404.runic.Runic;
+import binary404.runic.common.blocks.fluid.ItemSolventBucket;
+import binary404.runic.common.blocks.fluid.RegistryFluids;
 import binary404.runic.common.core.RunicTab;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
@@ -17,6 +19,12 @@ public class ModItems {
     @ObjectHolder("runic:guide")
     public static ItemGuide guide;
 
+    @ObjectHolder("runic:basic_mold")
+    public static Item basic_mold;
+
+    @ObjectHolder("runic:solvent_bucket")
+    public static ItemSolventBucket BUCKET_SOLVENT = null;
+
     public static Item.Properties defaultBuilder() {
         return new Item.Properties().group(RunicTab.INSTANCE);
     }
@@ -26,6 +34,10 @@ public class ModItems {
         IForgeRegistry<Item> r = event.getRegistry();
 
         register(r, new ItemGuide(), "guide");
+
+        register(r, new Item(defaultBuilder()), "basic_mold");
+
+        register(r, new ItemSolventBucket(() -> RegistryFluids.SOLVENT_SOURCE), "solvent_bucket");
     }
 
 }

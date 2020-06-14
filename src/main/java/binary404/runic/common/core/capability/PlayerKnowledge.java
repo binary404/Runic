@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.network.NetworkDirection;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -53,7 +54,7 @@ public class PlayerKnowledge implements IPlayerKnowledge {
             return true;
         }
         String[] ss = res.split("@");
-        if (ss.length > 1 && this.getResearchStage(ss[0]) < MathHelper.getInt((String) ss[1], (int) 0)) {
+        if (ss.length > 1 && this.getResearchStage(ss[0]) < NumberUtils.toInt((String) ss[1], (int) 0)) {
             return false;
         }
         return this.research.contains(ss[0]);

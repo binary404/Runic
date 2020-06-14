@@ -14,6 +14,7 @@ public class DataGenerator {
         ExistingFileHelper fileHelper = event.getExistingFileHelper();
 
         gen.addProvider(new RunicBlockStateProvider(gen, fileHelper));
+        gen.addProvider(new RecipeProvider(gen));
     }
 
 }

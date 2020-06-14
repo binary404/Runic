@@ -26,7 +26,7 @@ public class PacketKnowledgeGain {
     }
 
     public static PacketKnowledgeGain decode(PacketBuffer buf) {
-        return new PacketKnowledgeGain(buf.readByte(), buf.readString());
+        return new PacketKnowledgeGain(buf.readByte(), buf.readString(32767));
     }
 
     public static void handle(PacketKnowledgeGain message, Supplier<NetworkEvent.Context> ctx) {

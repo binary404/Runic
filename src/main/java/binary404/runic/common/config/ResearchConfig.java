@@ -6,8 +6,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ResearchConfig {
 
-    public static String[] runicCategories = new String[]{"BASICS"};
-    private static final ResourceLocation BACK_OVER = new ResourceLocation("runic", "textures/gui/gui_research_back_over.png");
+    public static String[] runicCategories = new String[]{"BASICS", "RITUAL"};
 
     public static void init() {
         ResearchConfig.initCategories();
@@ -21,7 +20,8 @@ public class ResearchConfig {
     }
 
     private static void initCategories() {
-        ResearchCategories.registerCategory("BASICS", null, new ResourceLocation("runic", "textures/items/book_necromancy.png"), new ResourceLocation("demonic", "textures/gui/gui_research_back_1.jpg"), BACK_OVER);
+        ResearchCategories.registerCategory("BASICS", null, new ResourceLocation("runic", "textures/item/guide.png"));
+        ResearchCategories.registerCategory("RITUAL", "UNLOCK_RITUAL", new ResourceLocation("runic", "textures/item/guide.png"));
     }
 
 }

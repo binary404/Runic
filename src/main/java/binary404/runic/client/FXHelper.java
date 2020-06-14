@@ -49,7 +49,7 @@ public class FXHelper {
 
     public static void rune1(double x, double y, double z, float r, float g, float b) {
         ParticleDispatcher.GenPart part = new ParticleDispatcher.GenPart();
-        part.scale = new float[]{0.4F};
+        part.scale = new float[]{0.2F};
         part.r = r;
         part.g = g;
         part.b = b;
@@ -62,4 +62,36 @@ public class FXHelper {
         part.grav = 0.9F;
         ParticleDispatcher.genericFx(x, y, z, 0.0D, 0.0D, 0.0D, part);
     }
+
+    public static void sparkle(double x, double y, double z, double mx, double my, double mz, float r, float g, float b) {
+        ParticleDispatcher.GenPart part = new ParticleDispatcher.GenPart();
+        part.scale = new float[]{0.3F, 0.0F};
+        part.r = r;
+        part.g = g;
+        part.b = b;
+        part.grid = 64;
+        part.age = 20;
+        part.partStart = 320;
+        part.partNum = 16;
+        part.partInc = 1;
+        part.loop = true;
+        part.location = new ResourceLocation("runic", "textures/misc/particles.png");
+        part.alpha = new float[]{0.9F, 0.0F};
+        ParticleDispatcher.genericFx(x, y, z, mx, my, mz, part);
+    }
+
+    public static void wisp(double x, double y, double z, double mx, double my, double mz, float r, float g, float b, float scale, int age) {
+        ParticleDispatcher.GenPart part = new ParticleDispatcher.GenPart();
+        part.scale = new float[]{scale};
+        part.r = r;
+        part.g = g;
+        part.b = b;
+        part.grid = 32;
+        part.age = age;
+        part.partStart = 224;
+        part.location = new ResourceLocation("runic", "textures/misc/particles.png");
+        part.alpha = new float[]{0.7F, 0.0F};
+        ParticleDispatcher.genericFx(x, y, z, mx, my, mz, part);
+    }
+
 }

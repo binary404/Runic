@@ -36,21 +36,32 @@ public class GuideHandler {
                         items.remove(item);
                     } else if (timeLeft > 1) {
                         items.put(item, timeLeft - 1);
-                        if (world.rand.nextInt(20) == 0)
-                            PacketHandler.sendToNearby(world, item, new PacketRunicFX(item.getPosX(), item.getPosY() + 1.5, item.getPosZ(), 2));
+                        if (world.getBlockState(item.getPosition()).getBlock() == Blocks.ENCHANTING_TABLE)
+                            if (world.rand.nextInt(20) == 0)
+                                PacketHandler.sendToNearby(world, item, new PacketRunicFX(item.getPosX(), item.getPosY() + 1.5, item.getPosZ(), 2));
                     } else {
                         BlockPos pos = item.getPosition();
-                        if (world.getBlockState(pos).getBlock() == Blocks.ENCHANTING_TABLE || world.getBlockState(pos.down()).getBlock() == Blocks.ENCHANTING_TABLE) {
+                        if (world.getBlockState(pos).getBlock() == Blocks.ENCHANTING_TABLE) {
                             if (item.getItem().getCount() == 1) {
-                                item.setItem(new ItemStack(ModItems.guide));
-                                PacketHandler.sendToNearby(world, item, new PacketRunicFX(item.getPosX(), item.getPosY() + 0.5, item.getPosZ(), 1));
+                                int count = 0;
+                                for (int x = -1; x <= 1; x++) {
+                                    for (int z = -1; z <= 1; z++) {
+                                        if (world.getBlockState(pos.add(x, -1, z)).getBlock() == ModBlocks.runed_stone) {
+                                            count++;
+                                        }
+                                    }
+                                }
+                                System.out.println("Count = " + count);
+                                if (count >= 4) {
+                                    item.setItem(new ItemStack(ModItems.guide));
+                                    PacketHandler.sendToNearby(world, item, new PacketRunicFX(item.getPosX(), item.getPosY() + 0.5, item.getPosZ(), 1));
+                                }
                             }
                         }
                         items.remove(item);
                     }
                 });
             } catch (ConcurrentModificationException e) {
-                e.printStackTrace();
             }
         }
     }

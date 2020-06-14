@@ -62,9 +62,9 @@ public class GuiResearchPage extends Screen {
     float rotZ = 0.0f;
     long lastCheck = 0L;
     float pt;
-    ResourceLocation tex1 = new ResourceLocation("runic", "textures/gui/gui_researchbook.png");
-    ResourceLocation tex2 = new ResourceLocation("runic", "textures/gui/gui_researchbook_overlay.png");
-    ResourceLocation tex4 = new ResourceLocation("runic", "textures/gui/paper.png");
+    ResourceLocation tex1 = new ResourceLocation("runic", "textures/gui/gui_researchrock.png");
+    ResourceLocation tex2 = new ResourceLocation("runic", "textures/gui/gui_researchrock_overlay.png");
+    ResourceLocation tex4 = new ResourceLocation("runic", "textures/gui/stone.png");
     ResourceLocation dummyResearch = new ResourceLocation("runic", "textures/aspects/_unknown.png");
     ResourceLocation dummyMap = new ResourceLocation("runic", "textures/research/rd_map.png");
     ResourceLocation dummyFlask = new ResourceLocation("runic", "textures/research/rd_flask.png");
@@ -86,8 +86,8 @@ public class GuiResearchPage extends Screen {
     List tipText = null;
     private static final int PAGEWIDTH = 140;
     private static final int PAGEHEIGHT = 210;
-    private static final PageImage PILINE = PageImage.parse("runic:textures/gui/gui_researchbook.png:24:184:95:6:1");
-    private static final PageImage PIDIV = PageImage.parse("runic:textures/gui/gui_researchbook.png:28:192:140:6:1");
+    private static final PageImage PILINE = PageImage.parse("runic:textures/gui/gui_researchrock.png:24:184:95:6:1");
+    private static final PageImage PIDIV = PageImage.parse("runic:textures/gui/gui_researchrock.png:28:192:140:6:1");
     private ArrayList<Page> pages = new ArrayList();
     boolean isComplete = false;
     boolean hasAllRequisites = false;
@@ -159,7 +159,7 @@ public class GuiResearchPage extends Screen {
                 shownRecipe = null;
                 //Minecraft.getMinecraft().player.playSound(ModSounds.page, 0.4f, 1.1f);
             } else {
-                //this.minecraft.displayGuiScreen(new GuiResearchBrowser(this.guiMapX, this.guiMapY));
+                this.minecraft.displayGuiScreen(new GuiResearchBrowser(this.guiMapX, this.guiMapY));
             }
             return true;
         } else if (par2 == 263) {
@@ -422,7 +422,6 @@ public class GuiResearchPage extends Screen {
                 this.blit(x + 280 + sh, y - 1, 116, 232, 4, 16);
                 RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 if (list.get(i) instanceof ItemStack) {
-                    System.out.println("Drawing stack");
                     this.drawStackAt((ItemStack) list.get(i), x + 287 + sh - le, y - 1, mx, my, false);
                 }
                 y += space;
@@ -596,7 +595,6 @@ public class GuiResearchPage extends Screen {
         this.allowWithPagePopup = true;
         RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
         this.minecraft.getTextureManager().bindTexture(this.tex4);
-        System.out.println("Drawing recipe");
         int x = (this.width - 256) / 2;
         int y = (this.height - 256) / 2;
         RenderSystem.disableDepthTest();
@@ -616,7 +614,6 @@ public class GuiResearchPage extends Screen {
             if ((recipe = list.get(this.recipePage % list.size())) != null) {
                 if (recipe instanceof ICraftingRecipe) {
                     this.drawCraftingPage(x + 128, y + 128, mx, my, (ICraftingRecipe) recipe);
-                    System.out.println("drawing crafting page");
                 }
             }
             if (this.hasRecipePages) {

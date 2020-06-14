@@ -2,6 +2,7 @@ package binary404.runic.client.utils;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.java.games.input.Mouse;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -50,7 +51,7 @@ public class RenderingUtils {
         if (isLightingEnabled) {
             GL11.glEnable(2896);
         } else {
-           GL11.glDisable(2896);
+            GL11.glDisable(2896);
         }
 
         return rc;
@@ -86,11 +87,22 @@ public class RenderingUtils {
         var9.draw();
     }
 
-    public static void drawCustomTooltip(Screen gui, FontRenderer fr, List textList, int x, int y) {
-        drawCustomTooltip(gui, fr, textList, x, y, false);
+    public static void drawTexturedQuadF(float par1, float par2, float par3, float par4, float par5, float par6, double zLevel) {
+        float d = 0.0625F;
+        Tessellator var9 = Tessellator.getInstance();
+        var9.getBuffer().begin(7, DefaultVertexFormats.POSITION_TEX);
+        var9.getBuffer().pos((par1 + 0.0F), (par2 + 16.0F), zLevel).tex(((par3 + 0.0F) * d), ((par4 + par6) * d)).endVertex();
+        var9.getBuffer().pos((par1 + 16.0F), (par2 + 16.0F), zLevel).tex(((par3 + par5) * d), ((par4 + par6) * d)).endVertex();
+        var9.getBuffer().pos((par1 + 16.0F), (par2 + 0.0F), zLevel).tex(((par3 + par5) * d), ((par4 + 0.0F) * d)).endVertex();
+        var9.getBuffer().pos((par1 + 0.0F), (par2 + 0.0F), zLevel).tex(((par3 + 0.0F) * d), ((par4 + 0.0F) * d)).endVertex();
+        var9.draw();
     }
 
-    public static void drawCustomTooltip(Screen gui, FontRenderer fr, List textList, int x, int y, boolean ignoremouse) {
+    public static void drawCustomTooltip(Screen gui, FontRenderer fr, List textList, int x, int y) {
+        drawCustomTooltip(gui, fr, textList, x, y, 0xFFFF, false);
+    }
+
+    public static void drawCustomTooltip(Screen gui, FontRenderer fr, List textList, int x, int y, int subTipColor, boolean ignoremouse) {
         if (!textList.isEmpty()) {
             Minecraft mc = Minecraft.getInstance();
             int sf = getScaleFactor(mc.getMainWindow());
@@ -157,7 +169,7 @@ public class RenderingUtils {
             if (flip) {
                 sX -= widestLineWidth + 24;
             }
-            Minecraft.getInstance().getItemRenderer().zLevel = 300.0f;
+            mc.getItemRenderer().zLevel = 300.0f;
             int var10 = -267386864;
             drawGradientRect(sX - 3, sY - 4, sX + widestLineWidth + 3, sY - 3, var10, var10);
             drawGradientRect(sX - 3, sY + totalHeight + 3, sX + widestLineWidth + 3, sY + totalHeight + 4, var10, var10);
@@ -171,7 +183,7 @@ public class RenderingUtils {
             drawGradientRect(sX - 3, sY - 3, sX + widestLineWidth + 3, sY - 3 + 1, var11, var11);
             drawGradientRect(sX - 3, sY + totalHeight + 2, sX + widestLineWidth + 3, sY + totalHeight + 3, var12, var12);
             for (int i = 0; i < textList.size(); ++i) {
-                RenderSystem.pushLightingAttributes();
+                RenderSystem.pushMatrix();
                 RenderSystem.translatef((float) sX, (float) sY, 0.0f);
                 String tl3 = (String) textList.get(i);
                 boolean shift = false;
@@ -192,7 +204,7 @@ public class RenderingUtils {
                 }
                 RenderSystem.popMatrix();
             }
-            Minecraft.getInstance().getItemRenderer().zLevel = 0.0f;
+            mc.getItemRenderer().zLevel = 0.0f;
             RenderSystem.enableLighting();
             RenderSystem.enableDepthTest();
             RenderHelper.enableStandardItemLighting();

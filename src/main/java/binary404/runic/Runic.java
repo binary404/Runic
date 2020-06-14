@@ -7,6 +7,7 @@ import binary404.runic.common.core.network.PacketHandler;
 import binary404.runic.proxy.ClientProxy;
 import binary404.runic.proxy.IProxy;
 import binary404.runic.proxy.ServerProxy;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
@@ -40,6 +41,10 @@ public class Runic {
         DeferredWorkQueue.runLater(() -> {
             ResearchConfig.post();
         });
+    }
+
+    public static ResourceLocation key(String path) {
+        return new ResourceLocation("demonic", path);
     }
 
 }

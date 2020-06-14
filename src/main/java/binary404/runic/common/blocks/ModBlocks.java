@@ -1,6 +1,8 @@
 package binary404.runic.common.blocks;
 
 import binary404.runic.Runic;
+import binary404.runic.common.blocks.fluid.BlockFluidSolvent;
+import binary404.runic.common.blocks.fluid.RegistryFluids;
 import binary404.runic.common.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -20,6 +22,12 @@ public class ModBlocks {
     @ObjectHolder("runic:runed_stone")
     public static Block runed_stone;
 
+    @ObjectHolder("runic:chisel")
+    public static Block chisel;
+
+    @ObjectHolder("runic:solvent")
+    public static BlockFluidSolvent solvent;
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> r = event.getRegistry();
@@ -27,6 +35,9 @@ public class ModBlocks {
         Block.Properties builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(5.0F, 10.0F).lightValue(7);
 
         register(r, new Block(builder), "runed_stone");
+        register(r, new BlockChisel(builder), "chisel");
+
+        register(r, new BlockFluidSolvent(() -> RegistryFluids.SOLVENT_SOURCE), "solvent");
     }
 
     @SubscribeEvent
@@ -34,6 +45,7 @@ public class ModBlocks {
         IForgeRegistry<Item> r = event.getRegistry();
 
         register(r, new BlockItem(runed_stone, ModItems.defaultBuilder()), "runed_stone");
+        register(r, new BlockItem(chisel, ModItems.defaultBuilder()), "chisel");
     }
 
 }
