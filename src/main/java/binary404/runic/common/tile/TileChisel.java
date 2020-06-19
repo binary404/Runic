@@ -1,14 +1,15 @@
 package binary404.runic.common.tile;
 
-import binary404.runic.api.recipe.ChiselRecipes;
 import binary404.runic.client.FXHelper;
 import binary404.runic.common.blocks.ModBlocks;
 import binary404.runic.common.core.feature.power.IPowerReciever;
 import binary404.runic.common.core.feature.power.IPowerTransfer;
 import binary404.runic.common.core.network.PacketHandler;
 import binary404.runic.common.core.network.fx.PacketRunicFX;
+import binary404.runic.common.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -32,25 +33,22 @@ public class TileChisel extends TileMod implements ITickableTileEntity {
     public void tick() {
         if (!this.world.isRemote) {
             ticks++;
-            if(ticks % 20 == 0) {
-                if(this.canRecievePower())
+            if (ticks % 20 == 0) {
+                if (this.canRecievePower())
                     this.recievePower(5);
             }
             if (!this.world.isBlockPowered(this.pos) && canProcess()) {
                 PacketHandler.sendToNearby(world, this.pos, new PacketRunicFX(this.pos.getX() + 0.5, this.pos.up().getY() + 0.5, this.pos.getZ() + 0.5, 3));
-                for (ChiselRecipes.ChiselRecipe recipe : ChiselRecipes.registry) {
-                    Block block = this.world.getBlockState(this.pos.up()).getBlock();
-                    Block test = recipe.input;
-                    if (block == test) {
-                        processTicks++;
-                        if (processTicks >= 200) {
-                            processTicks = 0;
-                            this.power = 0;
-                            world.destroyBlock(this.pos.up(), false);
-                            ItemEntity entity = new ItemEntity(this.world, this.pos.down().getX(), this.pos.down().getY(), this.pos.down().getZ(), new ItemStack(recipe.output));
-                            entity.setPosition(this.pos.getX() + 0.5, this.pos.down().getY(), this.pos.getZ() + 0.5);
-                            this.world.addEntity(entity);
-                        }
+                Block block = this.world.getBlockState(this.pos.up()).getBlock();
+                if (block == Blocks.STONE) {
+                    processTicks++;
+                    if (processTicks >= 200) {
+                        processTicks = 0;
+                        this.power = 0;
+                        world.destroyBlock(this.pos.up(), false);
+                        ItemEntity entity = new ItemEntity(this.world, this.pos.up().getX(), this.pos.down().getY(), this.pos.down().getZ(), new ItemStack(ModItems.basic_mold));
+                        entity.setPosition(this.pos.getX() + 0.5, this.pos.up().getY(), this.pos.getZ() + 0.5);
+                        this.world.addEntity(entity);
                     }
                 }
             }

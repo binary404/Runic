@@ -26,7 +26,7 @@ public class TileMod extends TileEntity {
         super.markDirty();
         if (getWorld() != null) {
             BlockState state = getWorld().getBlockState(pos);
-            if (state != null) {
+            if (state != null && this.world instanceof ServerWorld) {
                 state.getBlock().tick(state, (ServerWorld) this.world, getPos(), getWorld().rand);
                 getWorld().notifyBlockUpdate(pos, state, state, 3);
             }
@@ -36,20 +36,6 @@ public class TileMod extends TileEntity {
     public void syncTile(boolean rerender) {
         BlockState state = this.world.getBlockState(this.pos);
         this.world.notifyBlockUpdate(this.pos, state, state, 2 + (rerender ? 4 : 0));
-    }
-
-    public final void sendMessageToClient(CompoundNBT nbt, @Nullable ServerPlayerEntity player) {
-        if (player == null) {
-            if (getWorld() != null) {
-                PacketHandler.sendToNearby(getWorld(), getPos(), new PacketTileToClient(getPos(), nbt));
-            }
-        } else {
-            PacketHandler.sendToNearby(getWorld(), player, new PacketTileToClient(getPos(), nbt));
-        }
-    }
-
-    public final void sendMessageToServer(CompoundNBT nbt) {
-        PacketHandler.INSTANCE.sendToServer(new PacketTileToServer(getPos(), nbt));
     }
 
     public void messageFromServer(CompoundNBT nbt) {

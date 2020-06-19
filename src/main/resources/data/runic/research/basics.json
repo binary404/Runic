@@ -39,7 +39,7 @@
       "location": [
         0, 2
       ],
-      "parents": ["FIRST_STEPS"],
+      "parents": ["FIRST_STEPS", "epiphany_solvent"],
       "meta": [
         "ROUND"
       ],

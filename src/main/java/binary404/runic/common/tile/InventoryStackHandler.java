@@ -1,0 +1,42 @@
+package binary404.runic.common.tile;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
+import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nonnull;
+
+public class InventoryStackHandler extends ItemStackHandler {
+
+    private final TileInventory inventoryTile;
+    private boolean allowInput, allowOutput;
+
+    public InventoryStackHandler(TileInventory tile, boolean allowInput, boolean allowOutput, int size) {
+        super(size);
+        this.inventoryTile = tile;
+        this.allowInput = allowInput;
+        this.allowOutput = allowOutput;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        if (this.allowInput)
+            return super.insertItem(slot, stack, simulate);
+        else
+            return stack;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        if (this.allowOutput)
+            return super.extractItem(slot, amount, simulate);
+        else return ItemStack.EMPTY;
+    }
+
+    @Override
+    protected void onContentsChanged(int slot) {
+        this.inventoryTile.markDirty();
+    }
+}

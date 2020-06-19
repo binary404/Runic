@@ -2,6 +2,7 @@ package binary404.runic.client.utils;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.sun.prism.TextureMap;
 import net.java.games.input.Mouse;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -10,8 +11,12 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -239,6 +244,34 @@ public class RenderingUtils {
         if (!blendon) GL11.glDisable(3042);
         GL11.glEnable(3008);
         GL11.glEnable(3553);
+    }
+
+    public static final ResourceLocation MC_BLOCK_SHEET = new ResourceLocation("textures/atlas/blocks.png");
+
+    public static void setBlockTextureSheet() {
+        bindTexture(MC_BLOCK_SHEET);
+    }
+
+    public static TextureManager engine() {
+
+        return Minecraft.getInstance().getTextureManager();
+    }
+
+    public static void bindTexture(ResourceLocation texture) {
+
+        engine().bindTexture(texture);
+    }
+
+    public static TextureAtlasSprite getTexture(ResourceLocation location) {
+
+        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(location);
+    }
+
+    public static void setGLColorFromInt(int color) {
+        float red = (float) (color >> 16 & 255) / 255.0F;
+        float green = (float) (color >> 8 & 255) / 255.0F;
+        float blue = (float) (color & 255) / 255.0F;
+        RenderSystem.color4f(red, green, blue, 1.0F);
     }
 
 }

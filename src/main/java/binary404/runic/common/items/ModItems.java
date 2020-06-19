@@ -35,7 +35,7 @@ public class ModItems {
 
         register(r, new ItemGuide(), "guide");
 
-        register(r, new Item(defaultBuilder()), "basic_mold");
+        register(r, new ItemMold(defaultBuilder()), "basic_mold");
 
         register(r, new ItemSolventBucket(() -> RegistryFluids.SOLVENT_SOURCE), "solvent_bucket");
     }

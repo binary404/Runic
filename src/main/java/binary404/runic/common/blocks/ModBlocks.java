@@ -3,6 +3,8 @@ package binary404.runic.common.blocks;
 import binary404.runic.Runic;
 import binary404.runic.common.blocks.fluid.BlockFluidSolvent;
 import binary404.runic.common.blocks.fluid.RegistryFluids;
+import binary404.runic.common.blocks.machine.BlockChisel;
+import binary404.runic.common.blocks.machine.BlockRuneMolder;
 import binary404.runic.common.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -25,6 +27,9 @@ public class ModBlocks {
     @ObjectHolder("runic:chisel")
     public static Block chisel;
 
+    @ObjectHolder("runic:rune_molder")
+    public static Block rune_molder;
+
     @ObjectHolder("runic:solvent")
     public static BlockFluidSolvent solvent;
 
@@ -36,6 +41,7 @@ public class ModBlocks {
 
         register(r, new Block(builder), "runed_stone");
         register(r, new BlockChisel(builder), "chisel");
+        register(r, new BlockRuneMolder(builder), "rune_molder");
 
         register(r, new BlockFluidSolvent(() -> RegistryFluids.SOLVENT_SOURCE), "solvent");
     }
@@ -46,6 +52,7 @@ public class ModBlocks {
 
         register(r, new BlockItem(runed_stone, ModItems.defaultBuilder()), "runed_stone");
         register(r, new BlockItem(chisel, ModItems.defaultBuilder()), "chisel");
+        register(r, new BlockItem(rune_molder, ModItems.defaultBuilder()), "rune_molder");
     }
 
 }

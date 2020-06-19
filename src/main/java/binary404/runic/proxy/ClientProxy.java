@@ -1,11 +1,17 @@
 package binary404.runic.proxy;
 
 import binary404.runic.client.gui.GuiResearchBrowser;
+import binary404.runic.client.gui.container.GuiRuneMolder;
+import binary404.runic.client.render.RenderRuneMolder;
+import binary404.runic.common.container.ModContainers;
+import binary404.runic.common.tile.ModTiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -17,6 +23,12 @@ public class ClientProxy implements IProxy {
     }
 
     private void clientSetup(FMLClientSetupEvent event) {
+        ScreenManager.registerFactory(ModContainers.RUNE_MOLDER, GuiRuneMolder::new);
+        registerRendering();
+    }
+
+    private void registerRendering() {
+        ClientRegistry.bindTileEntityRenderer(ModTiles.MOLDER, RenderRuneMolder::new);
     }
 
     @Override

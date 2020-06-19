@@ -13,6 +13,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerWakeUpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -33,6 +34,19 @@ public class PlayerEvent {
                         event.player.sendStatusMessage(new TranslationTextComponent(TextFormatting.DARK_RED + I18n.format("f_lava_swim.msg")), true);
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void playerWakeUpEvent(PlayerWakeUpEvent event) {
+        IPlayerKnowledge knowledge = CapabilityHelper.getKnowledge(event.getPlayer());
+        if (knowledge.isResearchKnown("FIRST_STEPS@3") && !knowledge.isResearchKnown("epiphany_solvent")) {
+            knowledge.addResearch("epiphany_solvent");
+            if(event.getPlayer() instanceof ServerPlayerEntity) {
+                knowledge.sync((ServerPlayerEntity) event.getPlayer());
+            }
+            if(event.getPlayer().world.isRemote)
+                event.getPlayer().sendStatusMessage(new TranslationTextComponent(TextFormatting.DARK_RED + I18n.format("epiphany_solvent.msg")), true);
         }
     }
 

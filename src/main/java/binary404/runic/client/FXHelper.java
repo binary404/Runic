@@ -76,7 +76,7 @@ public class FXHelper {
         part.partInc = 1;
         part.loop = true;
         part.location = new ResourceLocation("runic", "textures/misc/particles.png");
-        part.alpha = new float[]{0.9F, 0.0F};
+        part.alpha = new float[]{0.8F};
         ParticleDispatcher.genericFx(x, y, z, mx, my, mz, part);
     }
 
