@@ -17,6 +17,7 @@ public class ObjModelLoader implements IModelCustomLoader {
 
 
     public IModelCustom loadInstance(ResourceLocation resource) throws WaveFrontObject.ModelFormatException {
+        System.out.println("Loading model");
         return new WaveFrontObject(resource);
     }
 }

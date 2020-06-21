@@ -1,15 +1,13 @@
 package binary404.runic.client.libs;
 
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import javafx.geometry.Side;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import org.lwjgl.system.CallbackI;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -232,10 +230,10 @@ public class WaveFrontObject implements IModelCustom {
         }
     }
 
-    public void renderPart(String partName, IVertexBuilder buffer) {
+    public void renderPart(String partName, MatrixStack stack) {
         for (GroupObject object : this.groupObjects) {
             if (partName.equalsIgnoreCase(object.name)) {
-                object.render(buffer);
+                object.render(Tessellator.getInstance(), stack);
             }
         }
     }
@@ -603,7 +601,8 @@ public class WaveFrontObject implements IModelCustom {
             addFaceForRender(tessellator, 5.0E-4F);
         }
 
-        public void addFaceForRender(IVertexBuilder buffer) {
+        public void addFaceForRender(Tessellator tessellator, MatrixStack stack) {
+            Matrix4f matrix = stack.getLast().getMatrix();
             if (this.faceNormal == null) {
                 this.faceNormal = calculateFaceNormal();
             }
@@ -641,11 +640,11 @@ public class WaveFrontObject implements IModelCustom {
                         offsetV = -offsetV;
                     }
 
-                    buffer.pos((this.vertices[i]).x, (this.vertices[i]).y, (this.vertices[i]).z).tex(((this.textureCoordinates[i]).u + offsetU), ((this.textureCoordinates[i]).v + offsetV))
+                    tessellator.getBuffer().pos(matrix, (this.vertices[i]).x, (this.vertices[i]).y, (this.vertices[i]).z).tex(((this.textureCoordinates[i]).u + offsetU), ((this.textureCoordinates[i]).v + offsetV))
                             .normal(this.faceNormal.x, this.faceNormal.y, this.faceNormal.z).endVertex();
                 } else {
 
-                    buffer.pos((this.vertices[i]).x, (this.vertices[i]).y, (this.vertices[i]).z).normal(this.faceNormal.x, this.faceNormal.y, this.faceNormal.z).endVertex();
+                    tessellator.getBuffer().pos(matrix, (this.vertices[i]).x, (this.vertices[i]).y, (this.vertices[i]).z).normal(this.faceNormal.x, this.faceNormal.y, this.faceNormal.z).endVertex();
                 }
             }
         }
@@ -735,17 +734,19 @@ public class WaveFrontObject implements IModelCustom {
         public void render() {
             if (this.faces.size() > 0) {
                 Tessellator tessellator = Tessellator.getInstance();
-                tessellator.getBuffer().begin(this.glDrawingMode, DefaultVertexFormats.POSITION_TEX);
+                tessellator.getBuffer().begin(this.glDrawingMode, RenderTypes.POSITION_TEX_NORMAL);
                 render(tessellator);
                 tessellator.draw();
             }
         }
 
-        public void render(IVertexBuilder buffer) {
+        public void render(Tessellator tessellator, MatrixStack stack) {
             if (this.faces.size() > 0) {
+                tessellator.getBuffer().begin(this.glDrawingMode, RenderTypes.POSITION_TEX_NORMAL);
                 for (Face face : this.faces) {
-                    face.addFaceForRender(buffer);
+                    face.addFaceForRender(tessellator, stack);
                 }
+                tessellator.draw();
             }
         }
 
