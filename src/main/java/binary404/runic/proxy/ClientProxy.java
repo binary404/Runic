@@ -2,6 +2,7 @@ package binary404.runic.proxy;
 
 import binary404.runic.client.gui.GuiResearchBrowser;
 import binary404.runic.client.gui.container.GuiRuneMolder;
+import binary404.runic.client.libs.ShaderHandler;
 import binary404.runic.client.render.RenderRuneMolder;
 import binary404.runic.common.container.ModContainers;
 import binary404.runic.common.tile.ModTiles;
@@ -19,6 +20,8 @@ public class ClientProxy implements IProxy {
 
     @Override
     public void registerEventHandlers() {
+        ShaderHandler.initShaders();
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
     }
 

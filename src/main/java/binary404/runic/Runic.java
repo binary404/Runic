@@ -44,7 +44,8 @@ public class Runic {
     }
 
     public static ResourceLocation key(String path) {
-        return new ResourceLocation("demonic", path);
+        ResourceLocation location = new ResourceLocation("runic", path);
+        return new ResourceLocation("runic", path);
     }
 
 }
