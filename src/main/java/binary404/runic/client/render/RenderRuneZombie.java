@@ -28,9 +28,11 @@ public class RenderRuneZombie extends BipedRenderer<EntityCultZombie, ModelCultZ
     @Override
     public void render(EntityCultZombie entityIn, float entityYaw, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int packedLightIn) {
         RenderSystem.pushMatrix();
-        RenderSystem.blendFunc(770, 771);
-        RenderSystem.alphaFunc(516, 0.003921569F);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.7F);
+        if (entityIn.world.isDaytime()) {
+            RenderSystem.blendFunc(770, 771);
+            RenderSystem.alphaFunc(516, 0.003921569F);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.6F);
+        }
         super.render(entityIn, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
         RenderSystem.popMatrix();
         float scale = entityIn.auraSize;
