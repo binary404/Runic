@@ -21,6 +21,11 @@ public class RenderRuneZombie extends BipedRenderer<EntityCultZombie, ModelCultZ
     }
 
     @Override
+    public ResourceLocation getEntityTexture(EntityCultZombie entity) {
+        return new ResourceLocation("runic", "textures/entity/rune_zombie.png");
+    }
+
+    @Override
     public void render(EntityCultZombie entityIn, float entityYaw, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int packedLightIn) {
         RenderSystem.pushMatrix();
         RenderSystem.blendFunc(770, 771);

@@ -34,13 +34,15 @@ public class EntityCultZombie extends MonsterEntity {
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.23F);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double) 0.23F);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
         this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(40.D);
     }
 
     public float auraSize = 5F;
+
+    private int aura = 5;
 
     @Override
     public void tick() {
@@ -51,6 +53,13 @@ public class EntityCultZombie extends MonsterEntity {
                 continue;
             target.attackEntityFrom(DamageSource.WITHER, 1F);
         }
-        auraSize = this.getHealth() / 4F;
+        if (this.ticksExisted % 5 == 0) {
+            aura = (int)this.getHealth() / 4;
+            if (this.auraSize > aura) {
+                this.auraSize--;
+            } else if (this.auraSize < aura) {
+                this.auraSize++;
+            }
+        }
     }
 }
