@@ -1,21 +1,12 @@
 package binary404.runic.common.entity.ai;
 
-import binary404.runic.client.FXHelper;
-import binary404.runic.client.libs.Vector3f;
 import binary404.runic.common.entity.EntityCultZombie;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.monster.BlazeEntity;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -28,19 +19,16 @@ public class GroupCastGoal extends Goal {
     public GroupCastGoal(EntityCultZombie monster, Class<? extends EntityCultZombie> helperClass) {
         this.helperClass = helperClass;
         this.monster = monster;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
-        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.getPosition()).grow(15.0D, 15.0D, 15.0D));
+        this.setMutexFlags(EnumSet.of(Flag.MOVE, Flag.LOOK, Flag.JUMP, Flag.TARGET));
     }
 
     @Override
     public boolean shouldExecute() {
+        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.getPosition()).grow(15.0D, 15.0D, 15.0D));
         if (this.monster.getRNG().nextFloat() >= 0.2) {
             return false;
         }
         if (this.nearby.size() <= 0) {
-            return false;
-        }
-        if (!monster.canCast) {
             return false;
         }
         return this.nearby.size() >= 3;
@@ -48,13 +36,14 @@ public class GroupCastGoal extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
+        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.getPosition()).grow(15.0D, 15.0D, 15.0D));
         int count = this.nearby.size();
         for (LivingEntity helper : this.nearby) {
             if (!helper.isAlive()) {
                 count--;
             }
         }
-        if (count >= 3 && monster.canCast) {
+        if (count >= 3) {
             return true;
         } else {
             return false;
@@ -63,7 +52,7 @@ public class GroupCastGoal extends Goal {
 
     @Override
     public void startExecuting() {
-        int count = 0;
+        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.getPosition()).grow(15.0D, 15.0D, 15.0D));
         int x = (int) this.monster.getPosX();
         int y = (int) this.monster.getPosY();
         int z = (int) this.monster.getPosZ();
@@ -71,14 +60,28 @@ public class GroupCastGoal extends Goal {
             x += entity.getPosX();
             y += entity.getPosY();
             z += entity.getPosZ();
-            count++;
         }
-        x /= count;
-        y /= count;
-        z /= count;
-        BlockPos castPos = new BlockPos(x, y, z);
+        x = x / (nearby.size() + 1);
+        y = y / (nearby.size() + 1);
+        z = z / (nearby.size() + 1);
+        BlockPos castPos = new BlockPos(x, y - 2, z);
+        this.monster.castPos = castPos;
         for (EntityCultZombie entity : this.nearby) {
             entity.castPos = castPos;
+            for (PrioritizedGoal entry : entity.goalSelector.goals) {
+                if (entry.getGoal() instanceof GroupCastGoal) {
+                    entry.startExecuting();
+                } else {
+                    entry.resetTask();
+                }
+            }
+        }
+
+        for (PrioritizedGoal entry : this.monster.goalSelector.goals) {
+            if (entry.getGoal() instanceof GroupCastGoal) {
+            } else {
+                entry.resetTask();
+            }
         }
 
     }
@@ -86,11 +89,12 @@ public class GroupCastGoal extends Goal {
     @Override
     public void resetTask() {
         this.nearby.clear();
+        this.monster.castPos = null;
     }
 
     @Override
     public void tick() {
-        this.monster.castingTicks++;
+        this.monster.heal(0.5F);
         this.monster.getLookController().setLookPosition(this.monster.castPos.getX(), this.monster.castPos.getY(), this.monster.castPos.getZ());
     }
 }

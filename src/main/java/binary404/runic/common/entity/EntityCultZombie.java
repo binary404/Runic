@@ -1,6 +1,7 @@
 package binary404.runic.common.entity;
 
-import binary404.runic.client.FXHelper;
+import binary404.runic.common.core.network.PacketHandler;
+import binary404.runic.common.core.network.fx.PacketCultFX;
 import binary404.runic.common.entity.ai.GroupCastGoal;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -26,8 +27,6 @@ public class EntityCultZombie extends MonsterEntity {
         this(ModEntities.CULT_ZOMBIE, world);
     }
 
-    public int castingTicks = 0;
-    public boolean canCast = true;
     public BlockPos castPos;
 
     @Override
@@ -36,7 +35,7 @@ public class EntityCultZombie extends MonsterEntity {
         this.goalSelector.addGoal(3, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomWalkingGoal(this, 0.987F));
         this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.987F, 64));
-        this.goalSelector.addGoal(1, new GroupCastGoal(this, EntityCultZombie.class));
+        this.goalSelector.addGoal(3, new GroupCastGoal(this, EntityCultZombie.class));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false));
     }
 
@@ -61,17 +60,17 @@ public class EntityCultZombie extends MonsterEntity {
             Vec3d current = new Vec3d(this.getPosition().getX() + this.world.rand.nextGaussian() * 0.1, this.getPosition().getY() + this.world.rand.nextGaussian() * 0.1, this.getPosition().getZ() + this.world.rand.nextGaussian() * 0.1);
             Vec3d end = new Vec3d(this.castPos.getX(), this.castPos.getY(), this.castPos.getZ());
             Vec3d motion = end.subtract(current).normalize().mul(0.1, 0.1, 0.1);
-            FXHelper.wisp(this.getPosX() + 0.5, this.getPosY() + 1, this.getPosZ() + 0.5, motion.x, motion.y, motion.z, 0.6F, 0.6F, 0.6F, 0.08F, 200);
+            PacketHandler.sendToNearby(world, this, new PacketCultFX(this.getPosX() + 0.2, this.getPosY() + 1.5, this.getPosZ() + 0.1, motion.x, motion.y, motion.z));
         }
 
         List<LivingEntity> targets = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(this.getPosition()).grow(auraSize / 2));
         for (LivingEntity target : targets) {
             if (target instanceof EntityCultZombie)
                 continue;
-            target.attackEntityFrom(DamageSource.WITHER, 1F);
+            target.attackEntityFrom(DamageSource.causeMobDamage(this), 1F);
         }
         if (this.ticksExisted % 5 == 0) {
-            aura = (int) this.getHealth() / 4;
+            aura = (int) this.getHealth() / 8;
             if (this.auraSize > aura) {
                 this.auraSize--;
             } else if (this.auraSize < aura) {
