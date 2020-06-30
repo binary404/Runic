@@ -48,19 +48,22 @@ public class FXHelper {
     }
 
     public static void rune1(double x, double y, double z, float r, float g, float b) {
+        rune1(x, y, z, 0, 0, 0, r, g, b, 0.9F, 60);
+    }
+
+    public static void rune1(double x, double y, double z, double mx, double my, double mz, float r, float g, float b, float gravity, int age) {
         ParticleDispatcher.GenPart part = new ParticleDispatcher.GenPart();
         part.scale = new float[]{0.2F};
         part.r = r;
         part.g = g;
         part.b = b;
-        part.age = 60;
+        part.age = age;
         part.partStart = 384 + rand.nextInt(16);
         part.grid = 64;
         part.location = new ResourceLocation("runic", "textures/misc/particles.png");
         part.alpha = new float[]{1.0F};
-        part.slowDown = 0.0D;
-        part.grav = 0.9F;
-        ParticleDispatcher.genericFx(x, y, z, 0.0D, 0.0D, 0.0D, part);
+        part.grav = gravity;
+        ParticleDispatcher.genericFx(x, y, z, mx, my, mz, part);
     }
 
     public static void sparkle(double x, double y, double z, double mx, double my, double mz, float r, float g, float b) {

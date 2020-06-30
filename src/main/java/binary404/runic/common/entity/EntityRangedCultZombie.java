@@ -27,6 +27,7 @@ public class EntityRangedCultZombie extends EntityCultZombie implements IRangedA
         this.goalSelector.addGoal(3, new RangedAttackGoal(this, 1.0F, 60, 64));
         this.goalSelector.addGoal(3, new GroupCastGoal(this, EntityCultZombie.class));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }
 
     @Override

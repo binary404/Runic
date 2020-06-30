@@ -37,6 +37,7 @@ public class EntityCultZombie extends MonsterEntity {
         this.goalSelector.addGoal(2, new MoveTowardsTargetGoal(this, 0.987F, 64));
         this.goalSelector.addGoal(3, new GroupCastGoal(this, EntityCultZombie.class));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, false));
+        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }
 
     protected void registerAttributes() {

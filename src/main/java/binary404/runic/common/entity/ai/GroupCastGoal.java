@@ -1,5 +1,6 @@
 package binary404.runic.common.entity.ai;
 
+import binary404.runic.common.core.util.ModSounds;
 import binary404.runic.common.entity.EntityCultZombie;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -95,6 +96,9 @@ public class GroupCastGoal extends Goal {
     @Override
     public void tick() {
         this.monster.heal(0.5F);
+        if(this.monster.ticksExisted % 60 == 0 && this.monster.world.rand.nextBoolean()) {
+            this.monster.playSound(ModSounds.chant, 10.F, 1.0F);
+        }
         this.monster.getLookController().setLookPosition(this.monster.castPos.getX(), this.monster.castPos.getY(), this.monster.castPos.getZ());
     }
 }

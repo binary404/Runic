@@ -4,6 +4,7 @@ import binary404.runic.client.FXHelper;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.Random;
 import java.util.function.Supplier;
 
 public class PacketCultFX {
@@ -39,6 +40,9 @@ public class PacketCultFX {
         }
         ctx.get().enqueueWork(() -> {
             FXHelper.wisp(msg.x, msg.y, msg.z, msg.mx, msg.my, msg.mz, 0.4F, 0.4F, 0.4F, 0.08F, 200);
+            Random rand = new Random();
+            if (rand.nextBoolean())
+                FXHelper.rune1(msg.x, msg.y, msg.z, msg.mx, msg.my, msg.mz, 0.2F, 0.2F, 0.2F, 0.0F, 80);
         });
         ctx.get().setPacketHandled(true);
     }

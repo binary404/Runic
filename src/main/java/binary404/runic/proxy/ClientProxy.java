@@ -3,6 +3,7 @@ package binary404.runic.proxy;
 import binary404.runic.client.gui.GuiResearchBrowser;
 import binary404.runic.client.gui.container.GuiRuneMolder;
 import binary404.runic.client.libs.ShaderHandler;
+import binary404.runic.client.render.RenderBeholder;
 import binary404.runic.client.render.RenderCultOrb;
 import binary404.runic.client.render.RenderRuneZombie;
 import binary404.runic.client.render.RenderRuneMolder;
@@ -39,6 +40,7 @@ public class ClientProxy implements IProxy {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.CULT_ZOMBIE, RenderRuneZombie::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.RANGED_CULT_ZOMBIE, RenderRuneZombie::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.CULT_ORB, RenderCultOrb::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.BEHOLDER, RenderBeholder::new);
     }
 
     @Override
