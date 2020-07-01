@@ -1,4 +1,4 @@
-package binary404.runic.client.render;
+package binary404.runic.client.render.tile;
 
 import binary404.runic.client.libs.ClientTickHandler;
 import binary404.runic.client.libs.RenderTypes;

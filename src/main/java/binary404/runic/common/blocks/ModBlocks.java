@@ -33,6 +33,12 @@ public class ModBlocks {
     @ObjectHolder("runic:solvent")
     public static BlockFluidSolvent solvent;
 
+    @ObjectHolder("runic:dungeon_core")
+    public static BlockDungeonCore dungeon_core;
+
+    @ObjectHolder("runic:mob_crystal")
+    public static Block mob_crystal;
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> r = event.getRegistry();
@@ -42,6 +48,10 @@ public class ModBlocks {
         register(r, new Block(builder), "runed_stone");
         register(r, new BlockChisel(builder), "chisel");
         register(r, new BlockRuneMolder(builder), "rune_molder");
+        builder = Block.Properties.create(Material.GLASS).lightValue(11).hardnessAndResistance(1.0F, 199000.0F);
+        register(r, new BlockDungeonCore(builder), "dungeon_core");
+        builder = builder.notSolid();
+        register(r, new BlockMobCrystal(builder), "mob_crystal");
 
         register(r, new BlockFluidSolvent(() -> RegistryFluids.SOLVENT_SOURCE), "solvent");
     }
@@ -53,6 +63,8 @@ public class ModBlocks {
         register(r, new BlockItem(runed_stone, ModItems.defaultBuilder()), "runed_stone");
         register(r, new BlockItem(chisel, ModItems.defaultBuilder()), "chisel");
         register(r, new BlockItem(rune_molder, ModItems.defaultBuilder()), "rune_molder");
+        register(r, new BlockItem(dungeon_core, ModItems.defaultBuilder()), "dungeon_core");
+        register(r, new BlockItem(mob_crystal, ModItems.defaultBuilder()), "mob_crystal");
     }
 
 }

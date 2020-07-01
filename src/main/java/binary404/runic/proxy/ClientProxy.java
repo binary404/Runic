@@ -6,13 +6,17 @@ import binary404.runic.client.libs.ShaderHandler;
 import binary404.runic.client.render.RenderBeholder;
 import binary404.runic.client.render.RenderCultOrb;
 import binary404.runic.client.render.RenderRuneZombie;
-import binary404.runic.client.render.RenderRuneMolder;
+import binary404.runic.client.render.tile.RenderMobCrystal;
+import binary404.runic.client.render.tile.RenderRuneMolder;
+import binary404.runic.common.blocks.ModBlocks;
 import binary404.runic.common.container.ModContainers;
 import binary404.runic.common.entity.ModEntities;
 import binary404.runic.common.tile.ModTiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -36,6 +40,7 @@ public class ClientProxy implements IProxy {
 
     private void registerRendering() {
         ClientRegistry.bindTileEntityRenderer(ModTiles.MOLDER, RenderRuneMolder::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.MOB_CRYSTAL, RenderMobCrystal::new);
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.CULT_ZOMBIE, RenderRuneZombie::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.RANGED_CULT_ZOMBIE, RenderRuneZombie::new);

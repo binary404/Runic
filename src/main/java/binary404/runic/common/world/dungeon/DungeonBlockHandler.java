@@ -1,9 +1,13 @@
 package binary404.runic.common.world.dungeon;
 
 import binary404.runic.Runic;
+import binary404.runic.common.blocks.BlockMobCrystal;
+import binary404.runic.common.container.CommonContainer;
 import binary404.runic.common.entity.ModEntities;
+import binary404.runic.common.tile.world.TileMobCrystal;
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.SpawnerBlock;
 import net.minecraft.entity.EntityType;
@@ -76,6 +80,55 @@ public class DungeonBlockHandler extends StructureProcessor {
                 return new Template.BlockInfo(blockInfo.pos, blockInfo.state, nbt);
             }
         }
+
+        if (blockInfo.state.getBlock() instanceof BlockMobCrystal) {
+            Random rand = placementSettingsIn.getRandom(blockInfo.pos);
+            TileEntity tile = TileEntity.create(blockInfo.nbt);
+
+            if (tile instanceof TileMobCrystal) {
+                double val = rand.nextDouble();
+                if (val > 0.95) {
+                    ((TileMobCrystal) tile).setMobType(EntityType.VINDICATOR);
+                } else if (val > 0.5) {
+                    ((TileMobCrystal) tile).setMobType(ModEntities.BEHOLDER);
+                } else {
+                    ((TileMobCrystal) tile).setMobType(EntityType.CAVE_SPIDER);
+                }
+            }
+            tile.markDirty();
+            CompoundNBT nbt = new CompoundNBT();
+            tile.write(nbt);
+            return new Template.BlockInfo(blockInfo.pos, blockInfo.state, nbt);
+        }
+
+        if (blockInfo.state.getBlock() == Blocks.STONE || blockInfo.state.getBlock() == Blocks.COBBLESTONE || blockInfo.state.getBlock() == Blocks.STONE_BRICKS) {
+            Random rand = placementSettingsIn.getRandom(blockInfo.pos);
+            int randomNumber = rand.nextInt(10);
+            switch (randomNumber) {
+                case 0: {
+                    return new Template.BlockInfo(blockInfo.pos, Blocks.COBBLESTONE.getDefaultState(), blockInfo.nbt);
+                }
+                case 1: {
+                    return new Template.BlockInfo(blockInfo.pos, Blocks.GRAVEL.getDefaultState(), blockInfo.nbt);
+                }
+                case 2: {
+                    return new Template.BlockInfo(blockInfo.pos, Blocks.POLISHED_ANDESITE.getDefaultState(), blockInfo.nbt);
+                }
+                case 4: {
+                    return new Template.BlockInfo(blockInfo.pos, Blocks.MOSSY_COBBLESTONE.getDefaultState(), blockInfo.nbt);
+                }
+                case 6: {
+                    return new Template.BlockInfo(blockInfo.pos, Blocks.STONE.getDefaultState(), blockInfo.nbt);
+                }
+                case 8: {
+                    return new Template.BlockInfo(blockInfo.pos, Blocks.STONE_BRICKS.getDefaultState(), blockInfo.nbt);
+                }
+                case 9: {
+                    return new Template.BlockInfo(blockInfo.pos, Blocks.ANDESITE.getDefaultState(), blockInfo.nbt);
+                }
+            }
+        }
+
         return blockInfo;
     }
 

@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeManager;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.jigsaw.JigsawManager;
@@ -21,6 +22,7 @@ import net.minecraft.world.gen.feature.structure.*;
 import net.minecraft.world.gen.feature.template.TemplateManager;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class DungeonStructure extends ScatteredStructure<NoFeatureConfig> {
@@ -35,22 +37,27 @@ public class DungeonStructure extends ScatteredStructure<NoFeatureConfig> {
     );
 
     private static final Set<String> STARTS = ImmutableSet.of(
-            "start1", "start2");
+            "start1"
+    );
 
     private static final Set<String> HALLWAY = ImmutableSet.of(
-            "hallway", "stair1"
+            "hallway1", "hallway2", "hallway3", "hallway4"
+    );
+
+    private static final Set<String> STAIR = ImmutableSet.of(
+            "stair1"
     );
 
     private static final Set<String> ROOMS = ImmutableSet.of(
-            "room1", "room2"
+            "room1_1", "room1_2", "room1_3"
     );
 
     static {
         DungeonBlockHandler handler = new DungeonBlockHandler();
         JigsawHelper.pool("dungeon", "starts").processor(handler).addMult("starts", STARTS, 1).register(JigsawPattern.PlacementBehaviour.RIGID);
-        JigsawHelper.pool("dungeon", "hallway").processor(handler).addMult("hallway", HALLWAY, 1).register(JigsawPattern.PlacementBehaviour.RIGID);
+        JigsawHelper.pool("dungeon", "hallway").processor(handler).addMult("hallway", HALLWAY, 1).addMult("stair", STAIR, 1).register(JigsawPattern.PlacementBehaviour.RIGID);
         JigsawHelper.pool("dungeon", "room").processor(handler).addMult("room", ROOMS, 1).register(JigsawPattern.PlacementBehaviour.RIGID);
-        JigsawHelper.pool("dungeon", "end").processor(handler).addMult("room", ROOMS, 100).addMult("hallway", HALLWAY, 120).register(JigsawPattern.PlacementBehaviour.RIGID);
+        JigsawHelper.pool("dungeon", "exit").processor(handler).addMult("room", ROOMS, 100).addMult("hallway", HALLWAY, 110).register(JigsawPattern.PlacementBehaviour.RIGID);
     }
 
     public DungeonStructure() {
@@ -68,6 +75,15 @@ public class DungeonStructure extends ScatteredStructure<NoFeatureConfig> {
         return (int) Math.ceil(15 / 1.5);
     }
 
+    @Override
+    protected int getBiomeFeatureDistance(ChunkGenerator<?> chunkGenerator) {
+        return 16;
+    }
+
+    @Override
+    protected int getBiomeFeatureSeparation(ChunkGenerator<?> chunkGenerator) {
+        return 4;
+    }
 
     @Override
     protected int getSeedModifier() {
@@ -93,7 +109,7 @@ public class DungeonStructure extends ScatteredStructure<NoFeatureConfig> {
         @Override
         public void init(ChunkGenerator<?> generator, TemplateManager templateManagerIn, int chunkX, int chunkZ, Biome biomeIn) {
             BlockPos pos = new BlockPos(chunkX * 16, 40, chunkZ * 16);
-            JigsawManager.addPieces(new ResourceLocation("runic", "dungeon/starts"), 15, Piece::new, generator, templateManagerIn, pos, components, this.rand);
+            JigsawManager.addPieces(new ResourceLocation("runic", "dungeon/starts"), 25, Piece::new, generator, templateManagerIn, pos, components, this.rand);
             recalculateStructureSize();
 
             int maxTop = 60;
