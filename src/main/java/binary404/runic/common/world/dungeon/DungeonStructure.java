@@ -28,12 +28,9 @@ import java.util.Set;
 public class DungeonStructure extends ScatteredStructure<NoFeatureConfig> {
 
     private static final List<Biome.SpawnListEntry> ENEMIES = Lists.newArrayList(
-            new Biome.SpawnListEntry(EntityType.ZOMBIE, 8, 1, 3),
-            new Biome.SpawnListEntry(EntityType.SKELETON, 8, 1, 3),
-            new Biome.SpawnListEntry(EntityType.CREEPER, 8, 1, 3),
-            new Biome.SpawnListEntry(EntityType.WITCH, 4, 1, 1),
-            new Biome.SpawnListEntry(EntityType.ILLUSIONER, 10, 1, 1),
-            new Biome.SpawnListEntry(ModEntities.BEHOLDER, 1, 1, 10)
+            new Biome.SpawnListEntry(EntityType.WITCH, 80, 1, 1),
+            new Biome.SpawnListEntry(EntityType.ILLUSIONER, 140, 1, 1),
+            new Biome.SpawnListEntry(ModEntities.BEHOLDER, 100, 1, 1)
     );
 
     private static final Set<String> STARTS = ImmutableSet.of(
@@ -77,12 +74,12 @@ public class DungeonStructure extends ScatteredStructure<NoFeatureConfig> {
 
     @Override
     protected int getBiomeFeatureDistance(ChunkGenerator<?> chunkGenerator) {
-        return 16;
+        return 9;
     }
 
     @Override
     protected int getBiomeFeatureSeparation(ChunkGenerator<?> chunkGenerator) {
-        return 4;
+        return 3;
     }
 
     @Override

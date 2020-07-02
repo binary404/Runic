@@ -65,13 +65,48 @@ public class DungeonBlockHandler extends StructureProcessor {
                 MobSpawnerTileEntity spawner = (MobSpawnerTileEntity) tile;
                 AbstractSpawner logic = spawner.getSpawnerBaseLogic();
 
-                double val = rand.nextDouble();
-                if (val > 0.95) {
-                    logic.setEntityType(EntityType.VINDICATOR);
-                } else if (val > 0.5) {
-                    logic.setEntityType(ModEntities.BEHOLDER);
-                } else {
-                    logic.setEntityType(EntityType.CAVE_SPIDER);
+                int val = rand.nextInt(10);
+                switch (val) {
+                    case 0: {
+                        logic.setEntityType(EntityType.VINDICATOR);
+                        break;
+                    }
+                    case 1: {
+                        logic.setEntityType(ModEntities.BEHOLDER);
+                        break;
+                    }
+                    case 2: {
+                        logic.setEntityType(EntityType.CAVE_SPIDER);
+                        break;
+                    }
+                    case 3: {
+                        logic.setEntityType(EntityType.BLAZE);
+                        break;
+                    }
+                    case 4: {
+                        logic.setEntityType(EntityType.ZOMBIE);
+                        break;
+                    }
+                    case 5: {
+                        logic.setEntityType(EntityType.SKELETON);
+                        break;
+                    }
+                    case 6: {
+                        logic.setEntityType(EntityType.WITHER_SKELETON);
+                        break;
+                    }
+                    case 7: {
+                        logic.setEntityType(EntityType.WITCH);
+                        break;
+                    }
+                    case 8: {
+                        logic.setEntityType(EntityType.ENDERMAN);
+                        break;
+                    }
+                    case 9: {
+                        logic.setEntityType(EntityType.EVOKER);
+                        break;
+                    }
                 }
 
                 tile.markDirty();
@@ -79,26 +114,6 @@ public class DungeonBlockHandler extends StructureProcessor {
                 tile.write(nbt);
                 return new Template.BlockInfo(blockInfo.pos, blockInfo.state, nbt);
             }
-        }
-
-        if (blockInfo.state.getBlock() instanceof BlockMobCrystal) {
-            Random rand = placementSettingsIn.getRandom(blockInfo.pos);
-            TileEntity tile = TileEntity.create(blockInfo.nbt);
-
-            if (tile instanceof TileMobCrystal) {
-                double val = rand.nextDouble();
-                if (val > 0.95) {
-                    ((TileMobCrystal) tile).setMobType(EntityType.VINDICATOR);
-                } else if (val > 0.5) {
-                    ((TileMobCrystal) tile).setMobType(ModEntities.BEHOLDER);
-                } else {
-                    ((TileMobCrystal) tile).setMobType(EntityType.CAVE_SPIDER);
-                }
-            }
-            tile.markDirty();
-            CompoundNBT nbt = new CompoundNBT();
-            tile.write(nbt);
-            return new Template.BlockInfo(blockInfo.pos, blockInfo.state, nbt);
         }
 
         if (blockInfo.state.getBlock() == Blocks.STONE || blockInfo.state.getBlock() == Blocks.COBBLESTONE || blockInfo.state.getBlock() == Blocks.STONE_BRICKS) {
