@@ -401,7 +401,7 @@ public class GuiResearchBrowser extends Screen {
             GL11.glEnable((int) 3042);
             RenderSystem.blendFunc((int) 770, (int) 771);
             if (iconResearch.hasMeta(ResearchEntry.EnumResearchMeta.ROUND)) {
-                this.blit(iconX - 8, iconY - 8, 144, 48 + (iconResearch.hasMeta(ResearchEntry.EnumResearchMeta.HIDDEN) ? 32 : 0), 32, 32);
+                this.blit(iconX - 8, iconY - 8, 144, 48, 32, 32);
             } else {
                 int ix = 80;
                 int iy = 48;

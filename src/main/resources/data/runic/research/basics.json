@@ -9,7 +9,7 @@
       "category": "BASICS",
       "location": [
         0,
-        0
+        -2
       ],
       "meta": [
         "ROUND"
@@ -17,36 +17,73 @@
       "stages": [
         {
           "text": "runic.research.FIRST_STEPS.stage.1",
-          "recipes": ["runic:chisel_fake"],
-          "required_craft": ["runic:chisel"]
+          "recipes": [
+            "runic:chisel_fake"
+          ],
+          "required_craft": [
+            "runic:chisel"
+          ]
         },
         {
           "text": "runic.research.FIRST_STEPS.stage.2",
-          "required_research": ["f_lava_swim"]
+          "required_research": [
+            "f_lava_swim"
+          ]
         },
         {
-          "text": "runic.research.FIRST_STEPS.stage.3"
+          "text": "runic.research.FIRST_STEPS.stage.3",
+          "required_item": [
+            "runic:solvent_bucket"
+          ]
+        },
+        {
+          "text": "runic.research.FIRST_STEPS.stage.4"
         }
       ]
     },
     {
-      "key": "BASIC_RUNES",
+      "key": "UNLOCK_RUNES",
       "name": "runic.research.BASIC_RUNES.title",
       "icons": [
-        "runic:textures/item/basic_mold.png"
+        "runic:textures/item/guide.png"
       ],
       "category": "BASICS",
       "location": [
-        0, 2
+        0,
+        0
       ],
-      "parents": ["FIRST_STEPS", "epiphany_solvent"],
       "meta": [
         "ROUND"
       ],
+      "parents": [
+        "FIRST_STEPS"
+      ],
       "stages": [
         {
-          "text": "runic.research.BASIC_RUNES.stage.1",
-          "required_item":["runic:basic_mold"]
+          "text": "runic.research.BASIC_RUNES.stage.1"
+        }
+      ]
+    },
+    {
+      "key": "UNLOCK_ARTIFACT",
+      "name": "runic.research.UNLOCK_ARTIFACT.title",
+      "icons": [
+        "runic:textures/item/guide.png"
+      ],
+      "category": "BASICS",
+      "location": [
+        -2,
+        3
+      ],
+      "meta": [
+        "ROUND", "HIDDEN"
+      ],
+      "parents": [
+        "~FIRST_STEPS", "BASIC_RUNES"
+      ],
+      "stages": [
+        {
+          "text": "runic.research.UNLOCK_ARTIFACT.stage.1"
         }
       ]
     }
