@@ -58,6 +58,9 @@
       "parents": [
         "FIRST_STEPS"
       ],
+      "siblings": [
+        "UNLOCK_ARTIFACT"
+      ],
       "stages": [
         {
           "text": "runic.research.BASIC_RUNES.stage.1"
@@ -79,7 +82,7 @@
         "ROUND", "HIDDEN"
       ],
       "parents": [
-        "~FIRST_STEPS", "BASIC_RUNES"
+        "BASIC_RUNES"
       ],
       "stages": [
         {
