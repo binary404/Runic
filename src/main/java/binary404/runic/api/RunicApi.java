@@ -2,6 +2,7 @@ package binary404.runic.api;
 
 import binary404.runic.api.internal.CommonInternals;
 import binary404.runic.api.internal.IRunicRecipe;
+import binary404.runic.api.multiblock.BluePrint;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
@@ -18,13 +19,8 @@ public class RunicApi {
         return CommonInternals.craftingRecipeCatalog;
     }
 
-
-    public static HashMap<ResourceLocation, Object> getCraftingRecipesFake() {
-        return CommonInternals.craftingRecipeCatalogFake;
-    }
-
-    public static void addFakeCraftingRecipe(ResourceLocation registry, Object recipe) {
-        getCraftingRecipesFake().put(registry, recipe);
+    public static void addMultiblockRecipeToCatalog(ResourceLocation registry, BluePrint recipe) {
+        getCraftingRecipes().put(registry, recipe);
     }
 
 }

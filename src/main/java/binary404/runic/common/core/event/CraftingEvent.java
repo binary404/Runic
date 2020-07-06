@@ -3,7 +3,6 @@ package binary404.runic.common.core.event;
 import binary404.runic.Runic;
 import binary404.runic.common.blocks.ModBlocks;
 import binary404.runic.common.config.ResearchManager;
-import binary404.runic.common.entity.EntitySpecialItem;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
@@ -38,27 +37,4 @@ public class CraftingEvent {
             }
         }
     }
-
-    @SubscribeEvent
-    public static void entityAdded(EntityJoinWorldEvent event) {
-        if (event.getWorld().isRemote) {
-            return;
-        }
-        Entity entity = event.getEntity();
-        if (entity instanceof ItemEntity && !(entity instanceof EntitySpecialItem)) {
-            ItemEntity entityItem = (ItemEntity) entity;
-            ItemStack stack = entityItem.getItem();
-            if(stack != null && stack.getItem() == Items.LAPIS_LAZULI) {
-                EntitySpecialItem newEntity = new EntitySpecialItem(event.getWorld(), entityItem.getPosX(), entityItem.getPosY(), entityItem.getPosZ(), stack);
-                newEntity.setMotion(entityItem.getMotion().x, entityItem.getMotion().y, entityItem.getMotion().z);
-                newEntity.setDefaultPickupDelay();
-                if (newEntity != null) {
-                    event.getEntity().remove();
-                    event.setCanceled(true);
-                    event.getWorld().addEntity(newEntity);
-                }
-            }
-        }
-    }
-
 }

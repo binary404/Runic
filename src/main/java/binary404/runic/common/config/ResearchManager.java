@@ -161,6 +161,11 @@ public class ResearchManager {
         return parents != null ? CapabilityHelper.knowsResearchStrict(player, parents) : true;
     }
 
+    public static InputStreamReader getReader(String s) {
+        InputStream stream = ResearchManager.class.getClassLoader().getResourceAsStream(s);
+        return new InputStreamReader(stream);
+    }
+
     public static void parseAllResearch() {
         Runic.LOGGER.info("<Runic-ResearchManager> Started Parsing Research");
         JsonParser parser = new JsonParser();
@@ -170,9 +175,7 @@ public class ResearchManager {
                 s = s + ".json";
             }
             try {
-                InputStream stream = Runic.class.getClassLoader().getResourceAsStream(s);
-                System.out.println(stream);
-                InputStreamReader reader = new InputStreamReader(stream);
+                InputStreamReader reader = getReader(s);
                 JsonObject obj = parser.parse((Reader) reader).getAsJsonObject();
                 JsonArray entries = obj.get("entries").getAsJsonArray();
                 int a = 0;
@@ -181,6 +184,7 @@ public class ResearchManager {
                     try {
                         JsonObject entry = element.getAsJsonObject();
                         ResearchEntry researchEntry = ResearchManager.parseResearchJson(entry);
+                        Runic.LOGGER.info("Parsed research entry " + researchEntry.getName());
                         ResearchManager.addResearchToCategory(researchEntry);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -191,6 +195,7 @@ public class ResearchManager {
                 Runic.LOGGER.error("Loaded " + a + " research entries from " + loc.toString());
             } catch (Exception e) {
                 Runic.LOGGER.error("Error parsing all research files");
+                e.printStackTrace();
             }
         }
     }
@@ -256,9 +261,7 @@ public class ResearchManager {
                 throw new Exception("Illegal stage text in research JSon");
             }
             if (stageObj.has("recipes")) {
-                System.out.println("found recipes");
                 stage.setRecipes(ResearchManager.arrayJsonToResourceLocations(stageObj.get("recipes").getAsJsonArray()));
-                System.out.println(stage.getRecipes());
             }
             if (stageObj.has("required_item")) {
                 stage.setObtain(ResearchManager.parseJsonOreList(entry.getKey(), ResearchManager.arrayJsonToString(stageObj.get("required_item").getAsJsonArray())));
@@ -322,6 +325,7 @@ public class ResearchManager {
                 entry.setAddenda(addenda.toArray(new ResearchAddendum[addenda.size()]));
             }
         }
+        System.out.println(entry.getName());
         return entry;
     }
 
@@ -441,7 +445,6 @@ public class ResearchManager {
             Item it = ForgeRegistries.ITEMS.getValue(new ResourceLocation(name));
             if (it != null) {
                 stack = new ItemStack(it, num);
-                System.out.println(stack);
                 if (nbt != null) {
                     stack.setTag(JsonToNBT.getTagFromJson((String) nbt));
                 }

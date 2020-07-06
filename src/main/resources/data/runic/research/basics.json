@@ -16,28 +16,7 @@
       ],
       "stages": [
         {
-          "text": "runic.research.FIRST_STEPS.stage.1",
-          "recipes": [
-            "runic:chisel_fake"
-          ],
-          "required_craft": [
-            "runic:chisel"
-          ]
-        },
-        {
-          "text": "runic.research.FIRST_STEPS.stage.2",
-          "required_research": [
-            "f_lava_swim"
-          ]
-        },
-        {
-          "text": "runic.research.FIRST_STEPS.stage.3",
-          "required_item": [
-            "runic:solvent_bucket"
-          ]
-        },
-        {
-          "text": "runic.research.FIRST_STEPS.stage.4"
+          "text": "runic.research.FIRST_STEPS.stage.1"
         }
       ]
     },
@@ -63,7 +42,23 @@
       ],
       "stages": [
         {
-          "text": "runic.research.BASIC_RUNES.stage.1"
+          "text": "runic.research.UNLOCK_RUNES.stage.1",
+          "recipes": [
+            "runic:blank_rune",
+            "minecraft:anvil",
+            "minecraft:furnace"
+          ],
+          "required_craft": [
+            "runic:blank_rune",
+            "minecraft:anvil",
+            "minecraft:furnace"
+          ]
+        },
+        {
+          "text": "runic.research.UNLOCK_RUNES.stage.2",
+          "recipes": [
+            "runic:test"
+          ]
         }
       ]
     },
@@ -76,13 +71,14 @@
       "category": "BASICS",
       "location": [
         -2,
-        3
+        -2
       ],
       "meta": [
-        "ROUND", "HIDDEN"
+        "ROUND",
+        "HIDDEN"
       ],
       "parents": [
-        "BASIC_RUNES"
+        "UNLOCK_RUNES"
       ],
       "stages": [
         {

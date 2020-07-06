@@ -3,6 +3,9 @@ package binary404.runic.client.gui;
 import binary404.runic.api.capability.CapabilityHelper;
 import binary404.runic.api.capability.IPlayerKnowledge;
 import binary404.runic.api.internal.CommonInternals;
+import binary404.runic.api.multiblock.BluePrint;
+import binary404.runic.api.multiblock.Matrix;
+import binary404.runic.api.multiblock.Part;
 import binary404.runic.api.research.*;
 import binary404.runic.client.gui.research_extras.Page;
 import binary404.runic.client.gui.research_extras.PageImage;
@@ -11,37 +14,52 @@ import binary404.runic.common.config.RecipeConfig;
 import binary404.runic.common.core.network.PacketHandler;
 import binary404.runic.common.core.network.research.PacketSyncProgressToServer;
 import binary404.runic.common.core.util.InventoryUtils;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ResourceLoadProgressGui;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapelessRecipe;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.*;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class GuiResearchPage extends Screen {
 
     public static LinkedList<ResourceLocation> history = new LinkedList<>();
     protected int paneWidth = 256;
+    BlueprintBlockAccess blockAccess;
     protected int paneHeight = 181;
     protected double guiMapX;
     protected double guiMapY;
@@ -62,6 +80,7 @@ public class GuiResearchPage extends Screen {
     float rotZ = 0.0f;
     long lastCheck = 0L;
     float pt;
+    HashMap<ResourceLocation, BlueprintBlockAccess> blockAccessIcons;
     ResourceLocation tex1 = new ResourceLocation("runic", "textures/gui/gui_researchrock.png");
     ResourceLocation tex2 = new ResourceLocation("runic", "textures/gui/gui_researchrock_overlay.png");
     ResourceLocation tex4 = new ResourceLocation("runic", "textures/gui/stone.png");
@@ -112,6 +131,7 @@ public class GuiResearchPage extends Screen {
         if (recipe != null) {
             shownRecipe = recipe;
         }
+        this.blockAccessIcons = new HashMap();
     }
 
     @Override
@@ -423,6 +443,12 @@ public class GuiResearchPage extends Screen {
                 RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 if (list.get(i) instanceof ItemStack) {
                     this.drawStackAt((ItemStack) list.get(i), x + 287 + sh - le, y - 1, mx, my, false);
+                } else if (list.get(i) instanceof Part[][][]) {
+                    BlueprintBlockAccess ba = this.blockAccessIcons.get(rk);
+                    if (ba == null)
+                        this.blockAccessIcons.put(rk, ba = new BlueprintBlockAccess((Part[][][]) list.get(i), true));
+                    int h = ((Part[][][]) list.get(i)).length;
+                    renderBluePrint(ba, x + 295 + sh - le, y + 6 + h, 4.0F, (Part[][][]) list.get(i), -5000, -5000, null);
                 }
                 y += space;
             }
@@ -614,6 +640,9 @@ public class GuiResearchPage extends Screen {
             if ((recipe = list.get(this.recipePage % list.size())) != null) {
                 if (recipe instanceof ICraftingRecipe) {
                     this.drawCraftingPage(x + 128, y + 128, mx, my, (ICraftingRecipe) recipe);
+                } else if (recipe instanceof BluePrint) {
+                    drawCompoundCraftingPage(x + 128, y + 128, mx, my, (BluePrint) recipe);
+                    this.renderingCompound = true;
                 }
             }
             if (this.hasRecipePages) {
@@ -659,8 +688,15 @@ public class GuiResearchPage extends Screen {
             NonNullList items = recipe.getIngredients();
             for (int i = 0; i < rw && i < 3; ++i) {
                 for (int j = 0; j < rh && j < 3; ++j) {
-                    if (items.get(i + j * rw) == null) continue;
+                    if (items.get(i + j * rw) == null)
+                        continue;
                     Ingredient toRender = (Ingredient) items.get(i + j * rw);
+                    if (toRender.getMatchingStacks() == null)
+                        continue;
+                    if (toRender.hasNoMatchingItems())
+                        continue;
+                    if (toRender == Ingredient.EMPTY)
+                        continue;
                     this.drawStackAt(toRender.getMatchingStacks()[0], x - 40 + i * 32, y - 40 + j * 32, mx, my, true);
                 }
             }
@@ -674,11 +710,88 @@ public class GuiResearchPage extends Screen {
                 if (items.get(i) == null)
                     continue;
                 Ingredient toRender = (Ingredient) items.get(i);
+                if (toRender.getMatchingStacks() == null)
+                    continue;
+                if (toRender.hasNoMatchingItems())
+                    continue;
+                if (toRender == Ingredient.EMPTY)
+                    continue;
                 this.drawStackAt(toRender.getMatchingStacks()[0], x + -40 + i % 3 * 32, y - 40 + i / 3 * 32, mx, my, true);
             }
         }
         recipeCycle++;
         RenderSystem.popMatrix();
+    }
+
+    private void drawCompoundCraftingPage(int x, int y, int mx, int my, BluePrint recipe) {
+        if (recipe.getParts() == null) return;
+        if (this.blockAccess == null) this.blockAccess = new BlueprintBlockAccess(recipe.getParts(), false);
+        int ySize = recipe.getParts().length;
+        int xSize = recipe.getParts()[0].length;
+        int zSize = recipe.getParts()[0][0].length;
+        String text = I18n.format("recipe.type.construct");
+        int offset = this.minecraft.fontRenderer.getStringWidth(text);
+        this.minecraft.fontRenderer.drawString(text, x - offset / 2, y - 104, 5263440);
+        int s = Math.max(Math.max(xSize, zSize), ySize) * 2;
+        float scale = (38 - s);
+        renderBluePrint(this.blockAccess, x, y, scale, recipe.getParts(), mx, my, recipe.getIngredientList());
+        this.minecraft.textureManager.bindTexture(this.tex1);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, mouseInside(x + 80, y + 100, 8, 8, mx, my) ? 1.0F : 0.75F);
+        blit(x + 80, y + 100, 160, 224, 8, 8);
+    }
+
+    IRenderTypeBuffer.Impl buffers = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
+
+    private void renderBluePrint(BlueprintBlockAccess ba, int x, int y, float scale, Part[][][] blueprint, int mx, int my, ItemStack[] ingredients) {
+        int ySize = blueprint.length;
+        int xSize = blueprint[0].length;
+        int zSize = blueprint[0][0].length;
+        this.transX = (x - xSize / 2);
+        this.transY = y - (float) Math.sqrt((ySize * ySize + xSize * xSize + zSize * zSize)) / 2.0F;
+        MatrixStack stack = new MatrixStack();
+        stack.translate(this.transX, this.transY, Math.max(ySize, Math.max(xSize, zSize)));
+        stack.scale(scale, -scale, 1.0F);
+        stack.rotate(new Quaternion(this.rotX, 1.0F, 0.0F, 0.0F));
+        stack.rotate(new Quaternion(this.rotY, 0.0F, 1.0F, 0.0F));
+        stack.translate(zSize / -2.0F, ySize / -2.0F, xSize / -2.0F);
+        this.minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+        Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+        for (int h = 0; h < ySize; h++) {
+            for (int l = 0; l < xSize; l++) {
+                for (int w = 0; w < zSize; w++) {
+                    BlockPos pos = new BlockPos(l, h, w);
+                    BlockState state = ba.getBlockState(pos);
+                    stack.push();
+                    stack.translate(l, h, w);
+                    stack.translate(-l, -h, -w);
+                    renderBlock(state, pos, buffers, stack);
+                    stack.pop();
+                }
+            }
+        }
+        Tessellator.getInstance().draw();
+        if (ingredients != null) for (int a = 0; a < ingredients.length; a++) {
+            if (ingredients[a] != null && !ingredients[a].isEmpty() && ingredients[a].getItem() != null) {
+                GL11.glDisable(2896);
+                GL11.glEnable(32826);
+                GL11.glEnable(2903);
+                GL11.glEnable(2896);
+                drawStackAt(ingredients[a], x - 85 + a * 17, y + 90, mx, my, true);
+                GL11.glDisable(2896);
+                GL11.glDepthMask(true);
+                GL11.glEnable(2929);
+            }
+        }
+        RenderHelper.disableStandardItemLighting();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.enableBlend();
+        RenderHelper.disableStandardItemLighting();
+    }
+
+    public static void renderBlock(BlockState state, BlockPos pos, IRenderTypeBuffer.Impl buffers, MatrixStack ms) {
+        if (pos != null) {
+            Minecraft.getInstance().getBlockRendererDispatcher().renderModel(state, pos, Minecraft.getInstance().world, ms, Tessellator.getInstance().getBuffer(), EmptyModelData.INSTANCE);
+        }
     }
 
     void drawPopupAt(int x, int y, int mx, int my, String text) {
@@ -889,10 +1002,7 @@ public class GuiResearchPage extends Screen {
     private void addRecipesToList(ResourceLocation rk, LinkedHashMap<ResourceLocation, ArrayList> recipeLists2, LinkedHashMap<ResourceLocation, ArrayList> recipeOutputs2, ResourceLocation rkey) {
         Object recipe = CommonInternals.getCatalogRecipe(rk);
         if (recipe == null) {
-            recipe = CommonInternals.getCatalogRecipeFake(rk);
-        }
-        if (recipe == null) {
-            recipe = RecipeConfig.manager.getRecipe(rk);
+            recipe = Minecraft.getInstance().world.getRecipeManager().getRecipe(rk).get();
         }
         if (recipe == null) {
             recipe = RecipeConfig.recipeGroups.get(rk.toString());
@@ -917,6 +1027,16 @@ public class GuiResearchPage extends Screen {
                 IRecipe re = (IRecipe) recipe;
                 list.add(re);
                 outputs.add(re.getRecipeOutput());
+            } else if (recipe instanceof BluePrint) {
+                BluePrint r = (BluePrint) recipe;
+                if (CapabilityHelper.knowsResearchStrict(this.minecraft.player, new String[]{r.getResearch()})) {
+                    list.add(r);
+                    if (r.getDisplayStack() != null) {
+                        outputs.add(r.getDisplayStack());
+                    } else {
+                        outputs.add(r.getParts());
+                    }
+                }
             }
         }
     }
@@ -1006,10 +1126,7 @@ public class GuiResearchPage extends Screen {
     private int findRecipePage(ResourceLocation rk, ItemStack stack, int start) {
         Object recipe = CommonInternals.getCatalogRecipe(rk);
         if (recipe == null) {
-            recipe = CommonInternals.getCatalogRecipeFake(rk);
-        }
-        if (recipe == null) {
-            recipe = RecipeConfig.manager.getRecipe(rk);
+            recipe = Minecraft.getInstance().world.getRecipeManager().getRecipe(rk).get();
         }
         if (recipe == null) {
             recipe = RecipeConfig.recipeGroups.get(rk.toString());
@@ -1086,4 +1203,141 @@ public class GuiResearchPage extends Screen {
             }
         }
     }
+
+    public static class BlueprintBlockAccess implements IBlockReader {
+        private final Part[][][] data;
+        private BlockState[][][] structure;
+        public int sliceLine;
+
+        public BlueprintBlockAccess(Part[][][] data, boolean target) {
+            this.sliceLine = 0;
+
+
+            this.data = new Part[data.length][data[0].length][data[0][0].length];
+            for (int y = 0; y < data.length; y++) {
+                for (int x = 0; x < data[0].length; x++) {
+                    for (int z = 0; z < data[0][0].length; z++)
+                        this.data[y][x][z] = data[y][x][z];
+                }
+            }
+            this.structure = new BlockState[data.length][data[0].length][data[0][0].length];
+            if (target)
+                for (int y = 0; y < this.data.length; y++) {
+                    Matrix matrix = new Matrix(this.data[y]);
+                    matrix.Rotate90DegRight(3);
+                    this.data[y] = matrix.getMatrix();
+                }
+            for (int y = 0; y < data.length; y++) {
+                for (int x = 0; x < data[0].length; x++) {
+                    for (int z = 0; z < data[0][0].length; z++)
+                        this.structure[data.length - y - 1][x][z] = target ? convertTarget(x, y, z) : convert(x, y, z);
+                }
+            }
+        }
+
+        private BlockState convert(int x, int y, int z) {
+            if (this.data[y][x][z] == null || this.data[y][x][z].getSource() == null)
+                return Blocks.AIR.getDefaultState();
+            if (this.data[y][x][z].getSource() instanceof ItemStack &&
+                    Block.getBlockFromItem(((ItemStack) this.data[y][x][z].getSource()).getItem()) != null) {
+                return Block.getBlockFromItem(((ItemStack) this.data[y][x][z].getSource()).getItem()).getDefaultState();
+            }
+            if (this.data[y][x][z].getSource() instanceof Block) {
+                return ((Block) this.data[y][x][z].getSource()).getDefaultState();
+            }
+            if (this.data[y][x][z].getSource() instanceof BlockState) {
+                return (BlockState) this.data[y][x][z].getSource();
+            }
+            if (this.data[y][x][z].getSource() instanceof Material) {
+                if ((Material) this.data[y][x][z].getSource() == Material.LAVA) {
+                    return Blocks.LAVA.getDefaultState();
+                }
+                if ((Material) this.data[y][x][z].getSource() == Material.WATER) {
+                    return Blocks.WATER.getDefaultState();
+                }
+            }
+            return Blocks.AIR.getDefaultState();
+        }
+
+
+        private BlockState convertTarget(int x, int y, int z) {
+            if (this.data[y][x][z] == null) return Blocks.AIR.getDefaultState();
+            if (this.data[y][x][z].getTarget() == null) return convert(x, y, z);
+            if (this.data[y][x][z].getTarget() instanceof ItemStack &&
+                    Block.getBlockFromItem(((ItemStack) this.data[y][x][z].getTarget()).getItem()) != null) {
+                return Block.getBlockFromItem(((ItemStack) this.data[y][x][z].getTarget()).getItem()).getDefaultState();
+            }
+            if (this.data[y][x][z].getTarget() instanceof Block) {
+                return ((Block) this.data[y][x][z].getTarget()).getDefaultState();
+            }
+            if (this.data[y][x][z].getTarget() instanceof BlockState) {
+                return (BlockState) this.data[y][x][z].getTarget();
+            }
+            if (this.data[y][x][z].getTarget() instanceof Material) {
+                if ((Material) this.data[y][x][z].getTarget() == Material.LAVA) {
+                    return Blocks.LAVA.getDefaultState();
+                }
+                if ((Material) this.data[y][x][z].getTarget() == Material.WATER) {
+                    return Blocks.WATER.getDefaultState();
+                }
+            }
+            return Blocks.AIR.getDefaultState();
+        }
+
+        public TileEntity getTileEntity(BlockPos pos) {
+            return null;
+        }
+
+        @Override
+        public int getHeight() {
+            return this.data.length;
+        }
+
+        @Override
+        public BlockRayTraceResult rayTraceBlocks(RayTraceContext context) {
+            return null;
+        }
+
+        @Nullable
+        @Override
+        public BlockRayTraceResult rayTraceBlocks(Vec3d startVec, Vec3d endVec, BlockPos pos, VoxelShape shape, BlockState state) {
+            return null;
+        }
+
+        @Override
+        public int getMaxLightLevel() {
+            return 15728880;
+        }
+
+        @Override
+        public int getLightValue(BlockPos pos) {
+            return 15728880;
+        }
+
+        public BlockState getBlockState(BlockPos pos) {
+            int x = pos.getX();
+            int y = pos.getY();
+            int z = pos.getZ();
+
+            if (this.sliceLine > this.structure.length) this.sliceLine = 0;
+
+            if (y >= 0 && y < this.structure.length - this.sliceLine &&
+                    x >= 0 && x < this.structure[y].length &&
+                    z >= 0 && z < this.structure[y][x].length) {
+                return this.structure[y][x][z];
+            }
+            return Blocks.AIR.getDefaultState();
+        }
+
+        @Override
+        public IFluidState getFluidState(BlockPos pos) {
+            return Blocks.AIR.getFluidState(Blocks.AIR.getDefaultState());
+        }
+
+        public boolean isAirBlock(BlockPos pos) {
+            return (getBlockState(pos).getBlock() == Blocks.AIR);
+        }
+
+    }
+
 }

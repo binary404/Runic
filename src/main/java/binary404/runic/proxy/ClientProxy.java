@@ -39,7 +39,6 @@ public class ClientProxy implements IProxy {
     }
 
     private void registerRendering() {
-        ClientRegistry.bindTileEntityRenderer(ModTiles.MOLDER, RenderRuneMolder::new);
         ClientRegistry.bindTileEntityRenderer(ModTiles.MOB_CRYSTAL, RenderMobCrystal::new);
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.CULT_ZOMBIE, RenderRuneZombie::new);

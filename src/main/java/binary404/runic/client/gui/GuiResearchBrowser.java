@@ -2,19 +2,17 @@ package binary404.runic.client.gui;
 
 import binary404.runic.api.capability.CapabilityHelper;
 import binary404.runic.api.capability.IPlayerKnowledge;
-import binary404.runic.api.research.*;
+import binary404.runic.api.research.ResearchCategories;
+import binary404.runic.api.research.ResearchCategory;
+import binary404.runic.api.research.ResearchEntry;
 import binary404.runic.client.utils.RenderingUtils;
-import binary404.runic.common.config.ResearchConfig;
 import binary404.runic.common.config.ResearchManager;
 import binary404.runic.common.core.network.PacketHandler;
 import binary404.runic.common.core.network.research.PacketSyncProgressToServer;
 import binary404.runic.common.core.network.research.PacketSyncResearchFlagsToServer;
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -493,7 +491,7 @@ public class GuiResearchBrowser extends Screen {
                     }
                 }
             } else {
-                text.add("@@\u00a7c" + I18n.format((String) "runic.researchmissing"));
+                text.add("@@\u00a7c" + I18n.format("runic.researchmissing"));
                 int a = 0;
                 for (String p2 : this.currentHighlight.getParents()) {
                     if (!CapabilityHelper.knowsResearchStrict(this.player, p2)) {

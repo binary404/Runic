@@ -1,13 +1,14 @@
 package binary404.runic.data;
 
 import binary404.runic.common.blocks.ModBlocks;
+import binary404.runic.common.items.ModItems;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Items;
-import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.function.Consumer;
 
@@ -32,15 +33,13 @@ public class RecipeProvider extends net.minecraft.data.RecipeProvider {
                 .setGroup("runic:runed_stone")
                 .addCriterion("has_item", hasItem(ModBlocks.runed_stone))
                 .build(consumer);
-        ShapedRecipeBuilder.shapedRecipe(ModBlocks.chisel)
-                .key('P', Blocks.PISTON)
-                .key('G', Items.GOLD_INGOT)
-                .key('R', Blocks.REDSTONE_BLOCK)
-                .key('S', ModBlocks.runed_stone)
-                .patternLine("PGP")
-                .patternLine("SRS")
-                .patternLine("SSS")
-                .addCriterion("has_item", hasItem(ModBlocks.chisel))
-                .build(consumer);
+        ShapedRecipeBuilder.shapedRecipe(ModItems.blank_rune)
+                .patternLine("RRR")
+                .patternLine("RLR")
+                .patternLine("RRR")
+                .key('R', ModBlocks.runed_stone)
+                .key('L', Items.LAPIS_LAZULI)
+                .addCriterion("has_item", hasItem(ModBlocks.runed_stone))
+                .build(consumer, new ResourceLocation("runic:blank_rune"));
     }
 }

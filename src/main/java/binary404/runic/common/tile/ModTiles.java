@@ -16,12 +16,6 @@ import static binary404.runic.common.core.util.RegistryUtil.register;
 @Mod.EventBusSubscriber(modid = Runic.modid, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModTiles {
 
-    @ObjectHolder("runic:chisel")
-    public static TileEntityType<TileChisel> CHISEL;
-
-    @ObjectHolder("runic:rune_molder")
-    public static TileEntityType<TileRuneMolder> MOLDER;
-
     @ObjectHolder("runic:dungeon_core")
     public static TileEntityType<TileDungeonCore> DUNGEON_CORE;
 
@@ -31,8 +25,6 @@ public class ModTiles {
     @SubscribeEvent
     public static void registerTileEntity(RegistryEvent.Register<TileEntityType<?>> event) {
         IForgeRegistry<TileEntityType<?>> r = event.getRegistry();
-        register(r, TileEntityType.Builder.create(TileChisel::new, ModBlocks.chisel).build(null), "chisel");
-        register(r, TileEntityType.Builder.create(TileRuneMolder::new, ModBlocks.rune_molder).build(null), "rune_molder");
         register(r, TileEntityType.Builder.create(TileDungeonCore::new, ModBlocks.dungeon_core).build(null), "dungeon_core");
         register(r, TileEntityType.Builder.create(TileMobCrystal::new, ModBlocks.mob_crystal).build(null), "mob_crystal");
     }

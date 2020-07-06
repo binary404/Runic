@@ -1,6 +1,5 @@
 package binary404.runic.common.tile;
 
-import binary404.runic.common.blocks.fluid.RegistryFluids;
 import binary404.runic.common.container.RuneMolderContainer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -44,7 +43,7 @@ public class TileRuneMolder extends TileInventory implements ITickableTileEntity
     private final LazyOptional<IItemHandler> allHolder = LazyOptional.of(() -> new CombinedInvWrapper(inputSlot, outputSlot));
 
     public TileRuneMolder() {
-        super(ModTiles.MOLDER);
+        super(null);
         inputSlot = new InventoryStackHandler(this, true, true, 1);
         outputSlot = new InventoryStackHandler(this, false, true, 1);
         tank = new FluidTank(1000);
@@ -57,38 +56,6 @@ public class TileRuneMolder extends TileInventory implements ITickableTileEntity
 
     @Override
     public void tick() {
-        if (!inputSlot.getStackInSlot(0).isEmpty() && tank.getFluid().getFluid() == RegistryFluids.SOLVENT_SOURCE && (this.outputSlot.getStackInSlot(0).getItem() == Items.DIAMOND || this.outputSlot.getStackInSlot(0).isEmpty()) && this.outputSlot.getStackInSlot(0).getCount() < 64) {
-            if (tank.getFluidAmount() >= 100 && progress < maxProgress) {
-                progress++;
-            }
-            if (this.world.isRemote) {
-                if (this.press < 90 && this.progress > 0) {
-                    this.press += 6;
-                    if (this.press >= 60) {
-                        //sounds
-                    }
-                }
-                if (this.press >= 90 && this.world.rand.nextInt(8) == 0){
-                    //sound
-                }
-                if (this.press > 0 && this.progress <= 0) {
-                    this.press -= 3;
-                }
-            }
-
-            if (progress >= maxProgress) {
-                tank.drain(100, IFluidHandler.FluidAction.EXECUTE);
-                this.inputSlot.getStackInSlot(0).shrink(1);
-                if (this.outputSlot.getStackInSlot(0).isEmpty()) {
-                    this.outputSlot.setStackInSlot(0, new ItemStack(Items.DIAMOND));
-                } else {
-                    this.outputSlot.getStackInSlot(0).setCount(this.outputSlot.getStackInSlot(0).getCount() + 1);
-                }
-                this.progress = 0;
-                this.markDirty();
-                this.syncTile(false);
-            }
-        }
     }
 
     @Nonnull

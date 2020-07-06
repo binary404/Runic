@@ -1,0 +1,6 @@
+# Made in Blockbench 3.5.4
+newmtl body
+map_Kd anvil.png 
+newmtl top
+map_Kd anvil_top.png 
+newmtl none

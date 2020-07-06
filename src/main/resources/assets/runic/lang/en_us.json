@@ -19,14 +19,8 @@
   "runic.research.begin": "Start Research",
   "recipe.clickthrough": "Click for recipe",
 
-  "runic.research.f_lava_swim.text": "Handle a hot liquid",
-  "f_lava_swim.msg": "You have handled a very hot fluid and have learned much",
   "runic.research.FIRST_STEPS.title": "Cryptic Beginnings",
-  "runic.research.FIRST_STEPS.stage.1": "Who would have thought that the magic of an enchanting table, paired with the inscriptions on the stones would have been able to create this magical tablet? <BR>This tablet seems to be an ancient record of runic magic, but the tablet was created just before my eyes! <BR>I can’t help but wonder what else I can do with the magic inscriptions of runes. <BR> I need to create some sort of more powerful  rune?<BR> I need some sort of device to make it easier to produce runes...<BR> Maybe some sort of chisel",
-  "runic.research.FIRST_STEPS.stage.2": "I have created a device I am naming the Arcane Chisel. The device uses the mystic power of runes to enhance redstone technology. <BR> The device should be capable of transforming a bit of stone on top of it into an engraved mold. <BR> Now I just need some way to transform these molds into runes…<BR><BR> Maybe lava would be worth testing?",
-  "runic.research.FIRST_STEPS.stage.3": "Lava seems a bit too viscous, making a rune out of lava would be a utter disaster. <BR> I need to find some sort of better fluid for a solvent. <BR> Maybe the magical properties of lapis might be able to transform lava into something better?...",
-  "runic.research.FIRST_STEPS.stage.4": "Throwing a bit of lapis into lava seems to have marvelous effects. It creates a fluid that vibrates with magical energy. I should now be able to blank runes using a mold and a bit of fluid. I am going to need some sort of device for that... <BR> I have invented a small machine just for that purpose. <BR> Now I should focus my energy else where, maybe studying different types of runes would be a great start.",
+  "runic.research.FIRST_STEPS.stage.1": "Who would have thought that an enchanting table could have transformed a bit of stone into this amazing runed stone? The runed stone seems to hint on how I can use runes to my advantage. <BR> I am not sure where to begin on the journey of learning the arts of runic magic. Maybe I should research how to create more powerful runes...",
 
-  "epiphany_solvent.msg": "you have had an epiphany about a magical solvent"
-
+  "runic.research.UNLOCK_RUNES.stage.1": "To create stronger runes I am going to need some sort of forge and anvil. How ever any mundane anvil and furnace will simply not do. <BR> I need to create some sort of magic infused furnace. Maybe I could use the runes I already have to provide magic? <BR> What ever the case I should probably get to work..."
 }
