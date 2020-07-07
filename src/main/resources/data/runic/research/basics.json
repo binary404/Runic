@@ -37,9 +37,6 @@
       "parents": [
         "FIRST_STEPS"
       ],
-      "siblings": [
-        "UNLOCK_ARTIFACT"
-      ],
       "stages": [
         {
           "text": "runic.research.UNLOCK_RUNES.stage.1",
@@ -70,8 +67,8 @@
       ],
       "category": "BASICS",
       "location": [
-        -2,
-        -2
+        2,
+        2
       ],
       "meta": [
         "ROUND",

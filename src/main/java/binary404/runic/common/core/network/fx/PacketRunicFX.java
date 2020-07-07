@@ -51,7 +51,7 @@ public class PacketRunicFX {
                 }
                 case 3: {
                     for (int i = 0; i < 2; i++) {
-                        FXHelper.sparkle(rand.nextGaussian() * 0.4 + msg.x, rand.nextGaussian() * 0.4 + msg.y, rand.nextGaussian() * 0.4 + msg.z, rand.nextGaussian() * 0.02, rand.nextGaussian() * 0.02, rand.nextGaussian() * 0.02, 0.6F, 0.4F, 0.1F);
+                        FXHelper.sparkle(rand.nextGaussian() * 0.4 + msg.x, rand.nextGaussian() * 0.4 + msg.y, rand.nextGaussian() * 0.4 + msg.z, rand.nextGaussian() * 0.02, rand.nextGaussian() * 0.02, rand.nextGaussian() * 0.02, 0.6F, 0.4F, 0.1F, 0.3F, 0.987F, 0.0F, 20);
                     }
                     break;
                 }

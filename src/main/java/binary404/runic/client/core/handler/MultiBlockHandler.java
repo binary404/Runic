@@ -5,6 +5,7 @@ import binary404.runic.api.internal.CommonInternals;
 import binary404.runic.api.multiblock.BluePrint;
 import binary404.runic.api.multiblock.Matrix;
 import binary404.runic.api.multiblock.Part;
+import binary404.runic.common.items.ModItems;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -41,8 +42,8 @@ import javax.annotation.Nullable;
 public class MultiBlockHandler {
 
     public static boolean hasMultiBlock = true;
-    private static BlockPos pos = new BlockPos(10, 60, 10);
-    private static BluePrint multiblock = (BluePrint) CommonInternals.getCatalogRecipe(new ResourceLocation("runic:test"));
+    public static BlockPos pos = new BlockPos(10, 60, 10);
+    public static BluePrint multiblock;
 
     private static IRenderTypeBuffer.Impl buffers = null;
 
@@ -53,21 +54,6 @@ public class MultiBlockHandler {
         }
         if (multiblock == null)
             multiblock = (BluePrint) CommonInternals.getCatalogRecipe(new ResourceLocation("runic:test"));
-    }
-
-    @SubscribeEvent
-    public static void playerInteract(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getPlayer() instanceof PlayerEntity) {
-            PlayerEntity player = event.getPlayer();
-            if (player.getHeldItem(Hand.MAIN_HAND).isEmpty()) {
-                if (event.getFace() == Direction.UP) {
-                    pos = event.getPos().add(0, 1, 0);
-                } else {
-                    pos = event.getPos();
-                }
-                hasMultiBlock = true;
-            }
-        }
     }
 
     public static void renderMultiBlock(World world, MatrixStack ms) {

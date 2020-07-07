@@ -7,6 +7,7 @@ import binary404.runic.api.multiblock.BluePrint;
 import binary404.runic.api.multiblock.Matrix;
 import binary404.runic.api.multiblock.Part;
 import binary404.runic.api.research.*;
+import binary404.runic.client.core.handler.MultiBlockHandler;
 import binary404.runic.client.gui.research_extras.Page;
 import binary404.runic.client.gui.research_extras.PageImage;
 import binary404.runic.client.utils.RenderingUtils;
@@ -17,16 +18,14 @@ import binary404.runic.common.core.util.InventoryUtils;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Quaternion;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
@@ -48,6 +47,13 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.ILightReader;
+import net.minecraft.world.LightType;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.level.ColorResolver;
+import net.minecraft.world.lighting.WorldLightManager;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import org.lwjgl.opengl.GL11;
@@ -643,6 +649,7 @@ public class GuiResearchPage extends Screen {
                 } else if (recipe instanceof BluePrint) {
                     drawCompoundCraftingPage(x + 128, y + 128, mx, my, (BluePrint) recipe);
                     this.renderingCompound = true;
+                    MultiBlockHandler.multiblock = (BluePrint) recipe;
                 }
             }
             if (this.hasRecipePages) {
@@ -725,7 +732,8 @@ public class GuiResearchPage extends Screen {
 
     private void drawCompoundCraftingPage(int x, int y, int mx, int my, BluePrint recipe) {
         if (recipe.getParts() == null) return;
-        if (this.blockAccess == null) this.blockAccess = new BlueprintBlockAccess(recipe.getParts(), false);
+        if (this.blockAccess == null)
+            this.blockAccess = new BlueprintBlockAccess(recipe.getParts(), false);
         int ySize = recipe.getParts().length;
         int xSize = recipe.getParts()[0].length;
         int zSize = recipe.getParts()[0][0].length;
@@ -733,43 +741,33 @@ public class GuiResearchPage extends Screen {
         int offset = this.minecraft.fontRenderer.getStringWidth(text);
         this.minecraft.fontRenderer.drawString(text, x - offset / 2, y - 104, 5263440);
         int s = Math.max(Math.max(xSize, zSize), ySize) * 2;
-        float scale = (38 - s);
+        float diag = (float) Math.sqrt(xSize * xSize + zSize * zSize);
+        float scaleX = 192 / diag;
+        float scaleY = 184 / ySize;
+        float scale = Math.min(scaleX, scaleY);
         renderBluePrint(this.blockAccess, x, y, scale, recipe.getParts(), mx, my, recipe.getIngredientList());
         this.minecraft.textureManager.bindTexture(this.tex1);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, mouseInside(x + 80, y + 100, 8, 8, mx, my) ? 1.0F : 0.75F);
         blit(x + 80, y + 100, 160, 224, 8, 8);
     }
 
-    IRenderTypeBuffer.Impl buffers = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
-
     private void renderBluePrint(BlueprintBlockAccess ba, int x, int y, float scale, Part[][][] blueprint, int mx, int my, ItemStack[] ingredients) {
         int ySize = blueprint.length;
         int xSize = blueprint[0].length;
         int zSize = blueprint[0][0].length;
         this.transX = (x - xSize / 2);
-        this.transY = y - (float) Math.sqrt((ySize * ySize + xSize * xSize + zSize * zSize)) / 2.0F;
-        MatrixStack stack = new MatrixStack();
-        stack.translate(this.transX, this.transY, Math.max(ySize, Math.max(xSize, zSize)));
-        stack.scale(scale, -scale, 1.0F);
-        stack.rotate(new Quaternion(this.rotX, 1.0F, 0.0F, 0.0F));
-        stack.rotate(new Quaternion(this.rotY, 0.0F, 1.0F, 0.0F));
-        stack.translate(zSize / -2.0F, ySize / -2.0F, xSize / -2.0F);
-        this.minecraft.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-        Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-        for (int h = 0; h < ySize; h++) {
-            for (int l = 0; l < xSize; l++) {
-                for (int w = 0; w < zSize; w++) {
-                    BlockPos pos = new BlockPos(l, h, w);
-                    BlockState state = ba.getBlockState(pos);
-                    stack.push();
-                    stack.translate(l, h, w);
-                    stack.translate(-l, -h, -w);
-                    renderBlock(state, pos, buffers, stack);
-                    stack.pop();
-                }
-            }
-        }
-        Tessellator.getInstance().draw();
+        this.transY = y - (float) (Math.sqrt(ySize * ySize + xSize * xSize + zSize * zSize / 2.0F));
+        MatrixStack ms = new MatrixStack();
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.pushMatrix();
+        ms.translate(transX, transY, Math.max(ySize, Math.max(xSize, zSize)));
+        ms.scale(scale, -scale, 1.0F);
+        ms.rotate(Vector3f.XP.rotationDegrees(40F));
+        ms.rotate(Vector3f.YP.rotationDegrees(-45));
+        ms.translate(zSize / -2.0F, ySize / -2.0F, xSize / -2.0F);
+
+        renderBlocks(ms, ba, BlockPos.getAllInBoxMutable(BlockPos.ZERO, new BlockPos(xSize, ySize, zSize)));
+        RenderSystem.popMatrix();
         if (ingredients != null) for (int a = 0; a < ingredients.length; a++) {
             if (ingredients[a] != null && !ingredients[a].isEmpty() && ingredients[a].getItem() != null) {
                 GL11.glDisable(2896);
@@ -782,29 +780,31 @@ public class GuiResearchPage extends Screen {
                 GL11.glEnable(2929);
             }
         }
-        RenderHelper.disableStandardItemLighting();
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.enableBlend();
-        RenderHelper.disableStandardItemLighting();
     }
 
-    public static void renderBlock(BlockState state, BlockPos pos, IRenderTypeBuffer.Impl buffers, MatrixStack ms) {
-        if (pos != null) {
-            Minecraft.getInstance().getBlockRendererDispatcher().renderModel(state, pos, Minecraft.getInstance().world, ms, Tessellator.getInstance().getBuffer(), EmptyModelData.INSTANCE);
+    private void renderBlocks(MatrixStack stack, BlueprintBlockAccess ba, Iterable<? extends BlockPos> blocks) {
+        stack.push();
+        RenderSystem.color4f(1F, 1F, 1F, 1F);
+        IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+        for (BlockPos pos : blocks) {
+            BlockState state = ba.getBlockState(pos);
+            stack.push();
+            stack.translate(pos.getX(), pos.getY(), pos.getZ());
+            for (RenderType layer : RenderType.getBlockRenderTypes()) {
+                if (RenderTypeLookup.canRenderInLayer(state, layer)) {
+                    IVertexBuilder buffer = buffers.getBuffer(layer);
+                    Minecraft.getInstance().getBlockRendererDispatcher().renderModel(state, pos, ba, stack, buffer, false, Minecraft.getInstance().world.rand);
+                }
+            }
+            stack.pop();
         }
+        buffers.finish();
+        stack.pop();
     }
 
     void drawPopupAt(int x, int y, int mx, int my, String text) {
         if ((shownRecipe == null || this.allowWithPagePopup) && mx >= x && my >= y && mx < x + 16 && my < y + 16) {
             ArrayList<String> s = new ArrayList<String>();
-            s.add(I18n.format(text));
-            this.tipText = s;
-        }
-    }
-
-    void drawPopupAt(int x, int y, int w, int h, int mx, int my, String text) {
-        if ((shownRecipe == null || this.allowWithPagePopup) && mx >= x && my >= y && mx < x + w && my < y + h) {
-            ArrayList<String> s = new ArrayList<>();
             s.add(I18n.format(text));
             this.tipText = s;
         }
@@ -1204,7 +1204,7 @@ public class GuiResearchPage extends Screen {
         }
     }
 
-    public static class BlueprintBlockAccess implements IBlockReader {
+    public static class BlueprintBlockAccess implements IBlockReader, ILightReader {
         private final Part[][][] data;
         private BlockState[][][] structure;
         public int sliceLine;
@@ -1338,6 +1338,26 @@ public class GuiResearchPage extends Screen {
             return (getBlockState(pos).getBlock() == Blocks.AIR);
         }
 
+
+        @Override
+        public int getLightFor(LightType lightTypeIn, BlockPos blockPosIn) {
+            return 15;
+        }
+
+        @Override
+        public int getLightSubtracted(BlockPos blockPosIn, int amount) {
+            return 15 - amount;
+        }
+
+        @Override
+        public WorldLightManager getLightManager() {
+            return null;
+        }
+
+        @Override
+        public int getBlockColor(BlockPos blockPosIn, ColorResolver colorResolverIn) {
+            return colorResolverIn.getColor(Biomes.PLAINS, blockPosIn.getX(), blockPosIn.getZ());
+        }
     }
 
 }

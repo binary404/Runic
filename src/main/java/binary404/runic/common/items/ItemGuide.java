@@ -1,23 +1,32 @@
 package binary404.runic.common.items;
 
 import binary404.runic.Runic;
-import binary404.runic.api.research.ResearchCategories;
-import binary404.runic.api.research.ResearchEntry;
+import binary404.runic.api.multiblock.IMultiBlockTrigger;
+import binary404.runic.api.multiblock.MultiBlockTrigger;
 import binary404.runic.client.FXHelper;
-import binary404.runic.client.gui.GuiResearchBrowser;
-import binary404.runic.client.gui.GuiResearchPage;
-import net.minecraft.client.Minecraft;
+import binary404.runic.client.core.handler.MultiBlockHandler;
+import binary404.runic.common.core.util.EntityUtils;
+import com.mojang.datafixers.kinds.IdF;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.UseAction;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 public class ItemGuide extends Item {
 
@@ -25,9 +34,62 @@ public class ItemGuide extends Item {
         super(ModItems.defaultBuilder().maxStackSize(1));
     }
 
+
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        Runic.proxy.openGuide();
+        if (!playerIn.isSneaking())
+            Runic.proxy.openGuide();
         return super.onItemRightClick(worldIn, playerIn, handIn);
     }
+
+    @Override
+    public ActionResultType onItemUse(ItemUseContext context) {
+        PlayerEntity player = context.getPlayer();
+        if (player.isSneaking() && MultiBlockHandler.multiblock != null) {
+            if (context.getFace() == Direction.UP) {
+                MultiBlockHandler.pos = context.getPos().add(0, 1, 0);
+            } else {
+                MultiBlockHandler.pos = context.getPos();
+            }
+            MultiBlockHandler.hasMultiBlock = true;
+            return ActionResultType.SUCCESS;
+        }
+        player.swingArm(context.getHand());
+        MultiBlockHandler.multiblock = null;
+        MultiBlockHandler.hasMultiBlock = false;
+        for (IMultiBlockTrigger trigger : IMultiBlockTrigger.triggers) {
+            IMultiBlockTrigger.Placement place = trigger.getValidFace(context.getWorld(), player, context.getPos(), context.getFace());
+            if (place != null) {
+                trigger.execute(context.getWorld(), context.getPlayer(), context.getPos(), place, context.getFace());
+                doSparkles(player, context.getWorld(), context.getPos(), (float) context.getHitVec().x, (float) context.getHitVec().y, (float) context.getHitVec().z, context.getHand(), trigger, place);
+                return ActionResultType.SUCCESS;
+            }
+        }
+        return super.onItemUse(context);
+    }
+
+    private void doSparkles(PlayerEntity player, World world, BlockPos pos, float hitX, float hitY, float hitZ, Hand
+            hand, IMultiBlockTrigger trigger, IMultiBlockTrigger.Placement place) {
+        Vec3d v1 = EntityUtils.posToHand(player, hand);
+        Vec3d v2 = new Vec3d(pos);
+        v2 = v2.add(0.5D, 0.5D, 0.5D);
+        v2 = v2.subtract(v1);
+        int cnt = 25;
+        for (int a = 0; a < cnt; a++) {
+            boolean floaty = (a < cnt / 3);
+            float r = MathHelper.nextInt(world.rand, 255, 255) / 255.0F;
+            float g = MathHelper.nextInt(world.rand, 189, 255) / 255.0F;
+            float b = MathHelper.nextInt(world.rand, 64, 255) / 255.0F;
+            FXHelper.sparkle(v1.x, v1.y, v1.z, v2.x / 6.0D + world.rand.nextGaussian() * 0.05D, v2.y / 6.0D + world.rand.nextGaussian() * 0.05D + (floaty ? 0.05D : 0.15D), v2.z / 6.0D + world.rand.nextGaussian() * 0.05D, r, g, b, 0.25F, floaty ? (float) (0.3F + world.rand.nextFloat() * 0.5D) : 0.85F, floaty ? 0.2F : 0.5F, 16);
+        }
+
+        List<BlockPos> sparkles = trigger.sparkle(world, player, pos, place);
+        if (sparkles != null) {
+            Vec3d v = (new Vec3d(pos)).add(hitX, hitY, hitZ);
+            for (BlockPos p : sparkles) {
+                FXHelper.drawBlockSparkles(p, v);
+            }
+        }
+    }
+
 }
