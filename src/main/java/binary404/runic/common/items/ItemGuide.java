@@ -21,11 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkHooks;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 public class ItemGuide extends Item {
@@ -51,6 +47,7 @@ public class ItemGuide extends Item {
             } else {
                 MultiBlockHandler.pos = context.getPos();
             }
+            MultiBlockHandler.facing = MultiBlockHandler.getRotation(player);
             MultiBlockHandler.hasMultiBlock = true;
             return ActionResultType.SUCCESS;
         }
@@ -80,7 +77,7 @@ public class ItemGuide extends Item {
             float r = MathHelper.nextInt(world.rand, 255, 255) / 255.0F;
             float g = MathHelper.nextInt(world.rand, 189, 255) / 255.0F;
             float b = MathHelper.nextInt(world.rand, 64, 255) / 255.0F;
-            FXHelper.sparkle(v1.x, v1.y, v1.z, v2.x / 6.0D + world.rand.nextGaussian() * 0.05D, v2.y / 6.0D + world.rand.nextGaussian() * 0.05D + (floaty ? 0.05D : 0.15D), v2.z / 6.0D + world.rand.nextGaussian() * 0.05D, r, g, b, 0.25F, floaty ? (float) (0.3F + world.rand.nextFloat() * 0.5D) : 0.85F, floaty ? 0.2F : 0.5F, 16);
+            FXHelper.sparkle(v1.x, v1.y, v1.z, v2.x / 6.0D + world.rand.nextGaussian() * 0.05D, v2.y / 6.0D + world.rand.nextGaussian() * 0.05D + (floaty ? 0.05D : 0.15D), v2.z / 6.0D + world.rand.nextGaussian() * 0.05D, r, g, b, 0.25F, floaty ? (float) (0.3F + world.rand.nextFloat() * 0.5D) : 0.85F, floaty ? 0.04F : 0.08F, 16);
         }
 
         List<BlockPos> sparkles = trigger.sparkle(world, player, pos, place);

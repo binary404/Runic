@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "runic:item/basic_mold"
+    "layer0": "runic:item/blank_rune"
   }
 }

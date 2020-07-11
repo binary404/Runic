@@ -2,14 +2,15 @@ package binary404.runic.common.config;
 
 import binary404.runic.api.RunicApi;
 import binary404.runic.api.multiblock.BluePrint;
+import binary404.runic.api.multiblock.IMultiBlockTrigger;
 import binary404.runic.api.multiblock.MultiBlockTrigger;
-import binary404.runic.api.multiblock.Part;
+import binary404.runic.api.multiblock.MultiBlockComponent;
+import binary404.runic.api.recipe.ForgeRecipe;
 import binary404.runic.common.blocks.ModBlocks;
-import net.minecraft.block.AbstractFurnaceBlock;
+import binary404.runic.common.items.ModItems;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -21,15 +22,22 @@ public class RecipeConfig {
 
     public static void init() {
         initCompoundRecipes();
+        initForgeRecipes();
     }
 
     public static void initCompoundRecipes() {
-        Part FURNACE = new Part(Blocks.FURNACE.getDefaultState().with(AbstractFurnaceBlock.FACING, Direction.EAST), new ItemStack(ModBlocks.runed_stone));
-        Part ANVIL = new Part(Blocks.ANVIL, new ItemStack(ModBlocks.runed_stone));
-        Part OBSIDION = new Part(Blocks.OBSIDIAN, new ItemStack(ModBlocks.runed_stone));
-        Part[][][] infernalFurnaceBlueprint = {{{null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null}}, {{FURNACE, null, FURNACE, null, FURNACE}, {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null}, {OBSIDION, null, OBSIDION, null, OBSIDION}}, {{OBSIDION, null, OBSIDION, null, OBSIDION}, {null, null, null, null, null}, {null, null, ANVIL, null, null}, {null, null, null, null, null}, {OBSIDION, null, OBSIDION, null, OBSIDION}}};
-        MultiBlockTrigger.triggers.add(new MultiBlockTrigger("FIRST_STEPS", infernalFurnaceBlueprint));
-        RunicApi.addMultiblockRecipeToCatalog(new ResourceLocation("runic:test"), new BluePrint("FIRST_STEPS", infernalFurnaceBlueprint, new ItemStack[]{new ItemStack(Blocks.NETHER_BRICKS, 12), new ItemStack(Blocks.OBSIDIAN, 12), new ItemStack(Blocks.IRON_BARS), new ItemStack(Items.LAVA_BUCKET)}));
+        MultiBlockComponent FURNACE = new MultiBlockComponent(Blocks.FURNACE, Blocks.AIR);
+        MultiBlockComponent ANVIL = new MultiBlockComponent(Blocks.ANVIL, ModBlocks.arcane_anvil);
+        MultiBlockComponent OBSIDIAN = new MultiBlockComponent(Blocks.OBSIDIAN, Blocks.AIR);
+        MultiBlockComponent BOTTOM = new MultiBlockComponent(Blocks.OBSIDIAN, ModBlocks.storage);
+        MultiBlockComponent OBSIDIAN_FURNACE = new MultiBlockComponent(Blocks.OBSIDIAN, ModBlocks.furnace);
+        MultiBlockComponent[][][] arcane_furnace = {{{null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null}}, {{FURNACE, null, FURNACE, null, FURNACE}, {null, null, null, null, null}, {null, null, null, null, null}, {null, null, null, null, null}, {OBSIDIAN, null, OBSIDIAN, null, OBSIDIAN}}, {{OBSIDIAN_FURNACE, null, OBSIDIAN_FURNACE, null, OBSIDIAN_FURNACE}, {null, null, null, null, null}, {null, null, ANVIL, null, null}, {null, null, null, null, null}, {BOTTOM, null, BOTTOM, null, BOTTOM}}};
+        IMultiBlockTrigger.triggers.add(new MultiBlockTrigger("FIRST_STEPS", arcane_furnace));
+        RunicApi.addMultiblockRecipeToCatalog(new ResourceLocation("runic:arcane_forge"), new BluePrint("FIRST_STEPS", arcane_furnace, new ItemStack[]{new ItemStack(Blocks.ANVIL, 1), new ItemStack(Blocks.OBSIDIAN, 9), new ItemStack(Blocks.FURNACE, 3)}));
+    }
+
+    public static void initForgeRecipes() {
+        RunicApi.addForgeRecipeToCatalog(new ResourceLocation("runic:test"), new ForgeRecipe("FIRST_STEPS", new ItemStack(Items.DIAMOND), 100, new ItemStack(ModItems.blank_rune), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.IRON_INGOT)));
     }
 
 }

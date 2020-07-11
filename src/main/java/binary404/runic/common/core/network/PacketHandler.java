@@ -2,6 +2,7 @@ package binary404.runic.common.core.network;
 
 import binary404.runic.Runic;
 import binary404.runic.common.core.network.fx.PacketCultFX;
+import binary404.runic.common.core.network.fx.PacketFlame;
 import binary404.runic.common.core.network.fx.PacketRunicFX;
 import binary404.runic.common.core.network.research.PacketKnowledgeGain;
 import binary404.runic.common.core.network.research.PacketSyncKnowledge;
@@ -35,6 +36,7 @@ public class PacketHandler {
         //FX
         INSTANCE.registerMessage(id++, PacketRunicFX.class, PacketRunicFX::encode, PacketRunicFX::decode, PacketRunicFX::handle);
         INSTANCE.registerMessage(id++, PacketCultFX.class, PacketCultFX::encode, PacketCultFX::decode, PacketCultFX::handle);
+        INSTANCE.registerMessage(id++, PacketFlame.class, PacketFlame::encode, PacketFlame::decode, PacketFlame::handle);
     }
 
     public static void sendToNearby(World world, Entity e, Object toSend) {

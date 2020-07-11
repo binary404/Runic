@@ -48,7 +48,6 @@ public class RenderRuneMolder extends TileEntityRenderer<TileRuneMolder> {
         stack.rotate(Vector3f.ZP.rotationDegrees(te.progress * -1F));
         stack.translate(-0.5F, -0.5F, 0.0F);
         Minecraft mc = Minecraft.getInstance();
-        mc.getItemRenderer().renderItem(new ItemStack(ModItems.basic_mold), ItemCameraTransforms.TransformType.GROUND, combinedLightIn, combinedOverlayIn, stack, bufferIn);
         stack.pop();
     }
 

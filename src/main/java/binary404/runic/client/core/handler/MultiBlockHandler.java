@@ -4,25 +4,27 @@ import binary404.runic.api.capability.CapabilityHelper;
 import binary404.runic.api.internal.CommonInternals;
 import binary404.runic.api.multiblock.BluePrint;
 import binary404.runic.api.multiblock.Matrix;
-import binary404.runic.api.multiblock.Part;
-import binary404.runic.common.items.ModItems;
+import binary404.runic.api.multiblock.MultiBlockComponent;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.fluid.IFluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -32,7 +34,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -44,6 +45,7 @@ public class MultiBlockHandler {
     public static boolean hasMultiBlock = true;
     public static BlockPos pos = new BlockPos(10, 60, 10);
     public static BluePrint multiblock;
+    public static Direction facing = Direction.NORTH;
 
     private static IRenderTypeBuffer.Impl buffers = null;
 
@@ -52,8 +54,6 @@ public class MultiBlockHandler {
         if (hasMultiBlock && multiblock != null) {
             renderMultiBlock(Minecraft.getInstance().world, event.getMatrixStack());
         }
-        if (multiblock == null)
-            multiblock = (BluePrint) CommonInternals.getCatalogRecipe(new ResourceLocation("runic:test"));
     }
 
     public static void renderMultiBlock(World world, MatrixStack ms) {
@@ -68,14 +68,17 @@ public class MultiBlockHandler {
             buffers = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
         }
 
-        BlueprintBlockAccess ba = new BlueprintBlockAccess(multiblock.getParts(), false);
+        BlueprintBlockAccess ba = new BlueprintBlockAccess(multiblock.getMultiBlockComponents(), false);
 
         int blocksDone = 0;
         int totalBlocks = 0;
         ms.translate(pos.getX(), pos.getY(), pos.getZ());
-        int ySize = multiblock.getParts().length;
-        int xSize = multiblock.getParts()[0].length;
-        int zSize = multiblock.getParts()[0][0].length;
+        int ySize = multiblock.getMultiBlockComponents().length;
+        int xSize = multiblock.getMultiBlockComponents()[0].length;
+        int zSize = multiblock.getMultiBlockComponents()[0][0].length;
+        ms.translate(xSize / 2, ySize / 2, zSize / 2);
+        ms.rotate(Vector3f.YP.rotationDegrees(facing.getHorizontalIndex() * 90F));
+        ms.translate(-xSize / 2, -ySize / 2, -zSize / 2);
         if (CapabilityHelper.knowsResearch(mc.player, multiblock.getResearch())) {
             for (int x = 0; x < xSize; x++) {
                 for (int y = 0; y < ySize; y++) {
@@ -109,15 +112,14 @@ public class MultiBlockHandler {
 
 
     public static class BlueprintBlockAccess implements IBlockReader {
-        private final Part[][][] data;
+        private MultiBlockComponent[][][] data;
         private BlockState[][][] structure;
         public int sliceLine;
 
-        public BlueprintBlockAccess(Part[][][] data, boolean target) {
+        public BlueprintBlockAccess(MultiBlockComponent[][][] data, boolean target) {
             this.sliceLine = 0;
 
-
-            this.data = new Part[data.length][data[0].length][data[0][0].length];
+            this.data = new MultiBlockComponent[data.length][data[0].length][data[0][0].length];
             for (int y = 0; y < data.length; y++) {
                 for (int x = 0; x < data[0].length; x++) {
                     for (int z = 0; z < data[0][0].length; z++)
@@ -135,6 +137,19 @@ public class MultiBlockHandler {
                 for (int x = 0; x < data[0].length; x++) {
                     for (int z = 0; z < data[0][0].length; z++)
                         this.structure[data.length - y - 1][x][z] = target ? convertTarget(x, y, z) : convert(x, y, z);
+                }
+            }
+        }
+
+        public void rotate(int times) {
+            for (int a = 0; a < times; a++) {
+                MultiBlockComponent[][][] newArray = new MultiBlockComponent[data.length][data[0].length][data[0][0].length];
+                for (int i = 0; i < data.length; i++) {
+                    for (int j = 0; j < data[0].length; j++) {
+                        for (int k = 0; k < data[0][0].length; j++) {
+
+                        }
+                    }
                 }
             }
         }
@@ -242,6 +257,23 @@ public class MultiBlockHandler {
             return (getBlockState(pos).getBlock() == Blocks.AIR);
         }
 
+    }
+
+    public static Direction getRotation(Entity entity) {
+        return entity.getHorizontalFacing();
+    }
+
+    public static Rotation rotationFromFacing(Direction facing) {
+        switch (facing) {
+            case EAST:
+                return Rotation.CLOCKWISE_90;
+            case SOUTH:
+                return Rotation.CLOCKWISE_180;
+            case WEST:
+                return Rotation.COUNTERCLOCKWISE_90;
+            default:
+                return Rotation.NONE;
+        }
     }
 
 }

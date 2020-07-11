@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-public class DataGenerator {
+public class RunicDataGenerator {
 
     @SubscribeEvent
     public static void gather(GatherDataEvent event) {
@@ -15,6 +15,7 @@ public class DataGenerator {
 
         gen.addProvider(new RunicBlockStateProvider(gen, fileHelper));
         gen.addProvider(new RecipeProvider(gen));
+        gen.addProvider(new BlockLootProvider(gen));
     }
 
 }

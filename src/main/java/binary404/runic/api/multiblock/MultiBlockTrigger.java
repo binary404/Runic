@@ -1,13 +1,11 @@
 package binary404.runic.api.multiblock;
 
 import binary404.runic.api.capability.CapabilityHelper;
-import binary404.runic.common.blocks.ModBlocks;
 import binary404.runic.common.container.InventoryFake;
 import binary404.runic.common.core.event.MultiblockEvents;
 import binary404.runic.common.core.util.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFaceBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
@@ -23,13 +21,13 @@ import static net.minecraftforge.fml.hooks.BasicEventHooks.firePlayerCraftingEve
 
 public class MultiBlockTrigger implements IMultiBlockTrigger {
 
-    Part[][][] blueprint;
+    MultiBlockComponent[][][] blueprint;
     String research;
     int ySize;
     int xSize;
     int zSize;
 
-    public MultiBlockTrigger(final String research, final Part[][][] blueprint) {
+    public MultiBlockTrigger(final String research, final MultiBlockComponent[][][] blueprint) {
         this.blueprint = blueprint;
         this.research = research;
         this.ySize = this.blueprint.length;
@@ -120,7 +118,6 @@ public class MultiBlockTrigger implements IMultiBlockTrigger {
     @Override
     public void execute(final World world, final PlayerEntity player, final BlockPos pos, final Placement placement, final Direction side) {
         if (!world.isRemote) {
-            firePlayerCraftingEvent(player, new ItemStack(ModBlocks.runed_stone), (IInventory) new InventoryFake(1));
             final BlockPos p2 = pos.add(placement.xOffset, placement.yOffset, placement.zOffset);
             for (int y = 0; y < this.ySize; ++y) {
                 final Matrix matrix = new Matrix(this.blueprint[y]);
@@ -137,6 +134,7 @@ public class MultiBlockTrigger implements IMultiBlockTrigger {
                             } else {
                                 targetObject = null;
                             }
+                            firePlayerCraftingEvent(player, new ItemStack(targetObject.getBlock()), (IInventory) new InventoryFake(1));
                             final BlockPos p3 = p2.add(x, -y + (this.ySize - 1), z);
                             Object sourceObject;
                             if (matrix.matrix[x][z].getSource() instanceof Block) {

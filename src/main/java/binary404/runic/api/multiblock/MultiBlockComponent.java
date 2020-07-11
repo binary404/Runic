@@ -1,6 +1,6 @@
 package binary404.runic.api.multiblock;
 
-public class Part {
+public class MultiBlockComponent {
 
     private Object source;
     private Object target;
@@ -8,21 +8,21 @@ public class Part {
     private int priority;
     private boolean applyPlayerFacing;
 
-    public Part(Object source, Object target, boolean opp, int priority) {
+    public MultiBlockComponent(Object source, Object target, boolean opp, int priority) {
         setSource(source);
         setTarget(target);
         setOpp(opp);
         setPriority(priority);
     }
 
-    public Part(Object source, Object target, boolean opp) {
+    public MultiBlockComponent(Object source, Object target, boolean opp) {
         setSource(source);
         setTarget(target);
         setOpp(opp);
         setPriority(50);
     }
 
-    public Part(Object source, Object target) {
+    public MultiBlockComponent(Object source, Object target) {
         setSource(source);
         setTarget(target);
         setOpp(false);
@@ -75,7 +75,7 @@ public class Part {
     }
 
 
-    public Part setApplyPlayerFacing(boolean applyFacing) {
+    public MultiBlockComponent setApplyPlayerFacing(boolean applyFacing) {
         this.applyPlayerFacing = applyFacing;
         return this;
     }

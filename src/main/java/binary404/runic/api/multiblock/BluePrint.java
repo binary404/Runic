@@ -6,28 +6,28 @@ import net.minecraft.util.ResourceLocation;
 
 public class BluePrint implements IRunicRecipe {
 
-    Part[][][] parts;
+    MultiBlockComponent[][][] multiBlockComponents;
     String research;
     ItemStack displayStack;
     ItemStack[] ingredientList;
     private String group;
 
-    public BluePrint(String research, Part[][][] parts, ItemStack... ingredientList) {
-        this.parts = parts;
+    public BluePrint(String research, MultiBlockComponent[][][] multiBlockComponents, ItemStack... ingredientList) {
+        this.multiBlockComponents = multiBlockComponents;
         this.research = research;
         this.ingredientList = ingredientList;
     }
 
-    public BluePrint(String research, ItemStack display, Part[][][] parts, ItemStack... ingredientList) {
-        this.parts = parts;
+    public BluePrint(String research, ItemStack display, MultiBlockComponent[][][] multiBlockComponents, ItemStack... ingredientList) {
+        this.multiBlockComponents = multiBlockComponents;
         this.research = research;
         this.displayStack = display;
         this.ingredientList = ingredientList;
     }
 
 
-    public Part[][][] getParts() {
-        return this.parts;
+    public MultiBlockComponent[][][] getMultiBlockComponents() {
+        return this.multiBlockComponents;
     }
 
 

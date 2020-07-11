@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class ResearchConfig {
 
-    public static String[] runicCategories = new String[]{"BASICS"};
+    public static String[] runicCategories = new String[]{"BASICS", "RUNES"};
 
     public static void init() {
         ResearchConfig.initCategories();
@@ -21,6 +21,7 @@ public class ResearchConfig {
 
     private static void initCategories() {
         ResearchCategories.registerCategory("BASICS", null, new ResourceLocation("runic", "textures/item/guide.png"));
+        ResearchCategories.registerCategory("RUNES", "UNLOCK_RUNES", new ResourceLocation("runic", "textures/item/blank_rune.png"));
     }
 
 }

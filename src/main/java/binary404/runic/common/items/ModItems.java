@@ -17,8 +17,8 @@ public class ModItems {
     @ObjectHolder("runic:guide")
     public static ItemGuide guide;
 
-    @ObjectHolder("runic:basic_mold")
-    public static Item basic_mold;
+    @ObjectHolder("runic:forge_hammer")
+    public static Item forge_hammer;
 
     @ObjectHolder("runic:blank_rune")
     public static Item blank_rune;
@@ -35,7 +35,7 @@ public class ModItems {
 
         register(r, new Item(defaultBuilder()), "blank_rune");
 
-        register(r, new ItemMold(defaultBuilder()), "basic_mold");
+        register(r, new Item(defaultBuilder()), "forge_hammer");
     }
 
 }

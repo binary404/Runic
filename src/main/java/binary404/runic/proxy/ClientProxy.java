@@ -6,6 +6,7 @@ import binary404.runic.client.libs.ShaderHandler;
 import binary404.runic.client.render.RenderBeholder;
 import binary404.runic.client.render.RenderCultOrb;
 import binary404.runic.client.render.RenderRuneZombie;
+import binary404.runic.client.render.tile.RenderArcaneForge;
 import binary404.runic.client.render.tile.RenderMobCrystal;
 import binary404.runic.client.render.tile.RenderRuneMolder;
 import binary404.runic.common.blocks.ModBlocks;
@@ -40,6 +41,7 @@ public class ClientProxy implements IProxy {
 
     private void registerRendering() {
         ClientRegistry.bindTileEntityRenderer(ModTiles.MOB_CRYSTAL, RenderMobCrystal::new);
+        ClientRegistry.bindTileEntityRenderer(ModTiles.ARCANE_FORGE, RenderArcaneForge::new);
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.CULT_ZOMBIE, RenderRuneZombie::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.RANGED_CULT_ZOMBIE, RenderRuneZombie::new);

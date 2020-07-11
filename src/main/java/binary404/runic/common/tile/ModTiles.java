@@ -22,11 +22,15 @@ public class ModTiles {
     @ObjectHolder("runic:mob_crystal")
     public static TileEntityType<TileMobCrystal> MOB_CRYSTAL;
 
+    @ObjectHolder("runic:arcane_forge")
+    public static TileEntityType<TileArcaneForge> ARCANE_FORGE;
+
     @SubscribeEvent
     public static void registerTileEntity(RegistryEvent.Register<TileEntityType<?>> event) {
         IForgeRegistry<TileEntityType<?>> r = event.getRegistry();
         register(r, TileEntityType.Builder.create(TileDungeonCore::new, ModBlocks.dungeon_core).build(null), "dungeon_core");
         register(r, TileEntityType.Builder.create(TileMobCrystal::new, ModBlocks.mob_crystal).build(null), "mob_crystal");
+        register(r, TileEntityType.Builder.create(TileArcaneForge::new, ModBlocks.arcane_anvil).build(null), "arcane_forge");
     }
 
 }

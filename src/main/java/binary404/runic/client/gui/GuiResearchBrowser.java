@@ -128,11 +128,11 @@ public class GuiResearchBrowser extends Screen {
             }
             if (top) {
                 this.categoriesBase.add(rcl);
-                addButton(new GuiCategoryButton(rc, v, rcl, false, 10 + this.categoriesBase.size() * 24, 1, 16, 16, I18n.format("demonic.research_category." + rcl), this::category));
+                addButton(new GuiCategoryButton(rc, v, rcl, false, 10 + this.categoriesBase.size() * 24, 1, 16, 16, I18n.format("runic.research_category." + rcl), this::category));
                 top = false;
             } else if (!top) {
                 this.categoriesBase.add(rcl);
-                addButton(new GuiCategoryButton(rc, v, rcl, true, 10 + this.categoriesBase.size() * 24, this.height - 17, 16, 15, I18n.format("demonic.research_category." + rcl), this::category));
+                addButton(new GuiCategoryButton(rc, v, rcl, true, 10 + this.categoriesBase.size() * 24, this.height - 17, 16, 15, I18n.format("runic.research_category." + rcl), this::category));
                 top = true;
             }
             ++count;

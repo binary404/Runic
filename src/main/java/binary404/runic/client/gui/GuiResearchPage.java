@@ -5,7 +5,8 @@ import binary404.runic.api.capability.IPlayerKnowledge;
 import binary404.runic.api.internal.CommonInternals;
 import binary404.runic.api.multiblock.BluePrint;
 import binary404.runic.api.multiblock.Matrix;
-import binary404.runic.api.multiblock.Part;
+import binary404.runic.api.multiblock.MultiBlockComponent;
+import binary404.runic.api.recipe.ForgeRecipe;
 import binary404.runic.api.research.*;
 import binary404.runic.client.core.handler.MultiBlockHandler;
 import binary404.runic.client.gui.research_extras.Page;
@@ -26,7 +27,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -52,9 +52,6 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.lighting.WorldLightManager;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import org.lwjgl.opengl.GL11;
 
@@ -449,12 +446,12 @@ public class GuiResearchPage extends Screen {
                 RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 if (list.get(i) instanceof ItemStack) {
                     this.drawStackAt((ItemStack) list.get(i), x + 287 + sh - le, y - 1, mx, my, false);
-                } else if (list.get(i) instanceof Part[][][]) {
+                } else if (list.get(i) instanceof MultiBlockComponent[][][]) {
                     BlueprintBlockAccess ba = this.blockAccessIcons.get(rk);
                     if (ba == null)
-                        this.blockAccessIcons.put(rk, ba = new BlueprintBlockAccess((Part[][][]) list.get(i), true));
-                    int h = ((Part[][][]) list.get(i)).length;
-                    renderBluePrint(ba, x + 295 + sh - le, y + 6 + h, 4.0F, (Part[][][]) list.get(i), -5000, -5000, null);
+                        this.blockAccessIcons.put(rk, ba = new BlueprintBlockAccess((MultiBlockComponent[][][]) list.get(i), true));
+                    int h = ((MultiBlockComponent[][][]) list.get(i)).length;
+                    renderBluePrint(ba, x + 295 + sh - le, y + 6 + h, 4.0F, (MultiBlockComponent[][][]) list.get(i), -5000, -5000, null);
                 }
                 y += space;
             }
@@ -650,6 +647,8 @@ public class GuiResearchPage extends Screen {
                     drawCompoundCraftingPage(x + 128, y + 128, mx, my, (BluePrint) recipe);
                     this.renderingCompound = true;
                     MultiBlockHandler.multiblock = (BluePrint) recipe;
+                } else if (recipe instanceof ForgeRecipe) {
+                    this.drawForgeRecipe(x + 128, y + 128, mx, my, (ForgeRecipe) recipe);
                 }
             }
             if (this.hasRecipePages) {
@@ -730,13 +729,37 @@ public class GuiResearchPage extends Screen {
         RenderSystem.popMatrix();
     }
 
+    private void drawForgeRecipe(int x, int y, int mx, int my, ForgeRecipe recipe) {
+        RenderSystem.pushMatrix();
+        this.minecraft.getTextureManager().bindTexture(this.tex2);
+        RenderSystem.pushMatrix();
+        RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc((int) 770, (int) 771);
+        RenderSystem.translatef((float) x, (float) y, (float) 1.0f);
+        RenderSystem.scalef((float) 2.0f, (float) 2.0f, (float) 1.0f);
+        this.blit(-36, -10, 120, 23, 62, 32);
+        this.blit(-8, -46, 20, 3, 16, 16);
+        RenderSystem.popMatrix();
+        this.drawStackAt(recipe.getOutput(), x - 8, y - 84, mx, my, false);
+        String text = I18n.format((String) "recipe.type.forge");
+        int offset = this.minecraft.fontRenderer.getStringWidth(text);
+        this.minecraft.fontRenderer.drawString(text, x - offset / 2, y - 104, 5263440);
+        this.drawStackAt(recipe.getRecipeInput().getMatchingStacks()[0], x - 8, y - 34, mx, my, false);
+        for (int a = 0; a < recipe.getComponents().size(); a++) {
+            this.drawStackAt(recipe.getComponents().get(a).getMatchingStacks()[0], x - 80 + a * 18, y + 80, mx, my, false);
+        }
+        RenderSystem.popMatrix();
+        RenderSystem.disableBlend();
+    }
+
     private void drawCompoundCraftingPage(int x, int y, int mx, int my, BluePrint recipe) {
-        if (recipe.getParts() == null) return;
+        if (recipe.getMultiBlockComponents() == null) return;
         if (this.blockAccess == null)
-            this.blockAccess = new BlueprintBlockAccess(recipe.getParts(), false);
-        int ySize = recipe.getParts().length;
-        int xSize = recipe.getParts()[0].length;
-        int zSize = recipe.getParts()[0][0].length;
+            this.blockAccess = new BlueprintBlockAccess(recipe.getMultiBlockComponents(), false);
+        int ySize = recipe.getMultiBlockComponents().length;
+        int xSize = recipe.getMultiBlockComponents()[0].length;
+        int zSize = recipe.getMultiBlockComponents()[0][0].length;
         String text = I18n.format("recipe.type.construct");
         int offset = this.minecraft.fontRenderer.getStringWidth(text);
         this.minecraft.fontRenderer.drawString(text, x - offset / 2, y - 104, 5263440);
@@ -745,13 +768,13 @@ public class GuiResearchPage extends Screen {
         float scaleX = 192 / diag;
         float scaleY = 184 / ySize;
         float scale = Math.min(scaleX, scaleY);
-        renderBluePrint(this.blockAccess, x, y, scale, recipe.getParts(), mx, my, recipe.getIngredientList());
+        renderBluePrint(this.blockAccess, x, y, scale, recipe.getMultiBlockComponents(), mx, my, recipe.getIngredientList());
         this.minecraft.textureManager.bindTexture(this.tex1);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, mouseInside(x + 80, y + 100, 8, 8, mx, my) ? 1.0F : 0.75F);
         blit(x + 80, y + 100, 160, 224, 8, 8);
     }
 
-    private void renderBluePrint(BlueprintBlockAccess ba, int x, int y, float scale, Part[][][] blueprint, int mx, int my, ItemStack[] ingredients) {
+    private void renderBluePrint(BlueprintBlockAccess ba, int x, int y, float scale, MultiBlockComponent[][][] blueprint, int mx, int my, ItemStack[] ingredients) {
         int ySize = blueprint.length;
         int xSize = blueprint[0].length;
         int zSize = blueprint[0][0].length;
@@ -1034,9 +1057,13 @@ public class GuiResearchPage extends Screen {
                     if (r.getDisplayStack() != null) {
                         outputs.add(r.getDisplayStack());
                     } else {
-                        outputs.add(r.getParts());
+                        outputs.add(r.getMultiBlockComponents());
                     }
                 }
+            } else if (recipe instanceof ForgeRecipe) {
+                ForgeRecipe re = (ForgeRecipe) recipe;
+                list.add(re);
+                outputs.add(re.getOutput());
             }
         }
     }
@@ -1205,15 +1232,15 @@ public class GuiResearchPage extends Screen {
     }
 
     public static class BlueprintBlockAccess implements IBlockReader, ILightReader {
-        private final Part[][][] data;
+        private final MultiBlockComponent[][][] data;
         private BlockState[][][] structure;
         public int sliceLine;
 
-        public BlueprintBlockAccess(Part[][][] data, boolean target) {
+        public BlueprintBlockAccess(MultiBlockComponent[][][] data, boolean target) {
             this.sliceLine = 0;
 
 
-            this.data = new Part[data.length][data[0].length][data[0][0].length];
+            this.data = new MultiBlockComponent[data.length][data[0].length][data[0][0].length];
             for (int y = 0; y < data.length; y++) {
                 for (int x = 0; x < data[0].length; x++) {
                     for (int z = 0; z < data[0][0].length; z++)

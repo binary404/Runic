@@ -4,12 +4,12 @@ public class Matrix {
 
     int rows;
     int cols;
-    Part[][] matrix;
+    MultiBlockComponent[][] matrix;
 
-    public Matrix(Part[][] matrix) {
+    public Matrix(MultiBlockComponent[][] matrix) {
         this.rows = matrix.length;
         this.cols = matrix[0].length;
-        this.matrix = new Part[this.rows][this.cols];
+        this.matrix = new MultiBlockComponent[this.rows][this.cols];
         for (int i = 0; i < this.rows; i++) {
 
             for (int j = 0; j < this.cols; j++) {
@@ -18,12 +18,11 @@ public class Matrix {
         }
     }
 
-
     public void Rotate90DegRight(int times) {
         for (int a = 0; a < times; a++) {
 
 
-            Part[][] newMatrix = new Part[this.cols][this.rows];
+            MultiBlockComponent[][] newMatrix = new MultiBlockComponent[this.cols][this.rows];
 
             for (int i = 0; i < this.rows; i++) {
 
@@ -42,7 +41,7 @@ public class Matrix {
     }
 
 
-    public Part[][] getMatrix() {
+    public MultiBlockComponent[][] getMatrix() {
         return this.matrix;
     }
 

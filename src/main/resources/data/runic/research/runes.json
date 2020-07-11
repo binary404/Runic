@@ -1,0 +1,23 @@
+{
+  "entries": [
+    {
+      "key": "RUNES",
+      "name": "runic.research.RUNES.title",
+      "icons": [
+        "runic:textures/item/blank_rune.png"
+      ],
+      "category": "RUNES",
+      "location": [
+        0, -4
+      ],
+      "meta": [
+        "ROUND"
+      ],
+      "stages": [
+        {
+          "text": "runic.research.RUNES.stage.1"
+        }
+      ]
+    }
+  ]
+}

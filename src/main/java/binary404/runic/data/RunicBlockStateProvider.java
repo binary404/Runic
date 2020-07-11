@@ -21,6 +21,9 @@ public class RunicBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         this.simpleBlockState(ModBlocks.runed_stone);
+        this.simpleBlockState(ModBlocks.arcane_anvil);
+        this.simpleBlockState(ModBlocks.storage);
+        this.simpleBlockState(ModBlocks.furnace);
     }
 
     private void simpleBlockState(Block b) {

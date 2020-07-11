@@ -23,6 +23,34 @@ public class FXHelper {
         return Minecraft.getInstance().world;
     }
 
+    public static ParticleDispatcher.GenPart defaultGen = new ParticleDispatcher.GenPart();
+
+    static {
+        defaultGen.location = new ResourceLocation("runic", "textures/misc/particles.png");
+    }
+
+    public static ParticleDispatcher.GenPart getGenPart(float r, float g, float b, float scale) {
+        ParticleDispatcher.GenPart toReturn = defaultGen;
+        toReturn.r = r;
+        toReturn.g = g;
+        toReturn.b = b;
+        toReturn.scale = new float[]{scale};
+        return toReturn;
+    }
+
+    public static void flame(double x, double y, double z, float scale) {
+        ParticleDispatcher.GenPart part = getGenPart(1.0F, 1.0F, 1.0F, scale);
+        part.grid = 64;
+        part.age = 10;
+        part.partStart = 640;
+        part.partNum = 10;
+        part.partInc = 1;
+        part.loop = true;
+        part.alpha = new float[]{1.0F};
+        part.grav = -0.08F;
+        ParticleDispatcher.genericFx(x, y, z, 0.0D, 0.0D, 0.0D, part);
+    }
+
     public static void poof(double x, double y, double z, float r, float g, float b, float scale) {
         ParticleDispatcher.GenPart part = new ParticleDispatcher.GenPart();
         part.scale = new float[]{scale};
@@ -132,7 +160,7 @@ public class FXHelper {
                         float b = MathHelper.nextInt((getWorld()).rand, 64, 255) / 255.0F;
                         Vec3d v1 = new Vec3d(p.getX() + x, p.getY() + y, p.getZ() + z);
                         double delay = (getWorld()).rand.nextInt(5) + v1.distanceTo(start) * 16.0D;
-                        sparkle(p.getX() + x, p.getY() + y, p.getZ() + z, 0.0D, 0.0025D, 0.0D, r, g, b, 0.06F + (float) (getWorld()).rand.nextGaussian() * 0.1F, 1.0F, 0.01F, 16);
+                        sparkle(p.getX() + x, p.getY() + y, p.getZ() + z, 0.0D, 0.0025D, 0.0D, r, g, b, 0.04F + (float) (getWorld()).rand.nextGaussian() * 0.06F, 1.0F, 0.01F, 16);
                     }
                 }
             }
