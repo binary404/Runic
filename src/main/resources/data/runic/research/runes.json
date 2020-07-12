@@ -15,7 +15,10 @@
       ],
       "stages": [
         {
-          "text": "runic.research.RUNES.stage.1"
+          "text": "runic.research.RUNES.stage.1",
+          "recipes": [
+            "runic:blank_rune"
+          ]
         }
       ]
     }

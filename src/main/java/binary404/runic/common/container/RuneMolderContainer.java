@@ -1,22 +1,18 @@
 package binary404.runic.common.container;
 
-import binary404.runic.api.item.IMoldItem;
+import binary404.runic.api.item.IRuneItem;
 import binary404.runic.common.container.slot.SlotInput;
 import binary404.runic.common.container.slot.SlotOutput;
 import binary404.runic.common.tile.TileRuneMolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class RuneMolderContainer extends CommonContainer {
 
@@ -53,7 +49,7 @@ public class RuneMolderContainer extends CommonContainer {
 
         @Override
         public boolean isItemValid(@Nonnull ItemStack stack) {
-            return stack.getItem() instanceof IMoldItem;
+            return stack.getItem() instanceof IRuneItem;
         }
     }
 

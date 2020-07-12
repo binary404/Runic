@@ -23,6 +23,9 @@ public class ModItems {
     @ObjectHolder("runic:blank_rune")
     public static Item blank_rune;
 
+    @ObjectHolder("runic:earth_rune")
+    public static Item earth_rune;
+
     public static Item.Properties defaultBuilder() {
         return new Item.Properties().group(RunicTab.INSTANCE);
     }
@@ -36,6 +39,8 @@ public class ModItems {
         register(r, new Item(defaultBuilder()), "blank_rune");
 
         register(r, new Item(defaultBuilder()), "forge_hammer");
+
+        register(r, new ItemBasicRune(defaultBuilder()), "earth_rune");
     }
 
 }

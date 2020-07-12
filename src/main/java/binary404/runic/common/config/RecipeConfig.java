@@ -37,7 +37,7 @@ public class RecipeConfig {
     }
 
     public static void initForgeRecipes() {
-        RunicApi.addForgeRecipeToCatalog(new ResourceLocation("runic:test"), new ForgeRecipe("FIRST_STEPS", new ItemStack(Items.DIAMOND), 100, new ItemStack(ModItems.blank_rune), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.IRON_INGOT)));
+        RunicApi.addForgeRecipeToCatalog(new ResourceLocation("runic:earth_rune"), new ForgeRecipe("FIRST_STEPS", new ItemStack(ModItems.earth_rune), 100, new ItemStack(ModItems.blank_rune), new ItemStack(Items.IRON_INGOT), new ItemStack(Items.COAL_BLOCK), new ItemStack(Items.STONE)));
     }
 
 }
