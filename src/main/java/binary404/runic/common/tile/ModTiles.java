@@ -32,5 +32,4 @@ public class ModTiles {
         register(r, TileEntityType.Builder.create(TileMobCrystal::new, ModBlocks.mob_crystal).build(null), "mob_crystal");
         register(r, TileEntityType.Builder.create(TileArcaneForge::new, ModBlocks.arcane_anvil).build(null), "arcane_forge");
     }
-
 }

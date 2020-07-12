@@ -21,7 +21,7 @@ public class ResearchConfig {
 
     private static void initCategories() {
         ResearchCategories.registerCategory("BASICS", null, new ResourceLocation("runic", "textures/item/guide.png"));
-        ResearchCategories.registerCategory("RUNES", "UNLOCK_RUNES", new ResourceLocation("runic", "textures/item/blank_rune.png"));
+        ResearchCategories.registerCategory("RUNES", "UNLOCK_RUNES", new ResourceLocation("runic", "textures/misc/rune_category.png"));
     }
 
 }
