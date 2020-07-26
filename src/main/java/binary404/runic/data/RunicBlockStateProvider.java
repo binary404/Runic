@@ -24,6 +24,13 @@ public class RunicBlockStateProvider extends BlockStateProvider {
         this.simpleBlockState(ModBlocks.arcane_anvil);
         this.simpleBlockState(ModBlocks.storage);
         this.simpleBlockState(ModBlocks.furnace);
+
+        this.simpleBlockState(ModBlocks.glyph_earth);
+        this.simpleBlockState(ModBlocks.glyph_fire);
+        this.simpleBlockState(ModBlocks.glyph_air);
+        this.simpleBlockState(ModBlocks.glyph_water);
+        this.simpleBlockState(ModBlocks.glyph_chaos);
+        this.simpleBlockState(ModBlocks.glyph_order);
     }
 
     private void simpleBlockState(Block b) {

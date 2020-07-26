@@ -1,6 +1,8 @@
 package binary404.runic.common.blocks;
 
 import binary404.runic.Runic;
+import binary404.runic.api.rune.Rune;
+import binary404.runic.api.rune.Runes;
 import binary404.runic.common.blocks.machine.BlockArcaneForge;
 import binary404.runic.common.blocks.machine.BlockArcaneForgeFurnace;
 import binary404.runic.common.blocks.machine.BlockStorage;
@@ -39,6 +41,27 @@ public class ModBlocks {
     @ObjectHolder("runic:furnace")
     public static Block furnace;
 
+    @ObjectHolder("runic:glyph_fire")
+    public static Block glyph_fire;
+
+    @ObjectHolder("runic:glyph_air")
+    public static Block glyph_air;
+
+    @ObjectHolder("runic:glyph_earth")
+    public static Block glyph_earth;
+
+    @ObjectHolder("runic:glyph_water")
+    public static Block glyph_water;
+
+    @ObjectHolder("runic:glyph_chaos")
+    public static Block glyph_chaos;
+
+    @ObjectHolder("runic:glyph_order")
+    public static Block glyph_order;
+
+    @ObjectHolder("runic:life_glyph")
+    public static Block life_glyph;
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> r = event.getRegistry();
@@ -48,6 +71,12 @@ public class ModBlocks {
         register(r, new Block(builder), "runed_stone");
         register(r, new BlockStorage(builder), "storage");
         register(r, new BlockArcaneForgeFurnace(builder), "furnace");
+        register(r, new BlockRitualGlyph(builder, Runes.LIFE), "life_glyph");
+
+        for (Rune rune : Rune.getPrimalRunes()) {
+            register(r, new BlockGlyph(builder.notSolid(), rune), "glyph_" + rune.getTag());
+        }
+
         builder = Block.Properties.create(Material.GLASS).lightValue(11).hardnessAndResistance(1.0F, 199000.0F);
         register(r, new BlockDungeonCore(builder), "dungeon_core");
         register(r, new BlockArcaneForge(Block.Properties.create(Material.ANVIL, MaterialColor.IRON).hardnessAndResistance(5.0F, 1200.0F).notSolid()), "arcane_anvil");
@@ -62,6 +91,15 @@ public class ModBlocks {
         register(r, new BlockItem(runed_stone, ModItems.defaultBuilder()), "runed_stone");
         register(r, new BlockItem(storage, ModItems.defaultBuilder()), "storage");
         register(r, new BlockItem(furnace, ModItems.defaultBuilder()), "furnace");
+        register(r, new BlockItem(life_glyph, ModItems.defaultBuilder()), "life_glyph");
+
+        register(r, new BlockItem(glyph_fire, ModItems.defaultBuilder()), "glyph_fire");
+        register(r, new BlockItem(glyph_air, ModItems.defaultBuilder()), "glyph_air");
+        register(r, new BlockItem(glyph_earth, ModItems.defaultBuilder()), "glyph_earth");
+        register(r, new BlockItem(glyph_water, ModItems.defaultBuilder()), "glyph_water");
+        register(r, new BlockItem(glyph_chaos, ModItems.defaultBuilder()), "glyph_chaos");
+        register(r, new BlockItem(glyph_order, ModItems.defaultBuilder()), "glyph_order");
+
         register(r, new BlockItem(dungeon_core, ModItems.defaultBuilder()), "dungeon_core");
         register(r, new BlockItem(arcane_anvil, ModItems.defaultBuilder()), "arcane_anvil");
         register(r, new BlockItem(mob_crystal, ModItems.defaultBuilder()), "mob_crystal");

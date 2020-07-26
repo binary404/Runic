@@ -1,5 +1,6 @@
 package binary404.runic;
 
+import binary404.runic.api.rune.Runes;
 import binary404.runic.common.config.RecipeConfig;
 import binary404.runic.common.config.ResearchConfig;
 import binary404.runic.common.core.capability.CapabilityEvent;
@@ -42,6 +43,7 @@ public class Runic {
         DeferredWorkQueue.runLater(() -> {
             ResearchConfig.post();
             ModStructures.init();
+            Runes.initEffects();
         });
     }
 

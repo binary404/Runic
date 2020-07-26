@@ -1,6 +1,7 @@
 package binary404.runic.common.items;
 
 import binary404.runic.Runic;
+import binary404.runic.api.rune.Runes;
 import binary404.runic.common.core.RunicTab;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
@@ -40,7 +41,7 @@ public class ModItems {
 
         register(r, new Item(defaultBuilder()), "forge_hammer");
 
-        register(r, new ItemBasicRune(defaultBuilder()), "earth_rune");
+        register(r, new ItemBasicRune(defaultBuilder(), Runes.EARTH), "earth_rune");
     }
 
 }

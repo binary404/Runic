@@ -25,11 +25,15 @@ public class ModTiles {
     @ObjectHolder("runic:arcane_forge")
     public static TileEntityType<TileArcaneForge> ARCANE_FORGE;
 
+    @ObjectHolder("runic:ritual_glyph")
+    public static TileEntityType<TileRitualRune> RITUAL_GLYPH;
+
     @SubscribeEvent
     public static void registerTileEntity(RegistryEvent.Register<TileEntityType<?>> event) {
         IForgeRegistry<TileEntityType<?>> r = event.getRegistry();
         register(r, TileEntityType.Builder.create(TileDungeonCore::new, ModBlocks.dungeon_core).build(null), "dungeon_core");
         register(r, TileEntityType.Builder.create(TileMobCrystal::new, ModBlocks.mob_crystal).build(null), "mob_crystal");
         register(r, TileEntityType.Builder.create(TileArcaneForge::new, ModBlocks.arcane_anvil).build(null), "arcane_forge");
+        register(r, TileEntityType.Builder.create(TileRitualRune::new, ModBlocks.life_glyph).build(null), "ritual_glyph");
     }
 }
