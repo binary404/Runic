@@ -20,6 +20,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.BlockSnapshot;
@@ -43,9 +44,9 @@ import java.util.function.Predicate;
 @Mod.EventBusSubscriber(modid = Runic.modid, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class MultiblockEvents {
 
-    static HashMap<Integer, Integer> serverTicks;
-    private static HashMap<Integer, LinkedBlockingQueue<RunnableEntry>> serverRunList;
-    public static HashMap<Integer, LinkedBlockingQueue<VirtualSwapper>> swapList;
+    static HashMap<DimensionType, Integer> serverTicks;
+    private static HashMap<DimensionType, LinkedBlockingQueue<RunnableEntry>> serverRunList;
+    public static HashMap<DimensionType, LinkedBlockingQueue<VirtualSwapper>> swapList;
     public static final Predicate<SwapperPredicate> DEFAULT_PREDICATE;
 
     @SubscribeEvent
@@ -53,7 +54,7 @@ public class MultiblockEvents {
         if (event.side == LogicalSide.CLIENT) {
             return;
         }
-        final int dim = event.world.func_230315_m_().func_241513_m_();
+        final DimensionType dim = event.world.func_230315_m_();
         if (!MultiblockEvents.serverTicks.containsKey(dim)) {
             MultiblockEvents.serverTicks.put(dim, 0);
         }
@@ -87,7 +88,7 @@ public class MultiblockEvents {
     }
 
     private static void tickBlockSwap(final World world) {
-        final int dim = world.func_230315_m_().func_241513_m_();
+        final DimensionType dim = world.func_230315_m_();
         final LinkedBlockingQueue<VirtualSwapper> queue = MultiblockEvents.swapList.get(dim);
         if (queue != null) {
             while (!queue.isEmpty()) {
@@ -102,7 +103,7 @@ public class MultiblockEvents {
     }
 
     public static void addSwapper(final World world, final BlockPos pos, final Object source, BlockState target, final boolean consumeTarget, final int life, final PlayerEntity player, final boolean fx, final boolean fancy, final int color, final boolean pickup, final boolean silk, final int fortune, final Predicate<SwapperPredicate> allowSwap) {
-        final int dim = world.func_230315_m_().func_241513_m_();
+        DimensionType dim = world.func_230315_m_();
         LinkedBlockingQueue<VirtualSwapper> queue = MultiblockEvents.swapList.get(dim);
         if (queue == null) {
             MultiblockEvents.swapList.put(dim, new LinkedBlockingQueue<VirtualSwapper>());
@@ -116,17 +117,17 @@ public class MultiblockEvents {
         if (world.isRemote) {
             return;
         }
-        LinkedBlockingQueue<RunnableEntry> rlist = MultiblockEvents.serverRunList.get(world.func_230315_m_().func_241513_m_());
+        LinkedBlockingQueue<RunnableEntry> rlist = MultiblockEvents.serverRunList.get(world.func_230315_m_());
         if (rlist == null) {
-            MultiblockEvents.serverRunList.put(world.func_230315_m_().func_241513_m_(), rlist = new LinkedBlockingQueue<RunnableEntry>());
+            MultiblockEvents.serverRunList.put(world.func_230315_m_(), rlist = new LinkedBlockingQueue<RunnableEntry>());
         }
         rlist.add(new RunnableEntry(runnable, delay));
     }
 
     static {
-        MultiblockEvents.serverTicks = new HashMap<Integer, Integer>();
-        MultiblockEvents.serverRunList = new HashMap<Integer, LinkedBlockingQueue<RunnableEntry>>();
-        MultiblockEvents.swapList = new HashMap<Integer, LinkedBlockingQueue<VirtualSwapper>>();
+        MultiblockEvents.serverTicks = new HashMap<DimensionType, Integer>();
+        MultiblockEvents.serverRunList = new HashMap<DimensionType, LinkedBlockingQueue<RunnableEntry>>();
+        MultiblockEvents.swapList = new HashMap<DimensionType, LinkedBlockingQueue<VirtualSwapper>>();
         DEFAULT_PREDICATE = (Predicate) new Predicate<SwapperPredicate>() {
             public boolean test(@Nullable final SwapperPredicate pred) {
                 return true;

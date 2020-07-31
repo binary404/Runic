@@ -918,7 +918,7 @@ public class GuiResearchPage extends Screen {
         for (String s : firstPassText) {
             List pt1 = this.minecraft.fontRenderer.func_238425_b_(ITextProperties.func_240652_a_(s), 140);
             for (Object ln : pt1) {
-                parsedText.add((String) ln);
+                parsedText.add(((ITextProperties)ln).getString());
             }
         }
         int lineHeight = this.minecraft.fontRenderer.FONT_HEIGHT;
