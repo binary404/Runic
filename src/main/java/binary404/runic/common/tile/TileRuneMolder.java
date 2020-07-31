@@ -1,6 +1,7 @@
 package binary404.runic.common.tile;
 
 import binary404.runic.common.container.RuneMolderContainer;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -108,8 +109,8 @@ public class TileRuneMolder extends TileInventory implements ITickableTileEntity
     }
 
     @Override
-    public void read(CompoundNBT par1nbtTagCompound) {
-        super.read(par1nbtTagCompound);
+    public void read(BlockState state, CompoundNBT par1nbtTagCompound) {
+        super.read(state, par1nbtTagCompound);
         this.press = par1nbtTagCompound.getInt("press");
     }
 

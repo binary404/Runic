@@ -53,7 +53,7 @@ public class MultiblockEvents {
         if (event.side == LogicalSide.CLIENT) {
             return;
         }
-        final int dim = event.world.getDimension().getType().getId();
+        final int dim = event.world.func_230315_m_().func_241513_m_();
         if (!MultiblockEvents.serverTicks.containsKey(dim)) {
             MultiblockEvents.serverTicks.put(dim, 0);
         }
@@ -87,7 +87,7 @@ public class MultiblockEvents {
     }
 
     private static void tickBlockSwap(final World world) {
-        final int dim = world.getDimension().getType().getId();
+        final int dim = world.func_230315_m_().func_241513_m_();
         final LinkedBlockingQueue<VirtualSwapper> queue = MultiblockEvents.swapList.get(dim);
         if (queue != null) {
             while (!queue.isEmpty()) {
@@ -102,7 +102,7 @@ public class MultiblockEvents {
     }
 
     public static void addSwapper(final World world, final BlockPos pos, final Object source, BlockState target, final boolean consumeTarget, final int life, final PlayerEntity player, final boolean fx, final boolean fancy, final int color, final boolean pickup, final boolean silk, final int fortune, final Predicate<SwapperPredicate> allowSwap) {
-        final int dim = world.getDimension().getType().getId();
+        final int dim = world.func_230315_m_().func_241513_m_();
         LinkedBlockingQueue<VirtualSwapper> queue = MultiblockEvents.swapList.get(dim);
         if (queue == null) {
             MultiblockEvents.swapList.put(dim, new LinkedBlockingQueue<VirtualSwapper>());
@@ -116,9 +116,9 @@ public class MultiblockEvents {
         if (world.isRemote) {
             return;
         }
-        LinkedBlockingQueue<RunnableEntry> rlist = MultiblockEvents.serverRunList.get(world.getDimension().getType().getId());
+        LinkedBlockingQueue<RunnableEntry> rlist = MultiblockEvents.serverRunList.get(world.func_230315_m_().func_241513_m_());
         if (rlist == null) {
-            MultiblockEvents.serverRunList.put(world.getDimension().getType().getId(), rlist = new LinkedBlockingQueue<RunnableEntry>());
+            MultiblockEvents.serverRunList.put(world.func_230315_m_().func_241513_m_(), rlist = new LinkedBlockingQueue<RunnableEntry>());
         }
         rlist.add(new RunnableEntry(runnable, delay));
     }

@@ -1,7 +1,6 @@
 package binary404.runic.client.libs;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
 
@@ -152,8 +151,8 @@ public class Vector3d {
     }
 
     public @Nonnull
-    Vec3d getVec3() {
-        return new Vec3d(x, y, z);
+    net.minecraft.util.math.vector.Vector3d getVec3() {
+        return new net.minecraft.util.math.vector.Vector3d(x, y, z);
     }
 
 }

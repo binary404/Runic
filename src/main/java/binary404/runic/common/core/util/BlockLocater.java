@@ -27,7 +27,7 @@ public class BlockLocater {
         }
         if (event.getState().getBlock() == ModBlocks.mob_crystal) {
             TileMobCrystal tile = (TileMobCrystal) event.getWorld().getTileEntity(event.getPos());
-            if(tile.mobsNearby) {
+            if (tile.mobsNearby) {
                 System.out.println("Event Canceled");
                 event.setCanceled(true);
             }
@@ -36,9 +36,8 @@ public class BlockLocater {
 
     public static boolean findBlock(World world, BlockPos startPos, int searchRange, Block block) {
         BlockPos orgin = startPos;
-        BlockPos.PooledMutable pooledPos = BlockPos.PooledMutable.retain();
+        BlockPos.Mutable pooledPos = new BlockPos.Mutable(orgin.getX(), orgin.getY(), orgin.getZ());
         boolean found = false;
-        try {
             for (int xx = -searchRange; xx <= searchRange; xx++) {
                 for (int zz = -searchRange; zz <= searchRange; zz++) {
                     pooledPos.setPos(orgin.getX() + xx, 0, orgin.getZ() + zz);
@@ -53,9 +52,6 @@ public class BlockLocater {
                     }
                 }
             }
-        } finally {
-            pooledPos.close();
-        }
         return found;
     }
 

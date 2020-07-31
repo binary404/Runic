@@ -36,11 +36,11 @@ public class GuideHandler {
                         items.remove(item);
                     } else if (timeLeft > 1) {
                         items.put(item, timeLeft - 1);
-                        if (world.getBlockState(item.getPosition()).getBlock() == Blocks.ENCHANTING_TABLE)
+                        if (world.getBlockState(item.func_233580_cy_()).getBlock() == Blocks.ENCHANTING_TABLE)
                             if (world.rand.nextInt(20) == 0)
                                 PacketHandler.sendToNearby(world, item, new PacketRunicFX(item.getPosX(), item.getPosY() + 1.5, item.getPosZ(), 2));
                     } else {
-                        BlockPos pos = item.getPosition();
+                        BlockPos pos = item.func_233580_cy_();
                         if (world.getBlockState(pos).getBlock() == Blocks.ENCHANTING_TABLE) {
                             if (item.getItem().getCount() == 1) {
                                 int count = 0;

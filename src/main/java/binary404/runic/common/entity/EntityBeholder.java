@@ -4,7 +4,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.Goal;
@@ -17,7 +16,7 @@ import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
@@ -35,13 +34,6 @@ public class EntityBeholder extends MonsterEntity implements IRangedAttackMob, I
         this(ModEntities.BEHOLDER, world);
     }
 
-    @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double) 0.23F);
-        this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue((double)0.6F);
-    }
 
     public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
         return worldIn.getBlockState(pos).isAir() ? 10.0F : 0.0F;
@@ -115,7 +107,7 @@ public class EntityBeholder extends MonsterEntity implements IRangedAttackMob, I
          * Execute a one shot task or start executing a continuous task
          */
         public void startExecuting() {
-            Vec3d vec3d = this.getRandomLocation();
+            Vector3d vec3d = this.getRandomLocation();
             if (vec3d != null) {
                 EntityBeholder.this.navigator.setPath(EntityBeholder.this.navigator.getPathToPos(new BlockPos(vec3d), 1), 1.0D);
             }
@@ -123,10 +115,10 @@ public class EntityBeholder extends MonsterEntity implements IRangedAttackMob, I
         }
 
         @Nullable
-        private Vec3d getRandomLocation() {
-            Vec3d vec3d;
+        private Vector3d getRandomLocation() {
+            net.minecraft.util.math.vector.Vector3d vec3d;
             vec3d = EntityBeholder.this.getLook(0.0F);
-            Vec3d vec3d2 = RandomPositionGenerator.findAirTarget(EntityBeholder.this, 8, 7, vec3d, ((float) Math.PI / 2F), 2, 1);
+            Vector3d vec3d2 = RandomPositionGenerator.findAirTarget(EntityBeholder.this, 8, 7, vec3d, ((float) Math.PI / 2F), 2, 1);
             return vec3d2 != null ? vec3d2 : RandomPositionGenerator.findGroundTarget(EntityBeholder.this, 8, 4, -2, vec3d, (double) ((float) Math.PI / 2F));
         }
     }

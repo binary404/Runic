@@ -41,11 +41,6 @@ public class EntityRangedCultZombie extends EntityCultZombie implements IRangedA
     }
 
     @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-    }
-
-    @Override
     public void tick() {
         super.tick();
         this.auraSize = 0F;

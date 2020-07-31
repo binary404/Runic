@@ -8,6 +8,7 @@ displayName="Runic" #mandatory
 logoFile="runic.png" #optional
 credits="" #optional
 authors="binary404" #optional
+license=""
 description='''
 Magic mod focused on channeling energy through runes
 '''

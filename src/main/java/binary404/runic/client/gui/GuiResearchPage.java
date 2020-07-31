@@ -20,6 +20,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.sun.javafx.geom.Vec3d;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -31,23 +32,22 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.IFluidState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.*;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.level.ColorResolver;
@@ -150,7 +150,7 @@ public class GuiResearchPage extends Screen {
     }
 
     @Override
-    public void render(int par1, int par2, float par3) {
+    public void render(MatrixStack stack, int par1, int par2, float par3) {
         this.hasRecipePages = false;
         long nano = System.nanoTime();
         if (nano > this.lastCheck) {
@@ -161,15 +161,15 @@ public class GuiResearchPage extends Screen {
             }
         }
         this.pt = par3;
-        this.renderBackground();
-        this.genResearchBackground(par1, par2);
+        this.renderBackground(stack);
+        this.genResearchBackground(stack, par1, par2);
         int sw = (this.width - this.paneWidth) / 2;
         int sh = (this.height - this.paneHeight) / 2;
         if (!history.isEmpty()) {
             int mx = par1 - (sw + 118);
             int my = par2 - (sh + 190);
             if (mx >= 0 && my >= 0 && mx < 20 && my < 12) {
-                this.minecraft.fontRenderer.drawStringWithShadow(I18n.format("recipe.return"), par1, par2, 16777215);
+                this.minecraft.fontRenderer.drawStringWithShadow(stack, I18n.format("recipe.return"), par1, par2, 16777215);
             }
         }
     }
@@ -312,7 +312,7 @@ public class GuiResearchPage extends Screen {
         }
     }
 
-    protected void genResearchBackground(int par1, int par2) {
+    protected void genResearchBackground(MatrixStack stack, int par1, int par2) {
         int sw = (this.width - this.paneWidth) / 2;
         int sh = (this.height - this.paneHeight) / 2;
         float var10 = ((float) this.width - (float) this.paneWidth * 1.3f) / 2.0f;
@@ -324,7 +324,7 @@ public class GuiResearchPage extends Screen {
         RenderSystem.pushMatrix();
         RenderSystem.translatef((float) var10, (float) var11, (float) 0.0f);
         RenderSystem.scalef((float) 1.3f, (float) 1.3f, (float) 1.0f);
-        this.blit(0, 0, 0, 0, this.paneWidth, this.paneHeight);
+        this.blit(stack, 0, 0, 0, 0, this.paneWidth, this.paneHeight);
         RenderSystem.popMatrix();
         this.reference.clear();
         RenderSystem.enableBlend();
@@ -332,7 +332,7 @@ public class GuiResearchPage extends Screen {
         int current = 0;
         for (int a = 0; a < this.pages.size(); ++a) {
             if ((current == this.page || current == this.page + 1) && current < this.maxPages) {
-                this.drawPage(this.pages.get(a), current % 2, sw, sh - 10, par1, par2);
+                this.drawPage(stack, this.pages.get(a), current % 2, sw, sh - 10, par1, par2);
             }
             if (++current > this.page + 1) break;
         }
@@ -351,12 +351,12 @@ public class GuiResearchPage extends Screen {
             this.drawTexturedModalRectScaled(sw + 262, sh + 190, 12, 184, 12, 8, bob);
         }
         if (this.tipText != null) {
-            RenderingUtils.drawCustomTooltip(this, this.minecraft.fontRenderer, this.tipText, par1, par2 + 12);
+            RenderingUtils.drawCustomTooltip(stack, this.minecraft.fontRenderer, this.tipText, par1, par2 + 12);
             this.tipText = null;
         }
     }
 
-    private void drawPage(Page pageParm, int side, int x, int y, int mx, int my) {
+    private void drawPage(MatrixStack stack, Page pageParm, int side, int x, int y, int mx, int my) {
         ResearchStage stage;
         if (this.lastCycle < System.currentTimeMillis()) {
             ++this.cycle;
@@ -365,17 +365,17 @@ public class GuiResearchPage extends Screen {
         RenderSystem.enableBlend();
         RenderSystem.blendFunc((int) 770, (int) 771);
         if (this.page == 0 && side == 0) {
-            this.blit(x + 4, y - 7, 24, 184, 96, 4);
-            this.blit(x + 4, y + 10, 24, 184, 96, 4);
+            this.blit(stack, x + 4, y - 7, 24, 184, 96, 4);
+            this.blit(stack, x + 4, y + 10, 24, 184, 96, 4);
             int offset = this.minecraft.fontRenderer.getStringWidth(this.research.getLocalizedName());
             if (offset <= 140) {
-                this.minecraft.fontRenderer.drawString(this.research.getLocalizedName(), x - 15 + 140 / 2 - offset / 2, y, 2105376);
+                this.minecraft.fontRenderer.drawString(stack, this.research.getLocalizedName(), x - 15 + 140 / 2 - offset / 2, y, 2105376);
             } else {
                 float vv = 140.0f / (float) offset;
                 RenderSystem.pushMatrix();
                 RenderSystem.translatef((float) ((float) (x - 15 + 140 / 2) - (float) (offset / 2) * vv), (float) ((float) y + 1.0f * vv), (float) 0.0f);
                 RenderSystem.scalef((float) vv, (float) vv, (float) vv);
-                this.minecraft.fontRenderer.drawString(this.research.getLocalizedName(), 0, 0, 2105376);
+                this.minecraft.fontRenderer.drawString(stack, this.research.getLocalizedName(), 0, 0, 2105376);
                 RenderSystem.popMatrix();
             }
             y += 28;
@@ -386,7 +386,7 @@ public class GuiResearchPage extends Screen {
             if (content instanceof String) {
                 RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 String ss = ((String) content).replace("~B", "");
-                this.minecraft.fontRenderer.drawString(ss, x - 15 + side * 152, y - 6, 0);
+                this.minecraft.fontRenderer.drawString(stack, ss, x - 15 + side * 152, y - 6, 0);
                 y += this.minecraft.fontRenderer.FONT_HEIGHT;
                 if (!((String) content).endsWith("~B"))
                     continue;
@@ -402,7 +402,7 @@ public class GuiResearchPage extends Screen {
             int pad = (140 - pi.aw) / 2;
             RenderSystem.translatef((float) (x - 15 + side * 152 + pad), (float) (y - 5), (float) 0.0f);
             RenderSystem.scalef((float) pi.scale, (float) pi.scale, (float) pi.scale);
-            this.blit(0, 0, pi.x, pi.y, pi.w, pi.h);
+            this.blit(stack, 0, 0, pi.x, pi.y, pi.w, pi.h);
             RenderSystem.popMatrix();
             y += pi.ah + 2;
         }
@@ -410,18 +410,18 @@ public class GuiResearchPage extends Screen {
         RenderSystem.blendFunc((int) 770, (int) 771);
 
         if ((stage = this.research.getStages()[this.currentStage]).getRecipes() != null) {
-            this.drawRecipeBookmarks(x, mx, my);
+            this.drawRecipeBookmarks(stack, x, mx, my);
         }
         if (this.page == 0 && side == 0 && !this.isComplete) {
-            this.drawRequirements(x, mx, my, stage);
+            this.drawRequirements(stack, x, mx, my, stage);
         }
         this.renderingCompound = false;
         if (shownRecipe != null) {
-            this.drawRecipe(mx, my);
+            this.drawRecipe(stack, mx, my);
         }
     }
 
-    private void drawRecipeBookmarks(int x, int mx, int my) {
+    private void drawRecipeBookmarks(MatrixStack stack, int x, int mx, int my) {
         Random rng = new Random(this.rhash);
         RenderSystem.pushMatrix();
         int y = (this.height - this.paneHeight) / 2 - 8;
@@ -441,8 +441,8 @@ public class GuiResearchPage extends Screen {
                     RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 }
 
-                this.blit(x + 280 + sh, y - 1, 120 + le, 232, 28, 16);
-                this.blit(x + 280 + sh, y - 1, 116, 232, 4, 16);
+                this.blit(stack, x + 280 + sh, y - 1, 120 + le, 232, 28, 16);
+                this.blit(stack, x + 280 + sh, y - 1, 116, 232, 4, 16);
                 RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 if (list.get(i) instanceof ItemStack) {
                     this.drawStackAt((ItemStack) list.get(i), x + 287 + sh - le, y - 1, mx, my, false);
@@ -460,7 +460,7 @@ public class GuiResearchPage extends Screen {
         RenderSystem.popMatrix();
     }
 
-    private void drawRequirements(int x, int mx, int my, ResearchStage stage) {
+    private void drawRequirements(MatrixStack stack, int x, int mx, int my, ResearchStage stage) {
         int shift;
         int idx;
         int y = (this.height - this.paneHeight) / 2 - 16 + 210;
@@ -471,7 +471,7 @@ public class GuiResearchPage extends Screen {
             shift = 24;
             RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 0.25f);
             this.minecraft.getTextureManager().bindTexture(this.tex1);
-            this.blit(x - 12, (y -= 18) - 1, 200, 232, 56, 16);
+            this.blit(stack, x - 12, (y -= 18) - 1, 200, 232, 56, 16);
             this.drawPopupAt(x - 15, y, mx, my, "runic.need.research");
             Object loc = null;
             if (this.hasResearch != null) {
@@ -523,7 +523,7 @@ public class GuiResearchPage extends Screen {
                         RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                         this.minecraft.getTextureManager().bindTexture(this.tex1);
                         RenderSystem.disableDepthTest();
-                        this.blit(x - 15 + shift + 8, y, 159, 207, 10, 10);
+                        this.blit(stack, x - 15 + shift + 8, y, 159, 207, 10, 10);
                         RenderSystem.enableDepthTest();
                     }
                     this.drawPopupAt(x - 15 + shift, y, mx, my, text);
@@ -536,7 +536,7 @@ public class GuiResearchPage extends Screen {
             shift = 24;
             RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 0.25f);
             this.minecraft.getTextureManager().bindTexture(this.tex1);
-            this.blit(x - 12, (y -= 18) - 1, 200, 216, 56, 16);
+            this.blit(stack, x - 12, (y -= 18) - 1, 200, 216, 56, 16);
             this.drawPopupAt(x - 15, y, mx, my, "runic.need.obtain");
             RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
             if (this.hasItem != null) {
@@ -548,13 +548,13 @@ public class GuiResearchPage extends Screen {
                     ss = 110 / stage.getObtain().length;
                 }
                 for (idx = 0; idx < stage.getObtain().length; ++idx) {
-                    ItemStack stack = (ItemStack) stage.getObtain()[idx];
-                    this.drawStackAt(stack, x - 15 + shift, y, mx, my, true);
+                    ItemStack itemStack = (ItemStack) stage.getObtain()[idx];
+                    this.drawStackAt(itemStack, x - 15 + shift, y, mx, my, true);
                     if (this.hasItem[idx]) {
                         RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                         this.minecraft.getTextureManager().bindTexture(this.tex1);
                         RenderSystem.disableDepthTest();
-                        this.blit(x - 15 + shift + 8, y, 159, 207, 10, 10);
+                        this.blit(stack, x - 15 + shift + 8, y, 159, 207, 10, 10);
                         RenderSystem.enableDepthTest();
                     }
                     shift += ss;
@@ -566,7 +566,7 @@ public class GuiResearchPage extends Screen {
             shift = 24;
             RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 0.25f);
             this.minecraft.getTextureManager().bindTexture(this.tex1);
-            this.blit(x - 12, (y -= 18) - 1, 200, 200, 56, 16);
+            this.blit(stack, x - 12, (y -= 18) - 1, 200, 200, 56, 16);
             this.drawPopupAt(x - 15, y, mx, my, "runic.need.craft");
             RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
             if (this.hasCraft != null) {
@@ -578,13 +578,13 @@ public class GuiResearchPage extends Screen {
                     ss = 110 / stage.getCraft().length;
                 }
                 for (idx = 0; idx < stage.getCraft().length; ++idx) {
-                    ItemStack stack = (ItemStack) stage.getCraft()[idx];
-                    this.drawStackAt(stack, x - 15 + shift, y, mx, my, true);
+                    ItemStack itemStack = (ItemStack) stage.getCraft()[idx];
+                    this.drawStackAt(itemStack, x - 15 + shift, y, mx, my, true);
                     if (this.hasCraft[idx]) {
                         RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                         this.minecraft.getTextureManager().bindTexture(this.tex1);
                         RenderSystem.disableDepthTest();
-                        this.blit(x - 15 + shift + 8, y, 159, 207, 10, 10);
+                        this.blit(stack, x - 15 + shift + 8, y, 159, 207, 10, 10);
                         RenderSystem.enableDepthTest();
                     }
 
@@ -595,14 +595,14 @@ public class GuiResearchPage extends Screen {
         if (b) {
             RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
             this.minecraft.getTextureManager().bindTexture(this.tex1);
-            this.blit(x + 4, (y -= 12) - 2, 24, 184, 96, 8);
+            this.blit(stack, x + 4, (y -= 12) - 2, 24, 184, 96, 8);
             if (this.hasAllRequisites) {
                 this.hrx = x + 20;
                 this.hry = y - 6;
                 if (this.hold) {
                     String s = I18n.format("runic.stage.hold");
                     int m = this.minecraft.fontRenderer.getStringWidth(s);
-                    this.minecraft.fontRenderer.drawStringWithShadow(s, (float) (x + 52) - (float) m / 2.0f, (float) (y - 4), 16777215);
+                    this.minecraft.fontRenderer.drawStringWithShadow(stack, s, (float) (x + 52) - (float) m / 2.0f, (float) (y - 4), 16777215);
                 } else {
                     if (this.mouseInside(this.hrx, this.hry, 64, 12, mx, my)) {
                         RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
@@ -610,24 +610,24 @@ public class GuiResearchPage extends Screen {
                         RenderSystem.color4f((float) 0.8f, (float) 0.8f, (float) 0.9f, (float) 1.0f);
                     }
                     this.minecraft.getTextureManager().bindTexture(this.tex1);
-                    this.blit(this.hrx, this.hry, 84, 216, 64, 12);
+                    this.blit(stack, this.hrx, this.hry, 84, 216, 64, 12);
                     String s = I18n.format((String) "runic.stage.complete");
                     int m = this.minecraft.fontRenderer.getStringWidth(s);
-                    this.minecraft.fontRenderer.drawStringWithShadow(s, (float) (x + 52) - (float) m / 2.0f, (float) (y - 4), 16777215);
+                    this.minecraft.fontRenderer.drawStringWithShadow(stack, s, (float) (x + 52) - (float) m / 2.0f, (float) (y - 4), 16777215);
                 }
             }
         }
         RenderSystem.popMatrix();
     }
 
-    private void drawRecipe(int mx, int my) {
+    private void drawRecipe(MatrixStack stack, int mx, int my) {
         this.allowWithPagePopup = true;
         RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
         this.minecraft.getTextureManager().bindTexture(this.tex4);
         int x = (this.width - 256) / 2;
         int y = (this.height - 256) / 2;
         RenderSystem.disableDepthTest();
-        this.blit(x, y, 0, 0, 255, 255);
+        this.blit(stack, x, y, 0, 0, 255, 255);
         RenderSystem.enableDepthTest();
         List list = this.recipeLists.get((Object) shownRecipe);
         if (list == null || list.size() == 0) {
@@ -642,13 +642,13 @@ public class GuiResearchPage extends Screen {
             }
             if ((recipe = list.get(this.recipePage % list.size())) != null) {
                 if (recipe instanceof ICraftingRecipe) {
-                    this.drawCraftingPage(x + 128, y + 128, mx, my, (ICraftingRecipe) recipe);
+                    this.drawCraftingPage(stack, x + 128, y + 128, mx, my, (ICraftingRecipe) recipe);
                 } else if (recipe instanceof BluePrint) {
-                    drawCompoundCraftingPage(x + 128, y + 128, mx, my, (BluePrint) recipe);
+                    drawCompoundCraftingPage(stack, x + 128, y + 128, mx, my, (BluePrint) recipe);
                     this.renderingCompound = true;
                     MultiBlockHandler.multiblock = (BluePrint) recipe;
                 } else if (recipe instanceof ForgeRecipe) {
-                    this.drawForgeRecipe(x + 128, y + 128, mx, my, (ForgeRecipe) recipe);
+                    this.drawForgeRecipe(stack, x + 128, y + 128, mx, my, (ForgeRecipe) recipe);
                 }
             }
             if (this.hasRecipePages) {
@@ -665,7 +665,7 @@ public class GuiResearchPage extends Screen {
         this.allowWithPagePopup = false;
     }
 
-    private void drawCraftingPage(int x, int y, int mx, int my, ICraftingRecipe recipe) {
+    private void drawCraftingPage(MatrixStack stack, int x, int y, int mx, int my, ICraftingRecipe recipe) {
         String text;
         int offset;
         RenderSystem.enableBlend();
@@ -681,14 +681,14 @@ public class GuiResearchPage extends Screen {
         RenderSystem.blendFunc((int) 770, (int) 771);
         RenderSystem.translatef((float) x, (float) y, (float) 0.0f);
         RenderSystem.scalef((float) 2.0f, (float) 2.0f, (float) 1.0f);
-        this.blit(-26, -26, 60, 15, 51, 52);
-        this.blit(-8, -46, 20, 3, 16, 16);
+        this.blit(stack, -26, -26, 60, 15, 51, 52);
+        this.blit(stack, -8, -46, 20, 3, 16, 16);
         RenderSystem.popMatrix();
         this.drawStackAt(recipe.getRecipeOutput(), x - 8, y - 84, mx, my, false);
         if (recipe != null && recipe instanceof IShapedRecipe) {
             text = I18n.format((String) "recipe.type.workbench");
             offset = this.minecraft.fontRenderer.getStringWidth(text);
-            this.minecraft.fontRenderer.drawString(text, x - offset / 2, y - 104, 5263440);
+            this.minecraft.fontRenderer.drawString(stack, text, x - offset / 2, y - 104, 5263440);
             int rw = ((IShapedRecipe) recipe).getRecipeWidth();
             int rh = ((IShapedRecipe) recipe).getRecipeHeight();
             NonNullList items = recipe.getIngredients();
@@ -710,7 +710,7 @@ public class GuiResearchPage extends Screen {
         if (recipe != null && (recipe instanceof ShapelessRecipe)) {
             text = I18n.format("recipe.type.workbenchshapeless");
             offset = this.minecraft.fontRenderer.getStringWidth(text);
-            this.minecraft.fontRenderer.drawString(text, x - offset / 2, y - 104, 5263440);
+            this.minecraft.fontRenderer.drawString(stack, text, x - offset / 2, y - 104, 5263440);
             NonNullList items = recipe.getIngredients();
             for (int i = 0; i < items.size() && i < 9; ++i) {
                 if (items.get(i) == null)
@@ -729,7 +729,7 @@ public class GuiResearchPage extends Screen {
         RenderSystem.popMatrix();
     }
 
-    private void drawForgeRecipe(int x, int y, int mx, int my, ForgeRecipe recipe) {
+    private void drawForgeRecipe(MatrixStack stack, int x, int y, int mx, int my, ForgeRecipe recipe) {
         RenderSystem.pushMatrix();
         this.minecraft.getTextureManager().bindTexture(this.tex2);
         RenderSystem.pushMatrix();
@@ -738,13 +738,13 @@ public class GuiResearchPage extends Screen {
         RenderSystem.blendFunc((int) 770, (int) 771);
         RenderSystem.translatef((float) x, (float) y, (float) 1.0f);
         RenderSystem.scalef((float) 2.0f, (float) 2.0f, (float) 1.0f);
-        this.blit(-36, -10, 120, 23, 62, 32);
-        this.blit(-8, -46, 20, 3, 16, 16);
+        this.blit(stack, -36, -10, 120, 23, 62, 32);
+        this.blit(stack, -8, -46, 20, 3, 16, 16);
         RenderSystem.popMatrix();
         this.drawStackAt(recipe.getOutput(), x - 8, y - 84, mx, my, false);
         String text = I18n.format((String) "recipe.type.forge");
         int offset = this.minecraft.fontRenderer.getStringWidth(text);
-        this.minecraft.fontRenderer.drawString(text, x - offset / 2, y - 104, 5263440);
+        this.minecraft.fontRenderer.drawString(stack, text, x - offset / 2, y - 104, 5263440);
         this.drawStackAt(recipe.getRecipeInput().getMatchingStacks()[0], x - 8, y - 34, mx, my, false);
         for (int a = 0; a < recipe.getComponents().size(); a++) {
             this.drawStackAt(recipe.getComponents().get(a).getMatchingStacks()[0], x - 80 + a * 18, y + 80, mx, my, false);
@@ -753,7 +753,7 @@ public class GuiResearchPage extends Screen {
         RenderSystem.disableBlend();
     }
 
-    private void drawCompoundCraftingPage(int x, int y, int mx, int my, BluePrint recipe) {
+    private void drawCompoundCraftingPage(MatrixStack stack, int x, int y, int mx, int my, BluePrint recipe) {
         if (recipe.getMultiBlockComponents() == null) return;
         if (this.blockAccess == null)
             this.blockAccess = new BlueprintBlockAccess(recipe.getMultiBlockComponents(), false);
@@ -762,7 +762,7 @@ public class GuiResearchPage extends Screen {
         int zSize = recipe.getMultiBlockComponents()[0][0].length;
         String text = I18n.format("recipe.type.construct");
         int offset = this.minecraft.fontRenderer.getStringWidth(text);
-        this.minecraft.fontRenderer.drawString(text, x - offset / 2, y - 104, 5263440);
+        this.minecraft.fontRenderer.drawString(stack, text, x - offset / 2, y - 104, 5263440);
         int s = Math.max(Math.max(xSize, zSize), ySize) * 2;
         float diag = (float) Math.sqrt(xSize * xSize + zSize * zSize);
         float scaleX = 192 / diag;
@@ -771,7 +771,7 @@ public class GuiResearchPage extends Screen {
         renderBluePrint(this.blockAccess, x, y, scale, recipe.getMultiBlockComponents(), mx, my, recipe.getIngredientList());
         this.minecraft.textureManager.bindTexture(this.tex1);
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, mouseInside(x + 80, y + 100, 8, 8, mx, my) ? 1.0F : 0.75F);
-        blit(x + 80, y + 100, 160, 224, 8, 8);
+        blit(stack, x + 80, y + 100, 160, 224, 8, 8);
     }
 
     private void renderBluePrint(BlueprintBlockAccess ba, int x, int y, float scale, MultiBlockComponent[][][] blueprint, int mx, int my, ItemStack[] ingredients) {
@@ -862,7 +862,7 @@ public class GuiResearchPage extends Screen {
                 if (!CapabilityHelper.knowsResearchStrict(this.minecraft.player, addendum.getResearch()))
                     continue;
                 TranslationTextComponent text = new TranslationTextComponent("runic.addendumtext", new Object[]{++ac});
-                rawText = rawText + "<PAGE>" + text.getFormattedText() + "<BR>" + addendum.getTextLocalized();
+                rawText = rawText + "<PAGE>" + text.toString() + "<BR>" + addendum.getTextLocalized();
             }
         }
         rawText = rawText.replaceAll("<BR>", "~B\n\n");
@@ -916,7 +916,7 @@ public class GuiResearchPage extends Screen {
         }
         ArrayList<String> parsedText = new ArrayList<String>();
         for (String s : firstPassText) {
-            List pt1 = this.minecraft.fontRenderer.listFormattedStringToWidth(s, 140);
+            List pt1 = this.minecraft.fontRenderer.func_238425_b_(ITextProperties.func_240652_a_(s), 140);
             for (Object ln : pt1) {
                 parsedText.add((String) ln);
             }
@@ -1208,7 +1208,7 @@ public class GuiResearchPage extends Screen {
                 String[] sr;
                 List<String> addtext = new ArrayList<>();
                 for (ITextComponent text : itemstack.getTooltip(this.minecraft.player, (Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL))) {
-                    addtext.add(text.getFormattedText());
+                    addtext.add(text.getString());
                 }
                 String ref = this.getCraftingRecipeKey(this.minecraft.player, itemstack);
                 if (ref != null && (sr = ref.split(";", 2)) != null && sr.length > 1) {
@@ -1224,14 +1224,14 @@ public class GuiResearchPage extends Screen {
             } else {
                 List<String> toolTip = new ArrayList<>();
                 for (ITextComponent text : itemstack.getTooltip(this.minecraft.player, (Minecraft.getInstance().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL))) {
-                    toolTip.add(text.getFormattedText());
+                    toolTip.add(text.getString());
                 }
                 this.tipText = toolTip;
             }
         }
     }
 
-    public static class BlueprintBlockAccess implements IBlockReader, ILightReader {
+    public static class BlueprintBlockAccess implements IBlockReader, IBlockDisplayReader {
         private final MultiBlockComponent[][][] data;
         private BlockState[][][] structure;
         public int sliceLine;
@@ -1325,12 +1325,6 @@ public class GuiResearchPage extends Screen {
             return null;
         }
 
-        @Nullable
-        @Override
-        public BlockRayTraceResult rayTraceBlocks(Vec3d startVec, Vec3d endVec, BlockPos pos, VoxelShape shape, BlockState state) {
-            return null;
-        }
-
         @Override
         public int getMaxLightLevel() {
             return 15728880;
@@ -1357,12 +1351,17 @@ public class GuiResearchPage extends Screen {
         }
 
         @Override
-        public IFluidState getFluidState(BlockPos pos) {
+        public FluidState getFluidState(BlockPos pos) {
             return Blocks.AIR.getFluidState(Blocks.AIR.getDefaultState());
         }
 
         public boolean isAirBlock(BlockPos pos) {
             return (getBlockState(pos).getBlock() == Blocks.AIR);
+        }
+
+        @Override
+        public float func_230487_a_(Direction p_230487_1_, boolean p_230487_2_) {
+            return 15;
         }
 
 

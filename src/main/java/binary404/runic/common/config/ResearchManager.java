@@ -129,7 +129,7 @@ public class ResearchManager {
                                 if (addendum.getResearch() == null || !Arrays.asList(addendum.getResearch()).contains(researchkey))
                                     continue;
                                 TranslationTextComponent text = new TranslationTextComponent("runic.addaddendum", new Object[]{ri.getLocalizedName()});
-                                player.sendMessage((ITextComponent) text);
+                                player.sendMessage((ITextComponent) text, player.getUniqueID());
                                 knowledge.setResearchFlag(ri.getKey(), IPlayerKnowledge.EnumResearchFlag.PAGE);
                                 continue block3;
                             }

@@ -36,7 +36,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -78,13 +78,13 @@ public class Utils {
         return values[MathHelper.clamp(index, 0, values.length - 1)];
     }
 
-    public static Vec3d rotateAroundY(Vec3d vec, float angle) {
+    public static Vector3d rotateAroundY(Vector3d vec, float angle) {
         float var2 = MathHelper.cos(angle);
         float var3 = MathHelper.sin(angle);
         double var4 = vec.x * var2 + vec.z * var3;
         double var6 = vec.y;
         double var8 = vec.z * var2 - vec.x * var3;
-        return new Vec3d(var4, var6, var8);
+        return new Vector3d(var4, var6, var8);
     }
 
     public static float pointDistanceSpace(double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -152,7 +152,7 @@ public class Utils {
     public static boolean isWoodLog(World world, BlockPos pos) {
         BlockState bs = world.getBlockState(pos);
         Block bi = bs.getBlock();
-        if (bi.getMaterial(bs) == Material.WOOD)
+        if (bs.getMaterial() == Material.WOOD)
             return true;
         //Tags todo
         return false;
@@ -207,7 +207,7 @@ public class Utils {
     }
 
 
-    public static Vec3d calculateVelocity(final Vec3d from, final Vec3d to, final double heightGain, final double gravity) {
+    public static Vector3d calculateVelocity(final Vector3d from, final Vector3d to, final double heightGain, final double gravity) {
         final double endGain = to.y - from.y;
         final double horizDist = Math.sqrt(distanceSquared2d(from, to));
         final double gain = heightGain;
@@ -225,16 +225,16 @@ public class Utils {
         final double dirz = dz / mag;
         final double vx = vh * dirx;
         final double vz = vh * dirz;
-        return new Vec3d(vx, vy, vz);
+        return new Vector3d(vx, vy, vz);
     }
 
-    public static double distanceSquared2d(final Vec3d from, final Vec3d to) {
+    public static double distanceSquared2d(final Vector3d from, final Vector3d to) {
         final double dx = to.x - from.x;
         final double dz = to.z - from.z;
         return dx * dx + dz * dz;
     }
 
-    public static double distanceSquared3d(final Vec3d from, final Vec3d to) {
+    public static double distanceSquared3d(final Vector3d from, final Vector3d to) {
         final double dx = to.x - from.x;
         final double dy = to.y - from.y;
         final double dz = to.z - from.z;

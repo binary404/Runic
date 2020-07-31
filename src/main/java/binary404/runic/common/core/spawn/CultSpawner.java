@@ -2,6 +2,7 @@ package binary404.runic.common.core.spawn;
 
 import binary404.runic.common.entity.EntityCultZombie;
 import binary404.runic.common.entity.EntityRangedCultZombie;
+import binary404.runic.common.entity.ModEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +39,7 @@ public class CultSpawner {
                     timer += 200 + random.nextInt(200);
                     int startX = (24 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
                     int startY = (24 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
-                    BlockPos.Mutable pos = new BlockPos.Mutable(player).move(startX, 0, startY);
+                    BlockPos.Mutable pos = new BlockPos.Mutable(player.getPosX(), player.getPosY(), player.getPosZ()).move(startX, 0, startY);
 
                     int iterations = random.nextInt(4) + 2;
                     for (int i = 0; i < iterations; ++i) {
@@ -54,7 +55,7 @@ public class CultSpawner {
 
     public static void spawnCultist(World world, BlockPos pos, Random random) {
         BlockState state = world.getBlockState(pos);
-        if (!WorldEntitySpawner.isSpawnableSpace(world, pos, state, state.getFluidState())) {
+        if (!WorldEntitySpawner.func_234968_a_(world, pos, state, state.getFluidState(), ModEntities.CULT_ZOMBIE)) {
             return;
         }
         EntityCultZombie cultist;

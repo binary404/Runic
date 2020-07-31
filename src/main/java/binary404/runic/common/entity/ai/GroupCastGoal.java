@@ -25,7 +25,7 @@ public class GroupCastGoal extends Goal {
 
     @Override
     public boolean shouldExecute() {
-        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.getPosition()).grow(15.0D, 15.0D, 15.0D));
+        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.func_233580_cy_()).grow(15.0D, 15.0D, 15.0D));
         if (this.monster.getRNG().nextFloat() >= 0.2) {
             return false;
         }
@@ -37,7 +37,7 @@ public class GroupCastGoal extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.getPosition()).grow(15.0D, 15.0D, 15.0D));
+        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.func_233580_cy_()).grow(15.0D, 15.0D, 15.0D));
         int count = this.nearby.size();
         for (LivingEntity helper : this.nearby) {
             if (!helper.isAlive()) {
@@ -53,7 +53,7 @@ public class GroupCastGoal extends Goal {
 
     @Override
     public void startExecuting() {
-        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.getPosition()).grow(15.0D, 15.0D, 15.0D));
+        this.nearby = monster.world.getEntitiesWithinAABB(helperClass, new AxisAlignedBB(monster.func_233580_cy_()).grow(15.0D, 15.0D, 15.0D));
         int x = (int) this.monster.getPosX();
         int y = (int) this.monster.getPosY();
         int z = (int) this.monster.getPosZ();

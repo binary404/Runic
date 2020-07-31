@@ -66,7 +66,7 @@ public class ModBlocks {
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> r = event.getRegistry();
 
-        Block.Properties builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(5.0F, 10.0F).lightValue(7);
+        Block.Properties builder = Block.Properties.create(Material.ROCK).hardnessAndResistance(5.0F, 10.0F).setLightLevel((b) -> 7);
 
         register(r, new Block(builder), "runed_stone");
         register(r, new BlockStorage(builder), "storage");
@@ -77,7 +77,7 @@ public class ModBlocks {
             register(r, new BlockGlyph(builder.notSolid(), rune), "glyph_" + rune.getTag());
         }
 
-        builder = Block.Properties.create(Material.GLASS).lightValue(11).hardnessAndResistance(1.0F, 199000.0F);
+        builder = Block.Properties.create(Material.GLASS).setLightLevel((n) -> 11).hardnessAndResistance(1.0F, 199000.0F);
         register(r, new BlockDungeonCore(builder), "dungeon_core");
         register(r, new BlockArcaneForge(Block.Properties.create(Material.ANVIL, MaterialColor.IRON).hardnessAndResistance(5.0F, 1200.0F).notSolid()), "arcane_anvil");
         builder = builder.notSolid();

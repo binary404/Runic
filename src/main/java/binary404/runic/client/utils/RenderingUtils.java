@@ -1,5 +1,6 @@
 package binary404.runic.client.utils;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.sun.prism.TextureMap;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextProperties;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -103,11 +105,11 @@ public class RenderingUtils {
         var9.draw();
     }
 
-    public static void drawCustomTooltip(Screen gui, FontRenderer fr, List textList, int x, int y) {
-        drawCustomTooltip(gui, fr, textList, x, y, 0xFFFF, false);
+    public static void drawCustomTooltip(MatrixStack stack, FontRenderer fr, List textList, int x, int y) {
+        drawCustomTooltip(stack, fr, textList, x, y, 0xFFFF, false);
     }
 
-    public static void drawCustomTooltip(Screen gui, FontRenderer fr, List textList, int x, int y, int subTipColor, boolean ignoremouse) {
+    public static void drawCustomTooltip(MatrixStack stack, FontRenderer fr, List textList, int x, int y, int subTipColor, boolean ignoremouse) {
         if (!textList.isEmpty()) {
             Minecraft mc = Minecraft.getInstance();
             int sf = getScaleFactor(mc.getMainWindow());
@@ -139,7 +141,7 @@ public class RenderingUtils {
                 List tl = new ArrayList();
                 for (Object o : textList) {
                     String textLine2 = (String) o;
-                    List tl2 = fr.listFormattedStringToWidth(textLine2, textLine2.startsWith("@@") ? (max * 2) : max);
+                    List tl2 = fr.func_238425_b_(ITextProperties.func_240652_a_(textLine2), textLine2.startsWith("@@") ? (max * 2) : max);
                     for (Object o2 : tl2) {
                         String textLine3 = ((String) o2).trim();
                         if (textLine2.startsWith("@@")) {
@@ -202,7 +204,7 @@ public class RenderingUtils {
                 }
                 tl3 = tl3.replaceAll("@@", "");
                 RenderSystem.translated(0.0, 0.0, 301.0);
-                fr.drawStringWithShadow(tl3, 0.0f, shift ? 3.0f : 0.0f, -1);
+                fr.drawStringWithShadow(stack, tl3, 0.0f, shift ? 3.0f : 0.0f, -1);
                 RenderSystem.popMatrix();
                 if (i == 0) {
                     sY += 2;

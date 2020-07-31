@@ -1,7 +1,6 @@
 package binary404.runic.proxy;
 
 import binary404.runic.client.gui.GuiResearchBrowser;
-import binary404.runic.client.gui.container.GuiRuneMolder;
 import binary404.runic.client.libs.ShaderHandler;
 import binary404.runic.client.render.RenderBeholder;
 import binary404.runic.client.render.RenderCultOrb;
@@ -35,7 +34,6 @@ public class ClientProxy implements IProxy {
     }
 
     private void clientSetup(FMLClientSetupEvent event) {
-        ScreenManager.registerFactory(ModContainers.RUNE_MOLDER, GuiRuneMolder::new);
         registerRendering();
     }
 

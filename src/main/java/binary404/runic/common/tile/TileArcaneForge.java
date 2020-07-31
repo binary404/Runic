@@ -16,7 +16,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,9 +135,9 @@ public class TileArcaneForge extends TileMod implements ITickableTileEntity {
                             BlockPos posTest = this.pos.add(i, 0, j);
                             BlockState state = world.getBlockState(posTest);
                             if (state.getBlock() == ModBlocks.storage || state.getBlock() == ModBlocks.furnace) {
-                                Vec3d otherVec = new Vec3d(posTest.up(2));
-                                Vec3d target = new Vec3d(this.pos);
-                                Vec3d motion = target.subtract(otherVec).mul(0.03, 0.03, 0.03);
+                                Vector3d otherVec = new Vector3d(posTest.up(2).getX(), posTest.up(2).getY(), posTest.up(2).getZ());
+                                Vector3d target = new Vector3d(this.pos.getX(), this.pos.getY(), this.pos.getZ());
+                                Vector3d motion = target.subtract(otherVec).mul(0.03, 0.03, 0.03);
                                 float r = 0.7F + 0.3F * (float) Math.random();
                                 float g = 0.2F;
                                 float b = 0.2F;

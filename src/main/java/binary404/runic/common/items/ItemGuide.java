@@ -6,20 +6,17 @@ import binary404.runic.api.multiblock.MultiBlockTrigger;
 import binary404.runic.client.FXHelper;
 import binary404.runic.client.core.handler.MultiBlockHandler;
 import binary404.runic.common.core.util.EntityUtils;
-import com.mojang.datafixers.kinds.IdF;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.UseAction;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -67,8 +64,8 @@ public class ItemGuide extends Item {
 
     private void doSparkles(PlayerEntity player, World world, BlockPos pos, float hitX, float hitY, float hitZ, Hand
             hand, IMultiBlockTrigger trigger, IMultiBlockTrigger.Placement place) {
-        Vec3d v1 = EntityUtils.posToHand(player, hand);
-        Vec3d v2 = new Vec3d(pos);
+        Vector3d v1 = EntityUtils.posToHand(player, hand);
+        Vector3d v2 = new Vector3d(pos.getX(), pos.getY(), pos.getZ());
         v2 = v2.add(0.5D, 0.5D, 0.5D);
         v2 = v2.subtract(v1);
         int cnt = 25;
@@ -82,7 +79,7 @@ public class ItemGuide extends Item {
 
         List<BlockPos> sparkles = trigger.sparkle(world, player, pos, place);
         if (sparkles != null) {
-            Vec3d v = (new Vec3d(pos)).add(hitX, hitY, hitZ);
+            Vector3d v = (new Vector3d(pos.getX(), pos.getY(), pos.getZ())).add(hitX, hitY, hitZ);
             for (BlockPos p : sparkles) {
                 FXHelper.drawBlockSparkles(p, v);
             }

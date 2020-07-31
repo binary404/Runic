@@ -8,8 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -129,7 +129,7 @@ public class FXHelper {
         ParticleDispatcher.genericFx(x, y, z, mx, my, mz, part);
     }
 
-    public static void drawBlockSparkles(BlockPos p, Vec3d start) {
+    public static void drawBlockSparkles(BlockPos p, Vector3d start) {
         VoxelShape vs = getWorld().getBlockState(p).getShape(getWorld(), p);
         List<AxisAlignedBB> bb = vs.toBoundingBoxList();
         for (AxisAlignedBB bs : bb) {
@@ -158,7 +158,7 @@ public class FXHelper {
                         float r = MathHelper.nextInt((getWorld()).rand, 255, 255) / 255.0F;
                         float g = MathHelper.nextInt((getWorld()).rand, 189, 255) / 255.0F;
                         float b = MathHelper.nextInt((getWorld()).rand, 64, 255) / 255.0F;
-                        Vec3d v1 = new Vec3d(p.getX() + x, p.getY() + y, p.getZ() + z);
+                        Vector3d v1 = new Vector3d(p.getX() + x, p.getY() + y, p.getZ() + z);
                         double delay = (getWorld()).rand.nextInt(5) + v1.distanceTo(start) * 16.0D;
                         sparkle(p.getX() + x, p.getY() + y, p.getZ() + z, 0.0D, 0.0025D, 0.0D, r, g, b, 0.04F + (float) (getWorld()).rand.nextGaussian() * 0.06F, 1.0F, 0.01F, 16);
                     }

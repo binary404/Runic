@@ -59,8 +59,8 @@ public class TileMod extends TileEntity {
     }
 
     @Override
-    public void read(CompoundNBT par1nbtTagCompound) {
-        super.read(par1nbtTagCompound);
+    public void read(BlockState state, CompoundNBT par1nbtTagCompound) {
+        super.read(state, par1nbtTagCompound);
         readPacketNBT(par1nbtTagCompound);
     }
 

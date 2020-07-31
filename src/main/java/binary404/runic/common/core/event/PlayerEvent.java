@@ -24,7 +24,7 @@ public class PlayerEvent {
     public static void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.player.ticksExisted % 20 == 0) {
             World world = event.player.world;
-            if (world.getBlockState(event.player.getPosition()).getBlock() == Blocks.LAVA) {
+            if (world.getBlockState(event.player.func_233580_cy_()).getBlock() == Blocks.LAVA) {
                 IPlayerKnowledge knowledge = CapabilityHelper.getKnowledge(event.player);
                 if (knowledge.isResearchKnown("FIRST_STEPS@2") && !knowledge.isResearchKnown("FIRST_STEPS@3")) {
                     knowledge.addResearch("f_lava_swim");

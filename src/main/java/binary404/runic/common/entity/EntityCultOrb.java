@@ -30,12 +30,12 @@ public class EntityCultOrb extends ThrowableEntity {
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(this.getPosition()).grow(2.0D));
+        List<LivingEntity> list = this.world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(this.func_233580_cy_()).grow(2.0D));
         for (LivingEntity target : list) {
             if (target instanceof EntityCultZombie) {
                 break;
             }
-            target.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.getThrower()), 2.0F);
+            target.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, this.func_234616_v_()), 2.0F);
             if (world.rand.nextInt(10) == 0)
                 target.addPotionEffect(new EffectInstance(Effects.WITHER, 100, 0));
         }

@@ -5,7 +5,6 @@ import binary404.runic.common.config.RecipeConfig;
 import binary404.runic.common.config.ResearchConfig;
 import binary404.runic.common.core.capability.CapabilityEvent;
 import binary404.runic.common.core.network.PacketHandler;
-import binary404.runic.common.world.dungeon.ModStructures;
 import binary404.runic.proxy.ClientProxy;
 import binary404.runic.proxy.IProxy;
 import binary404.runic.proxy.ServerProxy;
@@ -42,7 +41,6 @@ public class Runic {
         ResearchConfig.init();
         DeferredWorkQueue.runLater(() -> {
             ResearchConfig.post();
-            ModStructures.init();
             Runes.initEffects();
         });
     }

@@ -10,6 +10,7 @@ import binary404.runic.common.config.ResearchManager;
 import binary404.runic.common.core.network.PacketHandler;
 import binary404.runic.common.core.network.research.PacketSyncProgressToServer;
 import binary404.runic.common.core.network.research.PacketSyncResearchFlagsToServer;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -20,6 +21,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
@@ -264,7 +266,7 @@ public class GuiResearchBrowser extends Screen {
     }
 
     @Override
-    public void render(int mx, int my, float par3) {
+    public void render(MatrixStack stack, int mx, int my, float par3) {
         if (this.isMouseButtonDown == 1) {
             if ((this.isMouseButtonDown == 1) && mx >= this.startX && mx < this.startX + this.screenX && my >= this.startY && my < this.startY + this.screenY) {
                 this.guiMapX -= (double) (mx - this.mouseX) * (double) this.zoom;
@@ -290,7 +292,7 @@ public class GuiResearchBrowser extends Screen {
             this.isMouseButtonDown = 0;
         }
         this.zoom = MathHelper.clamp(this.zoom, 1.0F, 2.0F);
-        this.renderBackground();
+        this.renderBackground(stack);
         this.t = System.nanoTime() / 50000000L;
         int locX = MathHelper.floor((this.curMouseX + (this.guiMapX - this.curMouseX) * (double) par3));
         int locY = MathHelper.floor((this.curMouseY + (this.guiMapY - this.curMouseY) * (double) par3));
@@ -309,13 +311,13 @@ public class GuiResearchBrowser extends Screen {
         this.genResearchBackgroundFixedPre();
         GL11.glPushMatrix();
         GL11.glScalef((1.0F / this.zoom), (1.0F / this.zoom), 1.0F);
-        this.genResearchBackgroundZoomable(mx, my, locX, locY);
+        this.genResearchBackgroundZoomable(stack, mx, my, locX, locY);
         GL11.glPopMatrix();
-        this.genResearchBackgroundFixedPost(mx, my, par3);
+        this.genResearchBackgroundFixedPost(stack, mx, my, par3);
         if (this.popuptime > System.currentTimeMillis()) {
             ArrayList<String> text = new ArrayList<>();
             text.add(this.popupmessage);
-            RenderingUtils.drawCustomTooltip(this, this.font, text, 10, 32);
+            RenderingUtils.drawCustomTooltip(stack, this.font, text, 10, 32);
         }
     }
 
@@ -330,7 +332,7 @@ public class GuiResearchBrowser extends Screen {
         RenderSystem.enableColorMaterial();
     }
 
-    protected void genResearchBackgroundZoomable(int mx, int my, int locX, int locY) {
+    protected void genResearchBackgroundZoomable(MatrixStack stack, int mx, int my, int locX, int locY) {
         this.minecraft.getTextureManager().bindTexture(this.tx1);
         if (CapabilityHelper.getKnowledge(this.player).getResearchList() != null) {
             for (int index = 0; index < this.researchEntries.size(); ++index) {
@@ -346,12 +348,12 @@ public class GuiResearchBrowser extends Screen {
                         if (!b)
                             continue;
                         if (knowsParent) {
-                            this.drawLine(source.getDisplayColumn(), source.getDisplayRow(), parent.getDisplayColumn(), parent.getDisplayRow(), 0.6f, 0.6f, 0.6f, locX, locY, 3.0f, true, source.hasMeta(ResearchEntry.EnumResearchMeta.REVERSE));
+                            this.drawLine(stack, source.getDisplayColumn(), source.getDisplayRow(), parent.getDisplayColumn(), parent.getDisplayRow(), 0.6f, 0.6f, 0.6f, locX, locY, 3.0f, true, source.hasMeta(ResearchEntry.EnumResearchMeta.REVERSE));
                             continue;
                         }
                         if (!this.isVisible(parent))
                             continue;
-                        this.drawLine(source.getDisplayColumn(), source.getDisplayRow(), parent.getDisplayColumn(), parent.getDisplayRow(), 0.2f, 0.2f, 0.2f, locX, locY, 2.0f, true, source.hasMeta(ResearchEntry.EnumResearchMeta.REVERSE));
+                        this.drawLine(stack, source.getDisplayColumn(), source.getDisplayRow(), parent.getDisplayColumn(), parent.getDisplayRow(), 0.2f, 0.2f, 0.2f, locX, locY, 2.0f, true, source.hasMeta(ResearchEntry.EnumResearchMeta.REVERSE));
                     }
                 }
                 if (source.getSiblings() == null || source.getSiblings().length <= 0)
@@ -363,11 +365,11 @@ public class GuiResearchBrowser extends Screen {
                     boolean knowsSibling = CapabilityHelper.knowsResearchStrict(this.player, sibling.getKey());
                     if (!this.isVisible(source) || source.getSiblings()[a].startsWith("~")) continue;
                     if (knowsSibling) {
-                        this.drawLine(sibling.getDisplayColumn(), sibling.getDisplayRow(), source.getDisplayColumn(), source.getDisplayRow(), 0.3f, 0.3f, 0.4f, locX, locY, 1.0f, false, source.hasMeta(ResearchEntry.EnumResearchMeta.REVERSE));
+                        this.drawLine(stack, sibling.getDisplayColumn(), sibling.getDisplayRow(), source.getDisplayColumn(), source.getDisplayRow(), 0.3f, 0.3f, 0.4f, locX, locY, 1.0f, false, source.hasMeta(ResearchEntry.EnumResearchMeta.REVERSE));
                         continue;
                     }
                     if (!this.isVisible(sibling)) continue;
-                    this.drawLine(sibling.getDisplayColumn(), sibling.getDisplayRow(), source.getDisplayColumn(), source.getDisplayRow(), 0.1875f, 0.1875f, 0.25f, locX, locY, 0.0f, false, source.hasMeta(ResearchEntry.EnumResearchMeta.REVERSE));
+                    this.drawLine(stack, sibling.getDisplayColumn(), sibling.getDisplayRow(), source.getDisplayColumn(), source.getDisplayRow(), 0.1875f, 0.1875f, 0.25f, locX, locY, 0.0f, false, source.hasMeta(ResearchEntry.EnumResearchMeta.REVERSE));
                 }
             }
         }
@@ -399,7 +401,7 @@ public class GuiResearchBrowser extends Screen {
             GL11.glEnable((int) 3042);
             RenderSystem.blendFunc((int) 770, (int) 771);
             if (iconResearch.hasMeta(ResearchEntry.EnumResearchMeta.ROUND)) {
-                this.blit(iconX - 8, iconY - 8, 144, 48, 32, 32);
+                this.blit(stack, iconX - 8, iconY - 8, 144, 48, 32, 32);
             } else {
                 int ix = 80;
                 int iy = 48;
@@ -409,7 +411,7 @@ public class GuiResearchBrowser extends Screen {
                 if (iconResearch.hasMeta(ResearchEntry.EnumResearchMeta.HEX)) {
                     ix += 32;
                 }
-                this.blit(iconX - 8, iconY - 8, ix, iy, 32, 32);
+                this.blit(stack, iconX - 8, iconY - 8, ix, iy, 32, 32);
             }
             boolean bw = false;
             if (!this.canUnlockResearch(iconResearch)) {
@@ -422,7 +424,7 @@ public class GuiResearchBrowser extends Screen {
                 RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 RenderSystem.translatef((float) (iconX - 9), (float) (iconY - 9), (float) 0.0f);
                 RenderSystem.scaled((double) 0.5, (double) 0.5, (double) 1.0);
-                this.blit(0, 0, 176, 16, 32, 32);
+                this.blit(stack, 0, 0, 176, 16, 32, 32);
                 RenderSystem.popMatrix();
             }
             if (CapabilityHelper.getKnowledge(this.player).hasResearchFlag(iconResearch.getKey(), IPlayerKnowledge.EnumResearchFlag.PAGE)) {
@@ -430,7 +432,7 @@ public class GuiResearchBrowser extends Screen {
                 RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 RenderSystem.translatef((float) (iconX - 9), (float) (iconY + 9), (float) 0.0f);
                 RenderSystem.scaled((double) 0.5, (double) 0.5, (double) 1.0);
-                this.blit(0, 0, 208, 16, 32, 32);
+                this.blit(stack, 0, 0, 208, 16, 32, 32);
                 RenderSystem.popMatrix();
             }
             GuiResearchBrowser.drawResearchIcon(iconResearch, iconX, iconY, this.getBlitOffset(), bw);
@@ -442,7 +444,7 @@ public class GuiResearchBrowser extends Screen {
         GL11.glDisable(2929);
     }
 
-    private void genResearchBackgroundFixedPost(int mx, int my, float par3) {
+    private void genResearchBackgroundFixedPost(MatrixStack stack, int mx, int my, float par3) {
         int p, c;
         this.minecraft.getTextureManager().bindTexture(this.tx1);
         GL11.glEnable(3042);
@@ -455,8 +457,8 @@ public class GuiResearchBrowser extends Screen {
             }
             if (p <= 0)
                 continue;
-            this.blit(c, -2, 48, 13, p, 22);
-            this.blit(c, this.height - 20, 48, 13, p, 22);
+            this.blit(stack, c, -2, 48, 13, p, 22);
+            this.blit(stack, c, this.height - 20, 48, 13, p, 22);
         }
         for (c = 16; c < this.height - 16; c += 64) {
             p = 64;
@@ -465,19 +467,19 @@ public class GuiResearchBrowser extends Screen {
             }
             if (p <= 0)
                 continue;
-            this.blit(-2, c, 13, 48, 22, p);
-            this.blit(this.width - 20, c, 13, 48, 22, p);
+            this.blit(stack, -2, c, 13, 48, 22, p);
+            this.blit(stack, this.width - 20, c, 13, 48, 22, p);
         }
-        this.blit(-2, -2, 13, 13, 22, 22);
-        this.blit(-2, this.height - 20, 13, 13, 22, 22);
-        this.blit(this.width - 20, -2, 13, 13, 22, 22);
-        this.blit(this.width - 20, this.height - 20, 13, 13, 22, 22);
+        this.blit(stack, -2, -2, 13, 13, 22, 22);
+        this.blit(stack, -2, this.height - 20, 13, 13, 22, 22);
+        this.blit(stack, this.width - 20, -2, 13, 13, 22, 22);
+        this.blit(stack, this.width - 20, this.height - 20, 13, 13, 22, 22);
         RenderSystem.popMatrix();
         this.setBlitOffset(0);
         RenderSystem.depthFunc(515);
         GL11.glDisable(2929);
         GL11.glEnable(3553);
-        super.render(mx, my, par3);
+        super.render(stack, mx, my, par3);
         if (this.currentHighlight != null) {
             ArrayList<String> text = new ArrayList<>();
             text.add("\u00a76" + this.currentHighlight.getLocalizedName());
@@ -512,7 +514,7 @@ public class GuiResearchBrowser extends Screen {
             if (CapabilityHelper.getKnowledge(this.player).hasResearchFlag(this.currentHighlight.getKey(), IPlayerKnowledge.EnumResearchFlag.PAGE)) {
                 text.add(I18n.format((String) "runic.research.newpage"));
             }
-            RenderingUtils.drawCustomTooltip(this, this.font, text, mx + 3, my - 3);
+            RenderingUtils.drawCustomTooltip(stack, this.font, text, mx + 3, my - 3);
         }
         RenderSystem.enableDepthTest();
         RenderSystem.enableLighting();
@@ -542,7 +544,7 @@ public class GuiResearchBrowser extends Screen {
         return true;
     }
 
-    private void drawLine(int x, int y, int x2, int y2, float r, float g, float b, int locX, int locY, float zMod, boolean arrow, boolean flipped) {
+    private void drawLine(MatrixStack stack, int x, int y, int x2, int y2, float r, float g, float b, int locX, int locY, float zMod, boolean arrow, boolean flipped) {
         int yy, xx, ym, xm, yd, xd;
         float zt = this.getBlitOffset();
 
@@ -584,22 +586,22 @@ public class GuiResearchBrowser extends Screen {
                 int xx3 = x * 24 - 8 - locX + this.startX;
                 int yy3 = y * 24 - 8 - locY + this.startY;
                 if (xm < 0) {
-                    blit(xx3, yy3, 160, 112, 32, 32);
+                    blit(stack, xx3, yy3, 160, 112, 32, 32);
                 } else if (xm > 0) {
-                    blit(xx3, yy3, 128, 112, 32, 32);
+                    blit(stack, xx3, yy3, 128, 112, 32, 32);
                 } else if (ym > 0) {
-                    blit(xx3, yy3, 64, 112, 32, 32);
+                    blit(stack, xx3, yy3, 64, 112, 32, 32);
                 } else if (ym < 0) {
-                    blit(xx3, yy3, 96, 112, 32, 32);
+                    blit(stack, xx3, yy3, 96, 112, 32, 32);
                 }
             } else if (ym < 0) {
-                blit(xx - 4, yy - 4, 64, 112, 32, 32);
+                blit(stack, xx - 4, yy - 4, 64, 112, 32, 32);
             } else if (ym > 0) {
-                blit(xx - 4, yy - 4, 96, 112, 32, 32);
+                blit(stack, xx - 4, yy - 4, 96, 112, 32, 32);
             } else if (xm > 0) {
-                blit(xx - 4, yy - 4, 160, 112, 32, 32);
+                blit(stack, xx - 4, yy - 4, 160, 112, 32, 32);
             } else if (xm < 0) {
-                blit(xx - 4, yy - 4, 128, 112, 32, 32);
+                blit(stack, xx - 4, yy - 4, 128, 112, 32, 32);
             }
 
         }
@@ -607,25 +609,25 @@ public class GuiResearchBrowser extends Screen {
         int v = 1;
         int h = 0;
         for (; v < yd - (bigCorner ? 1 : 0); v++) {
-            blit(xx + xm * 24 * h, yy + ym * 24 * v, 0, 228, 24, 24);
+            blit(stack, xx + xm * 24 * h, yy + ym * 24 * v, 0, 228, 24, 24);
         }
 
         if (bigCorner) {
-            if (xm < 0 && ym > 0) blit(xx + xm * 24 * h - 24, yy + ym * 24 * v, 0, 180, 48, 48);
-            if (xm > 0 && ym > 0) blit(xx + xm * 24 * h, yy + ym * 24 * v, 48, 180, 48, 48);
-            if (xm < 0 && ym < 0) blit(xx + xm * 24 * h - 24, yy + ym * 24 * v - 24, 96, 180, 48, 48);
-            if (xm > 0 && ym < 0) blit(xx + xm * 24 * h, yy + ym * 24 * v - 24, 144, 180, 48, 48);
+            if (xm < 0 && ym > 0) blit(stack, xx + xm * 24 * h - 24, yy + ym * 24 * v, 0, 180, 48, 48);
+            if (xm > 0 && ym > 0) blit(stack, xx + xm * 24 * h, yy + ym * 24 * v, 48, 180, 48, 48);
+            if (xm < 0 && ym < 0) blit(stack, xx + xm * 24 * h - 24, yy + ym * 24 * v - 24, 96, 180, 48, 48);
+            if (xm > 0 && ym < 0) blit(stack, xx + xm * 24 * h, yy + ym * 24 * v - 24, 144, 180, 48, 48);
         } else {
-            if (xm < 0 && ym > 0) blit(xx + xm * 24 * h, yy + ym * 24 * v, 48, 228, 24, 24);
-            if (xm > 0 && ym > 0) blit(xx + xm * 24 * h, yy + ym * 24 * v, 72, 228, 24, 24);
-            if (xm < 0 && ym < 0) blit(xx + xm * 24 * h, yy + ym * 24 * v, 96, 228, 24, 24);
-            if (xm > 0 && ym < 0) blit(xx + xm * 24 * h, yy + ym * 24 * v, 120, 228, 24, 24);
+            if (xm < 0 && ym > 0) blit(stack, xx + xm * 24 * h, yy + ym * 24 * v, 48, 228, 24, 24);
+            if (xm > 0 && ym > 0) blit(stack, xx + xm * 24 * h, yy + ym * 24 * v, 72, 228, 24, 24);
+            if (xm < 0 && ym < 0) blit(stack, xx + xm * 24 * h, yy + ym * 24 * v, 96, 228, 24, 24);
+            if (xm > 0 && ym < 0) blit(stack, xx + xm * 24 * h, yy + ym * 24 * v, 120, 228, 24, 24);
 
         }
         v += (bigCorner ? 1 : 0);
         h += (bigCorner ? 2 : 1);
         for (; h < xd; h++) {
-            blit(xx + xm * 24 * h, yy + ym * 24 * v, 24, 228, 24, 24);
+            blit(stack, xx + xm * 24 * h, yy + ym * 24 * v, 24, 228, 24, 24);
         }
         RenderSystem.blendFunc(770, 771);
         GL11.glDisable(3042);
@@ -684,7 +686,7 @@ public class GuiResearchBrowser extends Screen {
         int completion;
 
         public GuiCategoryButton(ResearchCategory rc, int completion, String key, boolean flip, int x, int y, int w, int h, String text, IPressable onPress) {
-            super(x, y, w, h, text, onPress);
+            super(x, y, w, h, ITextComponent.func_241827_a_(text), onPress);
             this.rc = rc;
             this.key = key;
             this.flip = flip;
@@ -692,7 +694,7 @@ public class GuiResearchBrowser extends Screen {
         }
 
         @Override
-        public void render(int mouseX, int mouseY, float p_render_3_) {
+        public void renderButton(MatrixStack stack, int mouseX, int mouseY, float p_render_3_) {
             if (this.visible) {
                 this.isHovered = mouseX >= this.x + GuiResearchBrowser.this.addonShift && mouseY >= this.y && mouseX < this.x + this.width + GuiResearchBrowser.this.addonShift && mouseY < this.y + this.height;
                 RenderSystem.enableBlend();
@@ -705,7 +707,7 @@ public class GuiResearchBrowser extends Screen {
                 } else {
                     RenderSystem.color4f((float) 0.6f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
                 }
-                this.blit(this.x - 3 + GuiResearchBrowser.this.addonShift, this.y - 3, 13, 13, 22, 22);
+                this.blit(stack, this.x - 3 + GuiResearchBrowser.this.addonShift, this.y - 3, 13, 13, 22, 22);
                 RenderSystem.popMatrix();
                 RenderSystem.pushMatrix();
                 minecraft.textureManager.bindTexture(this.rc.icon);
@@ -736,7 +738,7 @@ public class GuiResearchBrowser extends Screen {
                     RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 0.7f);
                     RenderSystem.translated((double) (this.x + GuiResearchBrowser.this.addonShift - 2), (double) (this.y - 2), (double) 0.0);
                     RenderSystem.scaled((double) 0.25, (double) 0.25, (double) 1.0);
-                    this.blit(0, 0, 176, 16, 32, 32);
+                    this.blit(stack, 0, 0, 176, 16, 32, 32);
                     RenderSystem.popMatrix();
                 }
                 if (np) {
@@ -744,19 +746,19 @@ public class GuiResearchBrowser extends Screen {
                     RenderSystem.color4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 0.7f);
                     RenderSystem.translated((double) (this.x + GuiResearchBrowser.this.addonShift + 9), (double) (this.y - 2), (double) 0.0);
                     RenderSystem.scaled((double) 0.25, (double) 0.25, (double) 1.0);
-                    this.blit(0, 0, 208, 16, 32, 32);
+                    this.blit(stack, 0, 0, 208, 16, 32, 32);
                     RenderSystem.popMatrix();
                 }
                 if (this.isHovered) {
                     String dp = this.getMessage() + " (" + this.completion + "%)";
-                    this.drawString(minecraft.fontRenderer, dp, !this.flip ? this.x + 22 : GuiResearchBrowser.this.screenX + 9 - minecraft.fontRenderer.getStringWidth(dp), this.y + 4 + GuiResearchBrowser.this.addonShift, 16777215);
+                    this.drawString(stack, minecraft.fontRenderer, dp, !this.flip ? this.x + 22 : GuiResearchBrowser.this.screenX + 9 - minecraft.fontRenderer.getStringWidth(dp), this.y + 4 + GuiResearchBrowser.this.addonShift, 16777215);
                     int t = 9;
                     if (nr) {
-                        this.drawString(minecraft.fontRenderer, I18n.format((String) "runic.research.newresearch"), !this.flip ? this.x + 22 : GuiResearchBrowser.this.screenX + 9 - minecraft.fontRenderer.getStringWidth(I18n.format((String) "runic.research.newresearch")), this.y + 4 + t + GuiResearchBrowser.this.addonShift, 16777215);
+                        this.drawString(stack, minecraft.fontRenderer, I18n.format((String) "runic.research.newresearch"), !this.flip ? this.x + 22 : GuiResearchBrowser.this.screenX + 9 - minecraft.fontRenderer.getStringWidth(I18n.format((String) "runic.research.newresearch")), this.y + 4 + t + GuiResearchBrowser.this.addonShift, 16777215);
                         t += 9;
                     }
                     if (np) {
-                        this.drawString(minecraft.fontRenderer, I18n.format((String) "runic.research.newpage"), !this.flip ? this.x + 22 : GuiResearchBrowser.this.screenX + 9 - minecraft.fontRenderer.getStringWidth(I18n.format((String) "runic.research.newpage")), this.y + 4 + t + GuiResearchBrowser.this.addonShift, 16777215);
+                        this.drawString(stack, minecraft.fontRenderer, I18n.format((String) "runic.research.newpage"), !this.flip ? this.x + 22 : GuiResearchBrowser.this.screenX + 9 - minecraft.fontRenderer.getStringWidth(I18n.format((String) "runic.research.newpage")), this.y + 4 + t + GuiResearchBrowser.this.addonShift, 16777215);
                     }
                 }
             }
