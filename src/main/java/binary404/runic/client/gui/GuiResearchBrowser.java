@@ -750,7 +750,7 @@ public class GuiResearchBrowser extends Screen {
                     RenderSystem.popMatrix();
                 }
                 if (this.isHovered) {
-                    String dp = this.getMessage() + " (" + this.completion + "%)";
+                    String dp = this.getMessage().getString() + " (" + this.completion + "%)";
                     this.drawString(stack, minecraft.fontRenderer, dp, !this.flip ? this.x + 22 : GuiResearchBrowser.this.screenX + 9 - minecraft.fontRenderer.getStringWidth(dp), this.y + 4 + GuiResearchBrowser.this.addonShift, 16777215);
                     int t = 9;
                     if (nr) {

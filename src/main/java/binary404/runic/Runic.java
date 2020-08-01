@@ -5,9 +5,13 @@ import binary404.runic.common.config.RecipeConfig;
 import binary404.runic.common.config.ResearchConfig;
 import binary404.runic.common.core.capability.CapabilityEvent;
 import binary404.runic.common.core.network.PacketHandler;
+import binary404.runic.common.entity.EntityBeholder;
+import binary404.runic.common.entity.EntityCultZombie;
+import binary404.runic.common.entity.ModEntities;
 import binary404.runic.proxy.ClientProxy;
 import binary404.runic.proxy.IProxy;
 import binary404.runic.proxy.ServerProxy;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.DistExecutor;
@@ -42,11 +46,14 @@ public class Runic {
         DeferredWorkQueue.runLater(() -> {
             ResearchConfig.post();
             Runes.initEffects();
+
+            GlobalEntityTypeAttributes.put(ModEntities.CULT_ZOMBIE, EntityCultZombie.attributes().func_233813_a_());
+            GlobalEntityTypeAttributes.put(ModEntities.RANGED_CULT_ZOMBIE, EntityCultZombie.attributes().func_233813_a_());
+            GlobalEntityTypeAttributes.put(ModEntities.BEHOLDER, EntityBeholder.attributes().func_233813_a_());
         });
     }
 
     public static ResourceLocation key(String path) {
-        ResourceLocation location = new ResourceLocation("runic", path);
         return new ResourceLocation("runic", path);
     }
 

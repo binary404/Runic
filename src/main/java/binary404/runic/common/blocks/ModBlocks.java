@@ -59,8 +59,8 @@ public class ModBlocks {
     @ObjectHolder("runic:glyph_order")
     public static Block glyph_order;
 
-    @ObjectHolder("runic:life_glyph")
-    public static Block life_glyph;
+    @ObjectHolder("runic:life_ritual_glyph")
+    public static Block life_ritual_glyph;
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -71,7 +71,7 @@ public class ModBlocks {
         register(r, new Block(builder), "runed_stone");
         register(r, new BlockStorage(builder), "storage");
         register(r, new BlockArcaneForgeFurnace(builder), "furnace");
-        register(r, new BlockRitualGlyph(builder, Runes.LIFE), "life_glyph");
+        register(r, new BlockRitualGlyph(builder, Runes.LIFE), "life_ritual_glyph");
 
         for (Rune rune : Rune.getPrimalRunes()) {
             register(r, new BlockGlyph(builder.notSolid(), rune), "glyph_" + rune.getTag());
@@ -91,7 +91,8 @@ public class ModBlocks {
         register(r, new BlockItem(runed_stone, ModItems.defaultBuilder()), "runed_stone");
         register(r, new BlockItem(storage, ModItems.defaultBuilder()), "storage");
         register(r, new BlockItem(furnace, ModItems.defaultBuilder()), "furnace");
-        register(r, new BlockItem(life_glyph, ModItems.defaultBuilder()), "life_glyph");
+
+        register(r, new BlockItem(life_ritual_glyph, ModItems.defaultBuilder()), "life_ritual_glyph");
 
         register(r, new BlockItem(glyph_fire, ModItems.defaultBuilder()), "glyph_fire");
         register(r, new BlockItem(glyph_air, ModItems.defaultBuilder()), "glyph_air");

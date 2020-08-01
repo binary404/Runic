@@ -6,6 +6,8 @@ import binary404.runic.common.entity.ai.GroupCastGoal;
 import com.sun.javafx.geom.Vec3d;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,6 +30,10 @@ public class EntityCultZombie extends MonsterEntity {
     }
 
     public BlockPos castPos;
+
+    public static AttributeModifierMap.MutableAttribute attributes() {
+        return MonsterEntity.func_234295_eP_().func_233815_a_(Attributes.FOLLOW_RANGE, 35.0D).func_233815_a_(Attributes.MOVEMENT_SPEED, 0.23F).func_233815_a_(Attributes.ATTACK_DAMAGE, 3.0D).func_233815_a_(Attributes.ARMOR, 2.0D).func_233815_a_(Attributes.MAX_HEALTH, 40.0D);
+    }
 
     @Override
     protected void registerGoals() {

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "runic:item/earth_rune",
-		"particle": "runic:item/earth_rune"
+		"0": "runic:item/air_rune",
+		"particle": "runic:item/air_rune"
 	},
 	"elements": [
 		{

@@ -5,6 +5,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
@@ -34,6 +36,9 @@ public class EntityBeholder extends MonsterEntity implements IRangedAttackMob, I
         this(ModEntities.BEHOLDER, world);
     }
 
+    public static AttributeModifierMap.MutableAttribute attributes() {
+        return MonsterEntity.func_234295_eP_().func_233815_a_(Attributes.MOVEMENT_SPEED, 0.23F).func_233815_a_(Attributes.FLYING_SPEED, 0.6F);
+    }
 
     public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
         return worldIn.getBlockState(pos).isAir() ? 10.0F : 0.0F;
