@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "mystica:block/log_taintwood_top",
+    "up": "mystica:block/log_taintwood_top",
+    "down": "mystica:block/log_taintwood_top",
+    "north": "mystica:block/log_taintwood_0",
+    "south": "mystica:block/log_taintwood_0",
+    "east": "mystica:block/log_taintwood_0",
+    "west": "mystica:block/log_taintwood_0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "": [
+      { "model": "mystica:block/taint_rock" },
+      { "model": "mystica:block/taint_rock",  "x": 90 },
+      { "model": "mystica:block/taint_rock",  "y": 90 },
+      { "model": "mystica:block/taint_rock", "x": 90, "y": 90 }
+    ]
+  }
+}
+

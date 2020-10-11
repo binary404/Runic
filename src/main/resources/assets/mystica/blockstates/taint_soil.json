@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "": [
+      { "model": "mystica:block/taint_soil_0", "weight": 16 },
+      { "model": "mystica:block/taint_soil_0", "weight": 16, "x": 90 },
+      { "model": "mystica:block/taint_soil_0", "weight": 16, "y": 90 },
+      { "model": "mystica:block/taint_soil_0",  "weight": 16, "x": 90, "y": 90 },
+      { "model": "mystica:block/taint_soil_1" },
+      { "model": "mystica:block/taint_soil_1", "x": 90 },
+      { "model": "mystica:block/taint_soil_1", "y": 90 },
+      { "model": "mystica:block/taint_soil_1", "x": 90, "y": 90 },
+      { "model": "mystica:block/taint_soil_2" },
+      { "model": "mystica:block/taint_soil_2", "x": 90 },
+      { "model": "mystica:block/taint_soil_2", "y": 90 },
+      { "model": "mystica:block/taint_soil_2", "x": 90, "y": 90 }
+    ]
+  }
+}
+

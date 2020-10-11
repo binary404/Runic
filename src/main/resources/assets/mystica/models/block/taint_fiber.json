@@ -1,0 +1,14 @@
+{
+  "textures": {
+    "particle": "mystica:block/taint_fibers",
+    "crust": "mystica:block/taint_fibers"
+  },
+  "elements": [
+    {   "from": [ 0, 0, 0 ],
+      "to": [ 16, 0.01, 16 ],
+      "faces": {
+        "up":    { "uv": [ 0,  0, 16, 16 ], "texture": "#crust" }
+      }
+    }
+  ]
+}

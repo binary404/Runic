@@ -1,0 +1,41 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "textures": { "all": "mystica:block/log_taintwood_1" },
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "inventory":[{"model": "mystica:block/log_taintwood"}],
+    "axis=x": [
+      { "model": "mystica:block/log_taintwood", "textures": {"north": "mystica:block/log_taintwood_1"}, "x": 90, "y": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"south": "mystica:block/log_taintwood_1"}, "x": 90, "y": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"east": "mystica:block/log_taintwood_1"}, "x": 90, "y": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"west": "mystica:block/log_taintwood_1"}, "x": 90, "y": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"north": "mystica:block/log_taintwood_2"}, "x": 90, "y": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"south": "mystica:block/log_taintwood_2"}, "x": 90, "y": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"east": "mystica:block/log_taintwood_2"}, "x": 90, "y": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"west": "mystica:block/log_taintwood_2"}, "x": 90, "y": 90 }
+    ],
+    "axis=y": [
+      { "model": "mystica:block/log_taintwood", "textures": {"north": "mystica:block/log_taintwood_1"} },
+      { "model": "mystica:block/log_taintwood", "textures": {"south": "mystica:block/log_taintwood_1"} },
+      { "model": "mystica:block/log_taintwood", "textures": {"east": "mystica:block/log_taintwood_1"} },
+      { "model": "mystica:block/log_taintwood", "textures": {"west": "mystica:block/log_taintwood_1"} },
+      { "model": "mystica:block/log_taintwood", "textures": {"north": "mystica:block/log_taintwood_2"} },
+      { "model": "mystica:block/log_taintwood", "textures": {"south": "mystica:block/log_taintwood_2"} },
+      { "model": "mystica:block/log_taintwood", "textures": {"east": "mystica:block/log_taintwood_2"} },
+      { "model": "mystica:block/log_taintwood", "textures": {"west": "mystica:block/log_taintwood_2"} }
+    ],
+    "axis=z": [
+      { "model": "mystica:block/log_taintwood", "textures": {"north": "mystica:block/log_taintwood_1"}, "x": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"south": "mystica:block/log_taintwood_1"}, "x": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"east": "mystica:block/log_taintwood_1"}, "x": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"west": "mystica:block/log_taintwood_1"}, "x": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"north": "mystica:block/log_taintwood_2"}, "x": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"south": "mystica:block/log_taintwood_2"}, "x": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"east": "mystica:block/log_taintwood_2"}, "x": 90 },
+      { "model": "mystica:block/log_taintwood", "textures": {"west": "mystica:block/log_taintwood_2"}, "x": 90 }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "multipart": [
+    {   "when": { "north": true },
+      "apply": { "model": "mystica:block/taint_fiber", "y": 180, "x": 90 }
+    },
+    {   "when": { "south": true },
+      "apply": { "model": "mystica:block/taint_fiber", "x": 90 }
+    },
+    {   "when": { "east": true },
+      "apply": { "model": "mystica:block/taint_fiber", "y": 270, "x": 90 }
+    },
+    {   "when": { "west": true },
+      "apply": { "model": "mystica:block/taint_fiber", "y": 90, "x": 90 }
+    },
+    {   "when": { "up": true },
+      "apply": { "model": "mystica:block/taint_fiber", "x": 180 }
+    },
+    {   "when": { "down": true },
+      "apply": { "model": "mystica:block/taint_fiber" }
+    },
+    {   "when": { "growth1": true },
+      "apply": { "model": "mystica:block/taint_growth_1" }
+    },
+    {   "when": { "growth2": true },
+      "apply": { "model": "mystica:block/taint_growth_2" }
+    },
+    {   "when": { "growth3": true },
+      "apply": { "model": "mystica:block/taint_growth_3" }
+    },
+    {   "when": { "growth4": true },
+      "apply": { "model": "mystica:block/taint_growth_4" }
+    }
+  ]
+}
