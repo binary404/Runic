@@ -10,6 +10,13 @@ public class AspectRegistry {
 
     public static LinkedHashMap<String, Aspect> aspects = new LinkedHashMap<>();
 
+    public static final Aspect AIR = new Aspect("aer", 16777086, "e", 1);
+    public static final Aspect EARTH = new Aspect("terra", 5685248, "2", 1);
+    public static final Aspect FIRE = new Aspect("ignis", 16734721, "c", 1);
+    public static final Aspect WATER = new Aspect("aqua", 3986684, "3", 1);
+    public static final Aspect ORDER = new Aspect("ordo", 14013676, "7", 1);
+    public static final Aspect CHAOS = new Aspect("perditio", 4210752, "8", 771);
+
     public static ArrayList<Aspect> getPrimalAspects() {
         if (primals.isEmpty()) {
             Collection<Aspect> pa = aspects.values();

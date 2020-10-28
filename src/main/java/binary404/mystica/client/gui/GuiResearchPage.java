@@ -107,8 +107,8 @@ public class GuiResearchPage extends Screen {
     List tipText = null;
     private static final int PAGEWIDTH = 140;
     private static final int PAGEHEIGHT = 210;
-    private static final PageImage PILINE = PageImage.parse("mystica:textures/gui/gui_researchrock.png:24:184:95:6:1");
-    private static final PageImage PIDIV = PageImage.parse("mystica:textures/gui/gui_researchrock.png:28:192:140:6:1");
+    private static final PageImage PILINE = PageImage.parse("mystica:textures/gui/gui_researchbook.png:24:184:95:6:1");
+    private static final PageImage PIDIV = PageImage.parse("mystica:textures/gui/gui_researchook.png:28:192:140:6:1");
     private ArrayList<Page> pages = new ArrayList();
     boolean isComplete = false;
     boolean hasAllRequisites = false;
@@ -910,8 +910,8 @@ public class GuiResearchPage extends Screen {
             for (ResearchAddendum addendum : addenda) {
                 if (CapabilityHelper.knowsResearchStrict(this.minecraft.player, addendum.getResearch())) {
                     ac++;
-                    TranslationTextComponent text = new TranslationTextComponent("mystica.addendumtext", new Object[]{++ac});
-                    rawText = rawText + "<PAGE>" + text.toString() + "<BR>" + addendum.getTextLocalized();
+                    TranslationTextComponent text = new TranslationTextComponent(addendum.getTitle());
+                    rawText = rawText + "<PAGE>" + text.getString() + "<BR>" + addendum.getTextLocalized();
                 }
             }
         }

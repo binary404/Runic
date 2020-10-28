@@ -93,6 +93,7 @@ public class RenderWeaveThread extends EntityRenderer<EntityWeaveThread> {
             sw = Minecraft.getInstance().fontRenderer.getStringWidth(text);
             this.renderManager.getFontRenderer().drawString(matrixStackIn, text, -sw / 2.0F, -72.0F, 16777215);
             PacketHandler.sendToServer(new PacketAddPoints("BASICS", 10 + entityIn.world.rand.nextInt(20), "THREADS", true));
+            PacketHandler.sendToServer(new PacketAddPoints("BASICS", 0, ("f_node_" + type.id), false));
         }
         matrixStackIn.pop();
     }

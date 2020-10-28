@@ -2,6 +2,7 @@ package binary404.mystica.common.tile;
 
 import binary404.mystica.Mystica;
 import binary404.mystica.common.blocks.ModBlocks;
+import binary404.mystica.common.tile.crafting.TileArcaneWorkbench;
 import binary404.mystica.common.tile.world.TileDungeonCore;
 import binary404.mystica.common.tile.world.TileMobCrystal;
 import net.minecraft.tileentity.TileEntityType;
@@ -22,10 +23,13 @@ public class ModTiles {
     @ObjectHolder("mystica:mob_crystal")
     public static TileEntityType<TileMobCrystal> MOB_CRYSTAL;
 
+    public static TileEntityType<TileArcaneWorkbench> ARCANE_WORKBENCH;
+
     @SubscribeEvent
     public static void registerTileEntity(RegistryEvent.Register<TileEntityType<?>> event) {
         IForgeRegistry<TileEntityType<?>> r = event.getRegistry();
         register(r, TileEntityType.Builder.create(TileDungeonCore::new, ModBlocks.dungeon_core).build(null), "dungeon_core");
         register(r, TileEntityType.Builder.create(TileMobCrystal::new, ModBlocks.mob_crystal).build(null), "mob_crystal");
+        ARCANE_WORKBENCH = (TileEntityType<TileArcaneWorkbench>) register(r, TileEntityType.Builder.create(TileArcaneWorkbench::new, ModBlocks.arcane_workbench).build(null), "arcane_workbench");
     }
 }

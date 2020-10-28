@@ -1,6 +1,7 @@
 package binary404.mystica.common.blocks;
 
 import binary404.mystica.Mystica;
+import binary404.mystica.common.blocks.machine.BlockArcaneWorkbench;
 import binary404.mystica.common.blocks.world.taint.BlockTaint;
 import binary404.mystica.common.blocks.world.taint.BlockTaintFiber;
 import binary404.mystica.common.blocks.world.taint.BlockTaintLog;
@@ -41,6 +42,8 @@ public class ModBlocks {
     @ObjectHolder("mystica:taint_soil")
     public static Block taint_soil;
 
+    public static Block arcane_workbench;
+
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         IForgeRegistry<Block> r = event.getRegistry();
@@ -53,6 +56,8 @@ public class ModBlocks {
         register(r, new BlockTaintLog(), "taint_log");
         register(r, new BlockTaint(), "taint_rock");
         register(r, new BlockTaint(), "taint_soil");
+
+        arcane_workbench = register(r, new BlockArcaneWorkbench(builder), "arcane_workbench");
 
         builder = Block.Properties.create(Material.GLASS).setLightLevel((n) -> 11).hardnessAndResistance(1.0F, 199000.0F);
         register(r, new BlockDungeonCore(builder), "dungeon_core");
@@ -70,6 +75,7 @@ public class ModBlocks {
         register(r, new BlockItem(taint_log, ModItems.defaultBuilder()), "taint_log");
         register(r, new BlockItem(taint_rock, ModItems.defaultBuilder()), "taint_rock");
         register(r, new BlockItem(taint_soil, ModItems.defaultBuilder()), "taint_soil");
+        register(r, new BlockItem(arcane_workbench, ModItems.defaultBuilder()), "arcane_workbench");
     }
 
 }

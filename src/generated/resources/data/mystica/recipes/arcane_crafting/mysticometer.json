@@ -1,9 +1,10 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "mystica:arcane_crafting",
+  "mystic": 10,
   "pattern": [
     "III",
     "IGI",
-    " D "
+    "IDI"
   ],
   "key": {
     "I": {

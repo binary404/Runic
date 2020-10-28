@@ -26,7 +26,7 @@ public class Mystica {
     public static Mystica instance;
     public static IProxy proxy;
 
-    public static final Logger LOGGER = LogManager.getLogger("RUNIC");
+    public static final Logger LOGGER = LogManager.getLogger("MYSTICA");
 
     public static final String modid = "mystica";
 

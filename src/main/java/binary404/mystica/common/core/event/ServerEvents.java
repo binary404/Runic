@@ -1,6 +1,7 @@
 package binary404.mystica.common.core.event;
 
 import binary404.mystica.Mystica;
+import binary404.mystica.common.world.taint.TaintEvents;
 import binary404.mystica.common.world.taint.TaintSpreadHelper;
 import binary404.mystica.common.world.weave.WeaveHandlerThread;
 import binary404.mystica.common.world.weave.WeaveHelper;
@@ -35,6 +36,7 @@ public class ServerEvents {
         } else {
             if (WeaveHelper.fluxTrigger.containsKey(dimension)) {
                 TaintSpreadHelper.startFibers(event.world, WeaveHelper.fluxTrigger.get(dimension));
+                TaintEvents.taintTriggerEvent(event.world, WeaveHelper.fluxTrigger.get(dimension));
             }
         }
     }

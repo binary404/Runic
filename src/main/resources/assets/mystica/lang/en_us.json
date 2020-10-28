@@ -1,6 +1,15 @@
 {
   "item.mystica.guide": "Compendium of the Mystic",
 
+  "item.mystica.wand.name": "CAP ROD Wand",
+
+  "item.mystica.wand.wood.rod": "Wooden",
+  "item.mystica.wand.iron.cap": "Iron Capped",
+
+  "item.capacity.text": "Capacity",
+
+  "mystica.mystic.cost": "Cost",
+
   "block.mystica.runed_stone": "Runed Stone",
 
   "itemGroup.mystica": "Mystica",
@@ -16,9 +25,12 @@
   "mystica.need.research": "Required Knowledge",
   "mystica.stage.hold": "Completing...",
   "mystica.research.stage": "Stage:",
+  "mystica.research.newresearch": "§6Newly discovered research§0",
   "mystica.researchmissing": "Missing research required",
   "mystica.research.begin": "Start Research",
   "recipe.clickthrough": "Click for recipe",
+  "mystica.addaddendum": "§aAddendum added to %1$s§0",
+  "mystica.addendumtext": "§oAddendum %1$s§r",
 
   "threadtype.0": "Normal",
   "threadtype.1": "Dark",
@@ -29,10 +41,16 @@
   "threadtype.6": "Astral",
 
   "mystica.research_category.BASICS": "Essentials",
+
   "mystica.research.FIRST_STEPS.title": "Cryptic Beginnings",
   "mystica.research.FIRST_STEPS.stage.1": "Who would have thought that the magic of an enchanting table could have transformed a blank book into this marvelous book full of mystery? This strange book seems to hint of a powerful form of arcane magic, much stronger than standard enchanting. <BR> I think I should start by studying the world around me. <BR> Maybe I can make some sort of device to aid me in examining the world…",
   "mystica.research.FIRST_STEPS.stage.2": "Peering through the mysticometer shows a world full of flowing energy. The book calls this magic the weave. The weave seems to make up anything and everything. Each chunk seems to store a different amount of mystical energy. <BR> I wonder what else this device will reveal to me, maybe some exploration will be helpful.",
 
   "mystica.research.THREADS.title": "Magical Threads",
-  "mystica.research.THREADS.stage.1": "Around the world there seems to be small orbs of magical energy. These orbs seem to be invisible unless I peer through the mysticometer. It would seem as if these threads of magic replenish the weave periodically. <BR> How they replenish the weave is still a mystery to me."
+  "mystica.research.THREADS.stage.1": "Around the world there seems to be small orbs of magical energy. These orbs seem to be invisible unless I peer through the mysticometer. It would seem as if these threads of magic replenish the weave periodically. <BR> How they replenish the weave is still a mystery to me.",
+  "mystica.research.THREADS.pure.title": "Pure Threads",
+  "mystica.research.THREADS.pure": "It seems as if pure threads will slowly sacrifice themselves to clean up taint in the weave.",
+
+  "mystica.research.LEARNING_TYPES.title": "Types of Knowledge",
+  "mystica.research.LEARNING_TYPES.stage.1": "Knowledge is gained by studying strange magical interactions. Knowledge is divided into the main research categories like Essentials and Alchemy. <LINE> Knowledge is gained by observing the world and other interactions. Practical observation often gives insight into how magic works. Keeping some field notes of observations will help you build a solid basic of mystical knowledge. <LINE> Knowledge is also gained by careful research, rational thought, and practical experimentation. Much of the mystical research you will complete will require knowledge on certain topics to complete. "
 }

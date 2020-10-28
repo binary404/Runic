@@ -15,7 +15,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -333,6 +336,22 @@ public class GuiResearchBrowser extends Screen {
     }
 
     protected void genResearchBackgroundZoomable(MatrixStack stack, int mx, int my, int locX, int locY) {
+        RenderSystem.pushMatrix();
+        RenderSystem.enableBlend();
+        GL11.glEnable(3042);
+        RenderSystem.blendFunc(770, 771);
+        RenderSystem.alphaFunc(516, 0.003921569F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.minecraft.getTextureManager().bindTexture(new ResourceLocation("mystica", "textures/gui/background.jpg"));
+        blitWithDoubles((this.startX - 2) * this.zoom, (this.startY - 2) * this.zoom, locX / 2.0D, locY / 2.0D, ((this.screenX + 4) * this.zoom), ((this.screenY + 4) * this.zoom));
+        this.minecraft.getTextureManager().bindTexture(new ResourceLocation("mystica", "textures/gui/background2.png"));
+        blitWithDoubles((this.startX - 2) * this.zoom, (this.startY - 2) * this.zoom, locX / 1.5D, locY / 1.5D, ((this.screenX + 4) * this.zoom), ((this.screenY + 4) * this.zoom));
+
+        RenderSystem.disableBlend();
+        RenderSystem.alphaFunc(516, 0.1F);
+        RenderSystem.popMatrix();
+        RenderSystem.depthFunc(515);
+
         this.minecraft.getTextureManager().bindTexture(this.tx1);
         if (CapabilityHelper.getKnowledge(this.player).getResearchList() != null) {
             for (int index = 0; index < this.researchEntries.size(); ++index) {
@@ -640,6 +659,19 @@ public class GuiResearchBrowser extends Screen {
         RenderSystem.popMatrix();
 
         this.setBlitOffset((int) zt);
+    }
+
+    public void blitWithDoubles(float xCoord, float yCoord, double minU, double minV, double maxU, double maxV) {
+        float f2 = 0.00390625F;
+        float f3 = 0.00930625F;
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder wr = tessellator.getBuffer();
+        wr.begin(7, DefaultVertexFormats.POSITION_TEX);
+        wr.pos(xCoord, yCoord + maxV, this.getBlitOffset()).tex((float) (minU) * f2, (float) (minV + maxV) * f3).endVertex();
+        wr.pos(xCoord + maxU, yCoord + maxV, this.getBlitOffset()).tex((float) (minU + maxU) * f2, (float) (minV + maxV) * f3).endVertex();
+        wr.pos(xCoord + maxU, yCoord, this.getBlitOffset()).tex((float) (minU + maxU) * f2, (float) (minV) * f3).endVertex();
+        wr.pos(xCoord, yCoord, this.getBlitOffset()).tex((float) (minU) * f2, (float) (minV) * f3).endVertex();
+        tessellator.draw();
     }
 
     public static void drawResearchIcon(ResearchEntry iconResearch, int iconX, int iconY, float zLevel, boolean bw) {

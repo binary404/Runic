@@ -183,4 +183,16 @@ public class FXHelper {
         ParticleDispatcher.genericFx(x, y, z, mx, my, mz, part);
     }
 
+    public static void drawTaintCloudParticles(double x, double y, double z) {
+        ParticleDispatcher.GenPart part = getGenPart(1.0F, 0.5F, 1.0F, 1.0F);
+        part.age = 32;
+        part.grid = 16;
+        part.alpha = new float[]{0.5F, 0.0F};
+        part.loop = false;
+        part.partStart = 56;
+        part.partNum = 1;
+        part.partInc = 1;
+        ParticleDispatcher.genericFx(x, y, z, 0.0D, 0.0D, 0.0D, part);
+    }
+
 }

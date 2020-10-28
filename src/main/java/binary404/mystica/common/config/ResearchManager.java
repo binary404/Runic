@@ -242,6 +242,7 @@ public class ResearchManager {
                 ir[a] = stack != null && !((ItemStack) stack).isEmpty() ? stack : (icons[a].startsWith("focus") ? icons[a] : new ResourceLocation(icons[a]));
             }
             entry.setIcons(ir);
+            System.out.println(ir);
         }
 
         if (obj.has("parents")) {
@@ -263,7 +264,6 @@ public class ResearchManager {
                     throw new Exception("Illegal metadata in research JSon");
                 }
                 metas.add(en);
-                System.out.println(metas);
             }
             entry.setMeta(metas.toArray(new ResearchEntry.EnumResearchMeta[metas.size()]));
         }
@@ -371,8 +371,11 @@ public class ResearchManager {
                 JsonObject addendumObj = element.getAsJsonObject();
                 ResearchAddendum addendum = new ResearchAddendum();
                 addendum.setText(addendumObj.getAsJsonPrimitive("text").getAsString());
+                addendum.setTitle(addendumObj.getAsJsonPrimitive("title").getAsString());
                 if (addendum.getText() == null) {
                     throw new Exception("Illegal addendum text in research JSon");
+                } else if (addendum.getTitle() == null) {
+                    throw new Exception("Illegal addendum title in research JSON");
                 }
                 if (addendumObj.has("recipes")) {
                     addendum.setRecipes(ResearchManager.arrayJsonToResourceLocations(addendumObj.get("recipes").getAsJsonArray()));

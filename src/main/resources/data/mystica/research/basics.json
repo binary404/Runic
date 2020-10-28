@@ -18,8 +18,12 @@
       "stages": [
         {
           "text": "mystica.research.FIRST_STEPS.stage.1",
-          "recipes": ["mystica:mysticometer"],
-          "required_craft": ["mystica:mysticometer"]
+          "recipes": [
+            "mystica:mysticometer"
+          ],
+          "required_craft": [
+            "mystica:mysticometer"
+          ]
         },
         {
           "text": "mystica.research.FIRST_STEPS.stage.2"
@@ -27,14 +31,38 @@
       ]
     },
     {
-      "key": "THREADS",
-      "name": "mystica.research.THREADS.title",
+      "key": "LEARNING_TYPES",
+      "name": "mystica.research.LEARNING_TYPES.title",
       "icons": [
-        "mystica.textures/research/node/png"
+        "mystica:textures/research/points.png"
       ],
       "category": "BASICS",
       "location": [
-        -2, 0
+        2,
+        -3
+      ],
+      "meta": [
+        "ROUND"
+      ],
+      "parents": [
+        "FIRST_STEPS"
+      ],
+      "stages": [
+        {
+          "text": "mystica.research.LEARNING_TYPES.stage.1"
+        }
+      ]
+    },
+    {
+      "key": "THREADS",
+      "name": "mystica.research.THREADS.title",
+      "icons": [
+        "mystica:textures/research/thread.png"
+      ],
+      "category": "BASICS",
+      "location": [
+        -3,
+        -4
       ],
       "meta": [
         "ROUND",
@@ -43,6 +71,23 @@
       "stages": [
         {
           "text": "mystica.research.THREADS.stage.1"
+        }
+      ],
+      "addenda": [
+        {
+          "text": "mystica.research.THREADS.pure",
+          "title": "mystica.research.THREADS.pure.title",
+          "required_research": [
+            "f_node_3",
+            "f_flux"
+          ]
+        },
+        {
+          "text": "mystica.research.THREADS.taint",
+          "title": "mystica.research.THREADS.taint.title",
+          "required_research": [
+            "f_node_4"
+          ]
         }
       ]
     }

@@ -1,7 +1,10 @@
 package binary404.mystica.proxy;
 
+import binary404.mystica.client.core.handler.ColorHandler;
 import binary404.mystica.client.gui.GuiResearchBrowser;
 import binary404.mystica.client.core.handler.ShaderHandler;
+import binary404.mystica.client.gui.Screens;
+import binary404.mystica.client.render.BlankRenderer;
 import binary404.mystica.client.render.RenderBeholder;
 import binary404.mystica.client.render.RenderCultOrb;
 import binary404.mystica.client.render.RenderRuneZombie;
@@ -9,6 +12,7 @@ import binary404.mystica.client.render.entity.RenderWeaveThread;
 import binary404.mystica.client.render.tile.RenderMobCrystal;
 import binary404.mystica.common.blocks.ModBlocks;
 import binary404.mystica.common.entity.ModEntities;
+import binary404.mystica.common.entity.taint.EntityTaintCloud;
 import binary404.mystica.common.tile.ModTiles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -32,6 +36,8 @@ public class ClientProxy implements IProxy {
 
     private void clientSetup(FMLClientSetupEvent event) {
         registerRendering();
+        ColorHandler.init();
+        Screens.register();
     }
 
     private void registerRendering() {
@@ -44,6 +50,7 @@ public class ClientProxy implements IProxy {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.CULT_ORB, RenderCultOrb::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.BEHOLDER, RenderBeholder::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.THREAD, RenderWeaveThread::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.TAINT_CLOUD, BlankRenderer<EntityTaintCloud>::new);
     }
 
     @Override

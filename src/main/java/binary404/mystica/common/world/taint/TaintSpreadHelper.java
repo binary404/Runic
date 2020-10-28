@@ -56,7 +56,7 @@ public class TaintSpreadHelper {
         Material material = bs.getMaterial();
         if (bs.getBlock() instanceof LeavesBlock) {
             Direction face = null;
-            if (world.rand.nextFloat() < 0.6D && (face = BlockUtils.getFaceBlockTouching(world, pos, ModBlocks.mob_crystal)) != null) {
+            if (world.rand.nextFloat() < 0.6D && (face = BlockUtils.getFaceBlockTouching(world, pos, ModBlocks.taint_log)) != null) {
                 //Feature
             } else {
                 world.setBlockState(pos, BlockTaintFiber.getBlockStateFor(world, pos));
@@ -90,18 +90,16 @@ public class TaintSpreadHelper {
     }
 
     public static void startFibers(World world, BlockPos pos) {
-        for (int x = -3; x <= 3; x++) {
-            for (int z = -3; z <= 3; z++) {
-                BlockPos t = pos.add(x, world.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z), z);
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                BlockPos t = pos.add(x, 0, z);
                 BlockState bs = world.getBlockState(t);
-                if (BlockUtils.isAdjacentToSolidBlock(world, t) && (bs.getBlock() instanceof AirBlock || bs.getBlock() instanceof FlowerBlock || bs.getBlock() instanceof IPlantable)) {
+                if (BlockUtils.isAdjacentToSolidBlock(world, t) || (bs.getBlock() instanceof AirBlock || bs.getBlock() instanceof FlowerBlock || bs.getBlock() instanceof IPlantable) && world.rand.nextInt(3) == 0) {
                     world.setBlockState(t, BlockTaintFiber.getBlockStateFor(world, t));
                     world.func_230547_a_(t, ModBlocks.taint_fiber);
-                    System.out.println("Setting Blocks");
                 }
             }
         }
-        System.out.println("Starting fibers");
     }
 
     public static boolean isOnlyAdjacentToTaint(World world, BlockPos pos) {

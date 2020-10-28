@@ -1,4 +1,4 @@
-7482078777f9a5868a9c424e37caff08ae4a81c0 data/mystica/advancements/recipes/mystica/mysticometer.json
+03b2877134cb225790cfbd8a201ac43dc7248a25 data/mystica/loot_tables/blocks/arcane_workbench.json
 40da7023c06f0794cc8b51a950010814508ab416 data/mystica/loot_tables/blocks/dungeon_core.json
 0bea9e8dd27451c151883dc35ba35e59f4bbcf2c data/mystica/loot_tables/blocks/mob_crystal.json
 64a60d1dccd3168dc294b762300808901b5d6c21 data/mystica/loot_tables/blocks/runed_stone.json
@@ -6,4 +6,5 @@
 d7532c00080172e823cea445f7f5d1fa87fc37ed data/mystica/loot_tables/blocks/taint_log.json
 be0c849cac49c2ac08c6dd0a368f583274eebd7a data/mystica/loot_tables/blocks/taint_rock.json
 9cc588aa9e9d3fba9903210531ce16f9013942b5 data/mystica/loot_tables/blocks/taint_soil.json
-9ba770edbc4af4c99b61b9ac8acbe51ee45277ab data/mystica/recipes/mysticometer.json
+c216a2b55f855831640678dda39821ecd00f10f3 data/mystica/recipes/arcane_crafting/mysticometer.json
+22ce0b0e51b6c834695da58f3ba2400e543429fd data/mystica/recipes/dynamic/wand_recipe.json

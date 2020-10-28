@@ -35,12 +35,12 @@ public class Aspect {
 
 
     public Aspect(String tag, int color, Aspect[] components) {
-        this(tag, color, components, new ResourceLocation("thaumcraft", "textures/aspects/" + tag.toLowerCase() + ".png"), 1);
+        this(tag, color, components, new ResourceLocation("mystica", "textures/aspects/" + tag.toLowerCase() + ".png"), 1);
     }
 
 
     public Aspect(String tag, int color, Aspect[] components, int blend) {
-        this(tag, color, components, new ResourceLocation("thaumcraft", "textures/aspects/" + tag.toLowerCase() + ".png"), blend);
+        this(tag, color, components, new ResourceLocation("mystica", "textures/aspects/" + tag.toLowerCase() + ".png"), blend);
     }
 
 
